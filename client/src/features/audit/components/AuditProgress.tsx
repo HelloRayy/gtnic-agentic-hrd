@@ -1,12 +1,17 @@
-import Spinner from '@atlaskit/spinner';
 import SectionMessage from '@atlaskit/section-message';
+import Badge from '@atlaskit/badge';
+import { AuditStepTracker } from './AuditStepTracker.js';
+import { TraceLog } from './TraceLog.js';
+import type { TraceEvent } from '../../../types/audit.js';
 
 interface AuditProgressProps {
   isLoading: boolean;
   error: string | null;
+  events: TraceEvent[];
+  elapsedSeconds: number;
 }
 
-export function AuditProgress({ isLoading, error }: AuditProgressProps) {
+export function AuditProgress({ isLoading, error, events, elapsedSeconds }: AuditProgressProps) {
   if (error) {
     return (
       <div style={{ marginBottom: 24 }}>
@@ -17,20 +22,31 @@ export function AuditProgress({ isLoading, error }: AuditProgressProps) {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div style={{ marginBottom: 24 }}>
-        <SectionMessage title="Autonomous Agent Executing Multi-Step Pipeline" appearance="information">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
-            <Spinner size="medium" />
-            <p style={{ margin: 0, fontSize: 13, color: '#42526E' }}>
-              Phase 1: Ingesting CV &rarr; Phase 2: Triaging GitHub Repos &rarr; Phase 3: Auditing Tree & Manifests &rarr; Phase 4: Gemini 3.8 Flash Synthesis
-            </p>
-          </div>
-        </SectionMessage>
-      </div>
-    );
+  if (!isLoading && events.length === 0) {
+    return null;
   }
 
-  return null;
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <SectionMessage
+        title={isLoading ? 'Autonomous Agent Pipeline in Execution' : 'Autonomous Agent Pipeline Completed'}
+        appearance={isLoading ? 'information' : 'success'}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+          <p style={{ margin: 0, fontSize: 13, color: '#42526E' }}>
+            {isLoading
+              ? 'Multi-stage autonomous verification running with real-time reasoning feedback.'
+              : 'Autonomous pipeline finished all inspection stages and verified grounding.'}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 12, color: '#6B778C', fontWeight: 500 }}>Time Elapsed:</span>
+            <Badge appearance="added">{elapsedSeconds.toFixed(1)}s</Badge>
+          </div>
+        </div>
+
+        <AuditStepTracker events={events} isCompleted={!isLoading && events.length > 0} />
+        <TraceLog events={events} />
+      </SectionMessage>
+    </div>
+  );
 }

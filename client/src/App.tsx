@@ -1,25 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AuditHeader } from './features/audit/components/AuditHeader.js';
 import { AuditInputForm } from './features/audit/components/AuditInputForm.js';
 import { AuditProgress } from './features/audit/components/AuditProgress.js';
 import { DossierTabs } from './features/audit/components/DossierTabs.js';
-import { submitAudit, fetchSampleAudit } from './services/auditApi.js';
-import type { TechnicalDossier } from './types/audit.js';
+import { streamAuditExecution } from './services/auditApi.js';
+import type { TechnicalDossier, TraceEvent } from './types/audit.js';
 
 export default function App() {
   const [dossier, setDossier] = useState<TechnicalDossier | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [traceEvents, setTraceEvents] = useState<TraceEvent[]>([]);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  const timerRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (isLoading) {
+      startTimeRef.current = Date.now();
+      timerRef.current = window.setInterval(() => {
+        setElapsedSeconds((Date.now() - startTimeRef.current) / 1000);
+      }, 100);
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    }
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isLoading]);
 
   const handleRunAudit = async (formData: FormData) => {
     setIsLoading(true);
     setError(null);
+    setTraceEvents([]);
+    setElapsedSeconds(0);
+
     try {
-      const result = await submitAudit(formData);
-      setDossier(result);
+      await streamAuditExecution(formData, false, {
+        onProgress: (event) => setTraceEvents((prev) => [...prev, event]),
+        onComplete: (result) => {
+          setDossier(result);
+          setIsLoading(false);
+        },
+        onError: (err) => {
+          setError(err);
+          setIsLoading(false);
+        },
+      });
     } catch (err: any) {
       setError(err.message || 'Audit execution failed');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -27,12 +62,23 @@ export default function App() {
   const handleLoadSample = async () => {
     setIsLoading(true);
     setError(null);
+    setTraceEvents([]);
+    setElapsedSeconds(0);
+
     try {
-      const result = await fetchSampleAudit();
-      setDossier(result);
+      await streamAuditExecution(null, true, {
+        onProgress: (event) => setTraceEvents((prev) => [...prev, event]),
+        onComplete: (result) => {
+          setDossier(result);
+          setIsLoading(false);
+        },
+        onError: (err) => {
+          setError(err);
+          setIsLoading(false);
+        },
+      });
     } catch (err: any) {
       setError(err.message || 'Sample audit failed');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -45,7 +91,12 @@ export default function App() {
         onSubmit={handleRunAudit}
         onLoadSample={handleLoadSample}
       />
-      <AuditProgress isLoading={isLoading} error={error} />
+      <AuditProgress
+        isLoading={isLoading}
+        error={error}
+        events={traceEvents}
+        elapsedSeconds={elapsedSeconds}
+      />
       {dossier && <DossierTabs dossier={dossier} />}
     </div>
   );

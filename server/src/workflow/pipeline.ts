@@ -13,9 +13,9 @@ import type {
 } from '../core/types.js';
 
 export class AuditPipeline {
-  public async execute(input: AuditInput): Promise<TechnicalDossier> {
+  public async execute(input: AuditInput, onProgress?: (event: any) => void): Promise<TechnicalDossier> {
     const startTime = Date.now();
-    const traceStore = new TraceStore();
+    const traceStore = new TraceStore(onProgress);
 
     // 1. Ingestion Phase
     traceStore.log('PLAN', 'INGESTION', 'Initiating candidate CV extraction and metadata parsing.');

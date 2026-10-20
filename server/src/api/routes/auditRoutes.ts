@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { handleAuditRequest, handleSampleAudit } from '../controllers/auditController.js';
+import { handleAuditRequest, handleSampleAudit, handleStreamAudit } from '../controllers/auditController.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -19,4 +19,6 @@ auditRouter.get('/health', (_req, res) => {
 });
 
 auditRouter.get('/sample', handleSampleAudit);
+auditRouter.get('/sample/stream', handleStreamAudit);
 auditRouter.post('/audit', upload.single('cv'), handleAuditRequest);
+auditRouter.post('/audit/stream', upload.single('cv'), handleStreamAudit);
