@@ -43,7 +43,7 @@ export class AuditPipeline {
     const jobDesc = input.jobDesc || 'General Engineering Role';
     const auditedRepos: RepoAuditEvidence[] = [];
 
-    // 2. Triage & Audit Phase
+    // 2. Triage & Deep Structural Audit Phase
     if (candidate.githubUsername) {
       traceStore.log('TOOL_CALL', 'GITHUB_TRIAGE', `Searching public original repos for user: ${candidate.githubUsername}`);
       const repoNames = await toolRegistry.executeTool<any, string[]>('github_triage', {
@@ -53,25 +53,26 @@ export class AuditPipeline {
       traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
 
       for (const repo of repoNames) {
-        traceStore.log('TOOL_CALL', 'GITHUB_AUDIT', `Auditing code structure and manifests for repo: ${repo}`);
+        traceStore.log('TOOL_CALL', 'GITHUB_AUDIT', `Auditing code structure, subfolder manifests, and authorship for: ${repo}`);
         const evidence = await toolRegistry.executeTool<any, RepoAuditEvidence | null>('github_repo_audit', {
           owner: candidate.githubUsername,
           repo,
         });
+
         if (evidence) {
           auditedRepos.push(evidence);
           traceStore.log(
             'OBSERVATION',
             'GITHUB_AUDIT',
-            `Repo ${repo}: CI/CD=${evidence.hasCiCd}, Tests=${evidence.hasTests}, Docker=${evidence.hasDocker}, Commits=${evidence.commitCountSample}, Squashed/Migrated=${evidence.isSquashedOrMigrated}`
+            `Repo ${repo}: Monorepo=${evidence.isMonorepo}, AuthorshipMatch=${evidence.authorshipMatch}, PotentialClone=${evidence.isPotentialClone}, Commits=${evidence.commitCountSample}`
           );
         }
       }
     } else {
-      traceStore.log('REFLECTION', 'FALLBACK_MODE', 'No GitHub username detected. Switching to Deep Resume Experience Reasoner mode.');
+      traceStore.log('REFLECTION', 'FALLBACK_MODE', 'No GitHub username detected. Switching to Enterprise Experience Density Index mode.');
     }
 
-    // 3. Synthesis Phase via 9router
+    // 3. Synthesis Phase via 9router (Gemini 3.8 Flash)
     traceStore.log('PLAN', 'SYNTHESIS', 'Synthesizing Claim-vs-Evidence matrix and formulating tailored contextual interview questions.');
 
     let overallAssessment = '';
@@ -131,7 +132,34 @@ export class AuditPipeline {
       overallAssessment = `Automated audit verified ${evidenceMatrix.filter(e => e.status === 'VERIFIED').length} out of ${candidate.claimedSkills.length} claims against public repository manifests.`;
     }
 
-    traceStore.log('REFLECTION', 'PIPELINE_DONE', `Completed full evaluation in ${Date.now() - startTime}ms.`);
+    // 4. Out-of-the-Box Self-Correction & Verification Gate
+    traceStore.log('PLAN', 'SELF_CORRECTION', 'Executing Grounding Verification Gate across synthesized evidence.');
+    let correctionCount = 0;
+
+    const allDeps = auditedRepos.flatMap(r => r.manifestFiles.flatMap(m => m.dependencies.map(d => d.toLowerCase())));
+    for (const item of evidenceMatrix) {
+      if (item.status === 'VERIFIED') {
+        const hasManifestEvidence = allDeps.some(d => d.includes(item.claim.toLowerCase()));
+        const hasRepoAnchor = item.repoAnchor && auditedRepos.some(r => r.repoName === item.repoAnchor);
+        if (!hasManifestEvidence && !hasRepoAnchor) {
+          item.status = 'PARTIAL';
+          item.evidenceSummary += ' [Self-Correction: Downgraded to PARTIAL due to absence of physical manifest anchor]';
+          correctionCount++;
+        }
+      }
+    }
+
+    // Flag Potential Tutorial Clones in Assessment
+    const cloneRepo = auditedRepos.find(r => r.isPotentialClone || !r.authorshipMatch);
+    if (cloneRepo) {
+      overallAssessment += ` Note: Repository "${cloneRepo.repoName}" flagged with ${!cloneRepo.authorshipMatch ? 'unmatched commit authorship' : 'potential tutorial clone characteristics'}; recommended for targeted verification during interview.`;
+    }
+
+    traceStore.log(
+      'REFLECTION',
+      'SELF_CORRECTION_COMPLETED',
+      `Grounding verification passed. Self-corrected items: ${correctionCount}. Total execution: ${Date.now() - startTime}ms.`
+    );
 
     return {
       candidate,

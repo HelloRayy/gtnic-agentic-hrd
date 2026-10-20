@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { config } from '../../config/env.js';
+import { auditCacheStore } from '../../memory/cacheStore.js';
 import type { BaseTool, ToolParamDef } from '../registry.js';
 import type { RepoAuditEvidence } from '../../core/types.js';
 
@@ -46,10 +47,17 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
 
   public async execute(params: { owner: string; repo: string }): Promise<RepoAuditEvidence | null> {
     const { owner, repo } = params;
+
+    // 1. Check TTL cache
+    const cached = auditCacheStore.get(owner, repo);
+    if (cached) {
+      return { ...cached, cached: true };
+    }
+
     try {
       const { data: repoInfo } = await octokit.rest.repos.get({ owner, repo });
       const defaultBranch = repoInfo.default_branch || 'main';
-      let filePaths: string[] = [];
+      let rawFilePaths: string[] = [];
 
       try {
         const { data: treeData } = await octokit.rest.git.getTree({
@@ -59,15 +67,50 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
           recursive: 'true',
         });
         if (treeData.tree) {
-          filePaths = treeData.tree
+          rawFilePaths = treeData.tree
             .filter(item => item.path && item.type === 'blob')
             .map(item => item.path as string);
         }
       } catch {
         const { data: contents } = await octokit.rest.repos.getContent({ owner, repo, path: '' });
         if (Array.isArray(contents)) {
-          filePaths = contents.map(c => c.name);
+          rawFilePaths = contents.map(c => c.name);
         }
+      }
+
+      // Vendor Pruning: Ignore third-party dependency bloat
+      const ignoredPrefixes = ['node_modules/', 'dist/', 'build/', '.next/', 'vendor/', '.git/', 'coverage/'];
+      const filePaths = rawFilePaths.filter(p => !ignoredPrefixes.some(prefix => p.startsWith(prefix)));
+
+      // Monorepo & Subfolder Manifest Discovery (Scans up to depth 3)
+      const manifestFileNames = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'pom.xml', 'build.gradle'];
+      const manifestPaths = filePaths.filter(p => {
+        const parts = p.split('/');
+        return parts.length <= 4 && manifestFileNames.includes(parts[parts.length - 1]);
+      }).slice(0, 6); // Max 6 manifests to prevent token bloat
+
+      const isMonorepo = manifestPaths.length > 1 || filePaths.some(p =>
+        p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json'
+      );
+
+      const manifestFiles: { path: string; dependencies: string[] }[] = [];
+      for (const manifestPath of manifestPaths) {
+        try {
+          const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: manifestPath });
+          if ('content' in contentData && typeof contentData.content === 'string') {
+            const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
+            let deps: string[] = [];
+            if (manifestPath.endsWith('package.json')) {
+              try {
+                const parsed = JSON.parse(decoded);
+                deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
+              } catch {}
+            } else {
+              deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//') && !l.startsWith('#')).slice(0, 15);
+            }
+            manifestFiles.push({ path: manifestPath, dependencies: deps });
+          }
+        } catch {}
       }
 
       const hasTests = filePaths.some(p =>
@@ -82,45 +125,39 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         p.toLowerCase().includes('dockerfile') || p.toLowerCase().includes('docker-compose')
       );
 
-      const manifestFiles: { path: string; dependencies: string[] }[] = [];
-      const manifestCandidates = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'pom.xml', 'build.gradle'];
-
-      for (const candidate of manifestCandidates) {
-        if (filePaths.includes(candidate)) {
-          try {
-            const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: candidate });
-            if ('content' in contentData && typeof contentData.content === 'string') {
-              const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
-              let deps: string[] = [];
-              if (candidate === 'package.json') {
-                try {
-                  const parsed = JSON.parse(decoded);
-                  deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
-                } catch {}
-              } else {
-                deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//')).slice(0, 15);
-              }
-              manifestFiles.push({ path: candidate, dependencies: deps });
-            }
-          } catch {}
-        }
-      }
-
-      // Anti-False-Positive Git Lens: Inspect commit activity
+      // Authorship & Tutorial Clone Verification Lens
       let recentCommitSample: string[] = [];
+      let commitAuthors: string[] = [];
       let isSquashedOrMigrated = false;
+      let authorshipMatch = true;
+      let isPotentialClone = false;
       let commitCountSample = 0;
 
       try {
-        const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 5 });
+        const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 10 });
         commitCountSample = commits.length;
         recentCommitSample = commits.map(c => c.commit.message.split('\n')[0].slice(0, 70));
+        
+        const authors = commits.map(c => c.author?.login || c.commit.author?.name || '').filter(Boolean);
+        commitAuthors = Array.from(new Set(authors));
+
+        // If repo commits are predominantly made by an author other than the candidate
+        if (commitAuthors.length > 0 && !commitAuthors.some(a => a.toLowerCase() === owner.toLowerCase())) {
+          authorshipMatch = false;
+        }
+
         if (commits.length === 1 && (recentCommitSample[0]?.toLowerCase().includes('initial') || recentCommitSample[0]?.toLowerCase().includes('import'))) {
           isSquashedOrMigrated = true;
         }
+
+        // Detect tutorial indicators in descriptions or commit messages
+        const repoText = `${repoInfo.description || ''} ${recentCommitSample.join(' ')}`.toLowerCase();
+        if (repoText.includes('tutorial') || repoText.includes('course') || repoText.includes('cloned from')) {
+          isPotentialClone = true;
+        }
       } catch {}
 
-      return {
+      const result: RepoAuditEvidence = {
         repoName: repo,
         repoUrl: repoInfo.html_url,
         description: repoInfo.description || 'No description provided',
@@ -137,7 +174,16 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         isSquashedOrMigrated,
         recentCommitSample,
         license: repoInfo.license?.spdx_id || null,
+        isMonorepo,
+        authorshipMatch,
+        commitAuthors,
+        isPotentialClone,
+        cached: false,
       };
+
+      // Store in TTL cache
+      auditCacheStore.set(owner, repo, result);
+      return result;
     } catch (err: any) {
       if (err.status === 403) {
         console.warn(`[GithubRepoAuditTool] GitHub API Rate Limit exceeded for ${owner}/${repo}.`);

@@ -24,6 +24,11 @@ export interface RepoAuditEvidence {
   isSquashedOrMigrated: boolean;
   recentCommitSample: string[];
   license: string | null;
+  isMonorepo: boolean;
+  authorshipMatch: boolean;
+  commitAuthors: string[];
+  isPotentialClone: boolean;
+  cached?: boolean;
 }
 
 export interface EvidenceItem {
