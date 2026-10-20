@@ -10,6 +10,18 @@ if (config.router.apiKey) {
   });
 }
 
+function extractJson(raw: string): any {
+  let clean = raw.trim();
+  if (clean.startsWith('```json')) {
+    clean = clean.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+  } else if (clean.startsWith('```')) {
+    clean = clean.replace(/^```\s*/, '').replace(/\s*```$/, '');
+  }
+  // Neutralize literal JS undefined to valid JSON null
+  clean = clean.replace(/:\s*undefined\b/g, ': null');
+  return JSON.parse(clean.trim());
+}
+
 export async function runReasoningEngine(
   candidate: CandidateProfile,
   jobTitle: string,
@@ -41,7 +53,8 @@ INSTRUCTIONS:
 2. For each major claim, assign status: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL'.
 3. Formulate 3-4 tailored contextual interview questions based on the candidate's real code decisions (referencing specific repos or manifest patterns).
 4. Strictly follow Explainable AI: DO NOT output arbitrary scores (e.g. '85/100'). Focus purely on factual verification.
-5. Return ONLY a valid JSON object matching this schema:
+5. Use null instead of undefined for missing string properties.
+6. Return ONLY a valid JSON object matching this schema:
 {
   "overallAssessment": "string summarizing technical match",
   "evidenceMatrix": [
@@ -49,8 +62,8 @@ INSTRUCTIONS:
       "claim": "string (e.g. React & TypeScript)",
       "status": "VERIFIED" | "NO_PUBLIC_EVIDENCE" | "PARTIAL",
       "evidenceSummary": "string describing evidence found",
-      "repoAnchor": "string or undefined",
-      "fileAnchor": "string or undefined"
+      "repoAnchor": "string or null",
+      "fileAnchor": "string or null"
     }
   ],
   "interviewKit": [
@@ -58,7 +71,7 @@ INSTRUCTIONS:
       "topic": "string",
       "question": "string (contextual technical question)",
       "context": "string (why this question is asked based on their repo)",
-      "codeAnchor": "string (repo or file reference)",
+      "codeAnchor": "string or null",
       "expectedInsight": "string (what to look for in candidate answer)"
     }
   ]
@@ -70,15 +83,14 @@ INSTRUCTIONS:
       const response = await openaiClient.chat.completions.create({
         model: config.router.defaultModel,
         messages: [
-          { role: 'system', content: 'You are an objective enterprise engineering auditor. Output valid JSON only.' },
+          { role: 'system', content: 'You are an objective enterprise engineering auditor. Output valid JSON only, without conversational preamble.' },
           { role: 'user', content: prompt },
         ],
         temperature: 0.2,
-        response_format: { type: 'json_object' },
       });
 
       const text = response.choices[0]?.message?.content || '{}';
-      const parsed = JSON.parse(text);
+      const parsed = extractJson(text);
 
       return {
         candidate,
