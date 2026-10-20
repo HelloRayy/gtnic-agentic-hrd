@@ -64,7 +64,7 @@ export class AuditPipeline {
           traceStore.log(
             'OBSERVATION',
             'GITHUB_AUDIT',
-            `Repo ${repo}: Monorepo=${evidence.isMonorepo}, AuthorshipMatch=${evidence.authorshipMatch}, PotentialClone=${evidence.isPotentialClone}, Commits=${evidence.commitCountSample}`
+            `Repo ${repo}: Monorepo=${evidence.isMonorepo}, AuthorshipStatus=${evidence.authorshipStatus}, PotentialClone=${evidence.isPotentialClone}, Commits=${evidence.commitCountSample}`
           );
         }
       }
@@ -78,6 +78,7 @@ export class AuditPipeline {
     let overallAssessment = '';
     let evidenceMatrix: EvidenceItem[] = [];
     let interviewKit: InterviewQuestion[] = [];
+    let clarificationPrompts: string[] = [];
 
     if (routerClient.isConfigured) {
       try {
@@ -87,6 +88,7 @@ export class AuditPipeline {
         overallAssessment = parsed.overallAssessment || 'Assessment completed.';
         evidenceMatrix = parsed.evidenceMatrix || [];
         interviewKit = parsed.interviewKit || [];
+        clarificationPrompts = parsed.clarificationPrompts || [];
 
         traceStore.log('OBSERVATION', 'SYNTHESIS_SUCCESS', 'Autonomous verification reasoning completed by LLM gateway.');
       } catch (err: any) {
@@ -132,7 +134,7 @@ export class AuditPipeline {
       overallAssessment = `Automated audit verified ${evidenceMatrix.filter(e => e.status === 'VERIFIED').length} out of ${candidate.claimedSkills.length} claims against public repository manifests.`;
     }
 
-    // 4. Out-of-the-Box Self-Correction & Verification Gate
+    // 4. Grounding Verification Gate & Ambiguity Clarification Synthesis
     traceStore.log('PLAN', 'SELF_CORRECTION', 'Executing Grounding Verification Gate across synthesized evidence.');
     let correctionCount = 0;
 
@@ -149,16 +151,25 @@ export class AuditPipeline {
       }
     }
 
-    // Flag Potential Tutorial Clones in Assessment
-    const cloneRepo = auditedRepos.find(r => r.isPotentialClone || !r.authorshipMatch);
-    if (cloneRepo) {
-      overallAssessment += ` Note: Repository "${cloneRepo.repoName}" flagged with ${!cloneRepo.authorshipMatch ? 'unmatched commit authorship' : 'potential tutorial clone characteristics'}; recommended for targeted verification during interview.`;
+    // Automatically inject deterministic ambiguity clarification items
+    for (const repo of auditedRepos) {
+      if (repo.authorshipStatus === 'UNLINKED_GIT_CONFIG') {
+        const prompt = `Klarifikasi Konfigurasi Git (${repo.repoName}): ${repo.authorshipNote}`;
+        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
+      } else if (repo.authorshipStatus === 'THIRD_PARTY_OWNED') {
+        const prompt = `Klarifikasi Kepemilikan Kode (${repo.repoName}): ${repo.authorshipNote} Tanyakan peran kontribusi spesifik kandidat.`;
+        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
+      }
+      if (repo.isPotentialClone) {
+        const prompt = `Verifikasi Orisinalitas Proyek (${repo.repoName}): Terdapat indikasi proyek kursus/tutorial. Tanyakan bagian arsitektur mana yang dibuat mandiri oleh kandidat.`;
+        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
+      }
     }
 
     traceStore.log(
       'REFLECTION',
       'SELF_CORRECTION_COMPLETED',
-      `Grounding verification passed. Self-corrected items: ${correctionCount}. Total execution: ${Date.now() - startTime}ms.`
+      `Grounding verification passed. Self-corrected: ${correctionCount}, Clarification prompts: ${clarificationPrompts.length}. Total execution: ${Date.now() - startTime}ms.`
     );
 
     return {
@@ -167,6 +178,7 @@ export class AuditPipeline {
       overallAssessment,
       evidenceMatrix,
       interviewKit,
+      clarificationPrompts,
       auditedRepos: auditedRepos.map(r => r.repoName),
       executionTimeMs: Date.now() - startTime,
       traceEvents: traceStore.getEvents(),

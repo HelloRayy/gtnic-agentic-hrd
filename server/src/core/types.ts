@@ -7,6 +7,8 @@ export interface CandidateProfile {
   summary?: string;
 }
 
+export type AuthorshipStatus = 'MATCHED' | 'UNLINKED_GIT_CONFIG' | 'THIRD_PARTY_OWNED';
+
 export interface RepoAuditEvidence {
   repoName: string;
   repoUrl: string;
@@ -25,7 +27,8 @@ export interface RepoAuditEvidence {
   recentCommitSample: string[];
   license: string | null;
   isMonorepo: boolean;
-  authorshipMatch: boolean;
+  authorshipStatus: AuthorshipStatus;
+  authorshipNote: string;
   commitAuthors: string[];
   isPotentialClone: boolean;
   cached?: boolean;
@@ -61,6 +64,7 @@ export interface TechnicalDossier {
   overallAssessment: string;
   evidenceMatrix: EvidenceItem[];
   interviewKit: InterviewQuestion[];
+  clarificationPrompts: string[];
   auditedRepos: string[];
   executionTimeMs: number;
   traceEvents?: TraceEvent[];

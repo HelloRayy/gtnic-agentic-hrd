@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { config } from '../../config/env.js';
 import { auditCacheStore } from '../../memory/cacheStore.js';
 import type { BaseTool, ToolParamDef } from '../registry.js';
-import type { RepoAuditEvidence } from '../../core/types.js';
+import type { RepoAuditEvidence, AuthorshipStatus } from '../../core/types.js';
 
 const octokit = new Octokit({
   auth: config.githubToken || undefined,
@@ -48,7 +48,6 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
   public async execute(params: { owner: string; repo: string }): Promise<RepoAuditEvidence | null> {
     const { owner, repo } = params;
 
-    // 1. Check TTL cache
     const cached = auditCacheStore.get(owner, repo);
     if (cached) {
       return { ...cached, cached: true };
@@ -78,16 +77,14 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         }
       }
 
-      // Vendor Pruning: Ignore third-party dependency bloat
       const ignoredPrefixes = ['node_modules/', 'dist/', 'build/', '.next/', 'vendor/', '.git/', 'coverage/'];
       const filePaths = rawFilePaths.filter(p => !ignoredPrefixes.some(prefix => p.startsWith(prefix)));
 
-      // Monorepo & Subfolder Manifest Discovery (Scans up to depth 3)
       const manifestFileNames = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'pom.xml', 'build.gradle'];
       const manifestPaths = filePaths.filter(p => {
         const parts = p.split('/');
         return parts.length <= 4 && manifestFileNames.includes(parts[parts.length - 1]);
-      }).slice(0, 6); // Max 6 manifests to prevent token bloat
+      }).slice(0, 6);
 
       const isMonorepo = manifestPaths.length > 1 || filePaths.some(p =>
         p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json'
@@ -125,11 +122,12 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         p.toLowerCase().includes('dockerfile') || p.toLowerCase().includes('docker-compose')
       );
 
-      // Authorship & Tutorial Clone Verification Lens
+      // Authorship Analysis (Fuzzy & Non-Punitive)
       let recentCommitSample: string[] = [];
       let commitAuthors: string[] = [];
       let isSquashedOrMigrated = false;
-      let authorshipMatch = true;
+      let authorshipStatus: AuthorshipStatus = 'MATCHED';
+      let authorshipNote = 'Commit author matches repository owner profile.';
       let isPotentialClone = false;
       let commitCountSample = 0;
 
@@ -137,22 +135,32 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 10 });
         commitCountSample = commits.length;
         recentCommitSample = commits.map(c => c.commit.message.split('\n')[0].slice(0, 70));
-        
-        const authors = commits.map(c => c.author?.login || c.commit.author?.name || '').filter(Boolean);
-        commitAuthors = Array.from(new Set(authors));
 
-        // If repo commits are predominantly made by an author other than the candidate
-        if (commitAuthors.length > 0 && !commitAuthors.some(a => a.toLowerCase() === owner.toLowerCase())) {
-          authorshipMatch = false;
+        const authorLogins = commits.map(c => c.author?.login).filter(Boolean) as string[];
+        const gitNames = commits.map(c => c.commit.author?.name).filter(Boolean) as string[];
+        commitAuthors = Array.from(new Set([...authorLogins, ...gitNames]));
+
+        const hasOwnerLoginMatch = authorLogins.some(l => l.toLowerCase() === owner.toLowerCase());
+
+        if (hasOwnerLoginMatch) {
+          authorshipStatus = 'MATCHED';
+          authorshipNote = 'Verified GitHub profile login authorship on commits.';
+        } else if (authorLogins.length === 0 && gitNames.length > 0) {
+          // Commits exist, but author is not linked to GitHub profile login (very normal git config scenario)
+          authorshipStatus = 'UNLINKED_GIT_CONFIG';
+          authorshipNote = `Commits authored by local git user "${gitNames[0]}". Not linked to GitHub account login. Requires verbal confirmation.`;
+        } else if (authorLogins.length > 0 && !hasOwnerLoginMatch) {
+          // Commits are explicitly authored by someone else entirely
+          authorshipStatus = 'THIRD_PARTY_OWNED';
+          authorshipNote = `Commits authored by GitHub user "${authorLogins[0]}", differing from candidate username "${owner}".`;
         }
 
         if (commits.length === 1 && (recentCommitSample[0]?.toLowerCase().includes('initial') || recentCommitSample[0]?.toLowerCase().includes('import'))) {
           isSquashedOrMigrated = true;
         }
 
-        // Detect tutorial indicators in descriptions or commit messages
         const repoText = `${repoInfo.description || ''} ${recentCommitSample.join(' ')}`.toLowerCase();
-        if (repoText.includes('tutorial') || repoText.includes('course') || repoText.includes('cloned from')) {
+        if (repoText.includes('tutorial') || repoText.includes('course project') || repoText.includes('cloned from')) {
           isPotentialClone = true;
         }
       } catch {}
@@ -175,13 +183,13 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         recentCommitSample,
         license: repoInfo.license?.spdx_id || null,
         isMonorepo,
-        authorshipMatch,
+        authorshipStatus,
+        authorshipNote,
         commitAuthors,
         isPotentialClone,
         cached: false,
       };
 
-      // Store in TTL cache
       auditCacheStore.set(owner, repo, result);
       return result;
     } catch (err: any) {
