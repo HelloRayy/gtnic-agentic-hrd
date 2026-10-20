@@ -90,7 +90,8 @@ export class AuditPipeline {
         interviewKit = parsed.interviewKit || [];
         clarificationPrompts = parsed.clarificationPrompts || [];
 
-        traceStore.log('OBSERVATION', 'SYNTHESIS_SUCCESS', 'Autonomous verification reasoning completed by LLM gateway.');
+        const resolvedModel = parsed._resolvedModel ? ` (${parsed._resolvedModel})` : '';
+        traceStore.log('OBSERVATION', 'SYNTHESIS_SUCCESS', `Autonomous verification reasoning completed by LLM gateway${resolvedModel}.`);
       } catch (err: any) {
         traceStore.log('REFLECTION', 'SYNTHESIS_FALLBACK', `LLM error (${err.message}). Falling back to deterministic matching.`);
       }
