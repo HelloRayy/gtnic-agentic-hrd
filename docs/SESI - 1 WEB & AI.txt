@@ -1,0 +1,506 @@
+13:22:03 Acjara akan segirakita men tepat padakukul digi blast diga pulu waktu Indonesia berat.
+13:29:50 Selamat siang, Om Swastiasto. Nama budaya. Salam kebajikan. Assalamualaikum warahmatullahi wabarakatuh.
+13:29:56 Selamat bergabung di Technical Meeting Garda Tech National Innovation Competition. Dua ribu dua puluh enam sesi pertama terkhusus untuk kategori Web Development dan Ai Aging. Perkenalkan saya bening selaku Master of Ceremony yang akan memandu jalannya. Sosialisasi teknis hari Ini.
+13:30:13 Dengan tujuan diadakan technical meeting pada hari ini untuk menyelaraskan pemahaman seluruh peserta mengenai teknis dan ketentuan pelaksanaan lomba, aturan, Pengumpulan karya serta kriteria penilaian. Agar tidak ada tim yang didiskualifikasi karena kesalahan administratif.
+13:30:31 Selanjutnya, saya akan membacakan susunan acara pada hari ini. Adapun susunan acara sebagai berikut.
+13:30:38 Yang pertama, pembukaan yang kedua menyanyikan lagu Indonesia raya. Yang ketiga, sambutan penanggung jawab Garda Crack National Innovation Competition. Dua Ribu Dua puluh enam yang keempat. Penyampaian materi lomba, kategori web Development yang kelima. Tanya jawab kategori W.
+13:31:07 Berdua di silhachkan.
+13:31:48 Bless the new love
+13:33:21 Sambutan nakanisambaikan ole penang job saudera family kami silhakan.
+13:33:51 As salaamu alaykum wa rahmatullahi.
+13:34:12 Parapani tiya.
+13:34:15 Pernal Khan
+13:34:27 Purdana bagi again sigaratach kami.
+13:34:31 Kapada para peserta darisluru.
+13:34:37 Indonesia, Yandimana
+13:34:53 Janati bisamanjarikan sebua achievement untuk masingmasing dari
+13:35:00 Pasarta.
+13:35:06 Tri Mahasi kepada parapanitiya
+13:35:10 Busi kepada
+13:35:15 Danjuga paserta.
+13:35:23 Padak sa batan nini, sagesugayan mengachapkan.
+13:35:28 Bonsai
+13:35:35 Yanima na tinya.
+13:35:39 Rakutakan Bishami kuti Alurian suda detent tukan oleh penitiya
+13:35:44 Then, alternimana untuk.
+13:35:53 agarlong bani bisa sa side dengan rancaynayan sudar Rakutan dan panitiaspakati.
+13:36:01 Harapanya, dairy Vanini yala
+13:36:04 Dan nati
+13:36:13 Talenta, talenta yan bimana.
+13:36:20 Ma'am, Brican…
+13:36:26 Sanat Mambrikan Impact, Untuk kepada, para
+13:36:31 Kaya Public
+13:36:34 Impactors boot, yeah lah, seguang creativity system yang Rakan dakan natiable itu bisa memban tu.
+13:36:42 Kebanyakan darima sera kakluas.
+13:36:47 Triangkasi
+13:36:52 Palatan ito
+13:36:55 For Haririni, dan, namini sao chapkan dan shares mekan Bonsai nivern ini, Klarsmi di buka.
+13:37:11 Bera.
+13:37:44 management repository code.
+13:38:21 Assalamu alaikum, wa murahmatullahi wa barakatu.
+13:38:25 Shalom Amswastyasdu, Nama Budaya
+13:38:28 Kebajikan. Selamat siang, teman. Teman. Semuanya.
+13:38:34 Pada siang hari ini, saya ingin berterima kasih kepada teman, teman, semuanya. Khususnya para peserta.
+13:38:41 Karena.
+13:38:42 Pada perlombaan Gtcnc ini.
+13:38:45 Sangat banyak sekali peserta yang ikut serta hingga ratusan tim.
+13:38:51 Dan sebuah.
+13:38:53 Kehormatan bagi kami untuk bisa menerima teman teman. Semua di perlombaan ini sebelumnya. Mohon maaf yang sebesar besarnya.
+13:39:02 Tadi ada kelepasan. Sebuah video yang tidak senonoh oleh.
+13:39:07 Tidak tahu dari pihak luar. Dan itu tentu menjadi evaluasi bagi kami yang sebesar besarnya. Kami ucapkan. Mohon maaf, tapi tenang.
+13:39:18 Teman, teman, semuanya. Tim di sini sudah berkontribusi besar untuk bisa.
+13:39:27 Menghindari kejadian kejadian tersebut untuk tidak terulang lagi.
+13:39:31 Info tuibon Sabar. Ya, nanti akan saya beritahu. Baik, tak kenal, maka tak, Sayang, sudah dikenal. Belum tentu bakal disayang.
+13:39:39 Perkenalkan nama saya Husama Fadrillah. Saya adalah Kor yang bertanggung jawab untuk menyampaikan ketentuan ketentuan perlombaan, khususnya bidang web Development kepada para peserta, Khususnya di bidang Web Development.
+13:39:53 Apakah kedengaran jelas suara Saya teman teman atau nge lag nge lag nih?
+13:39:57 Jelas jelas.
+13:39:58 Jelas jelas, jelas jelas.
+13:39:58 Jelas. Ya, Oke, mantap, mantap, Oke.
+13:40:02 Bentar ya.
+13:40:07 Langsung saja, kita masuk ke dalam pembahasan.
+13:40:13 Apa saja sih yang akan saya bahas pada siang hari ini? Tak banyak, hanya lima saja, yaitu skop. Kompetisi seperti Masalah apa yang akan diselesaikan oleh teman teman? Yang kedua adalah standar karya. Yang ketiga adalah repository dan dokumentasi yang keempat adalah penilaian, dan Yang kelima adalah pengumpulan dan timeline.
+13:40:34 Nah.
+13:40:35 Permasalahan yang akan teman teman selesaikan di sini adalah.
+13:40:38 Sebuah permasalahan bagi bisnis digital atau Umkm. Ya, jadi di sini kami berharap teman teman bisa membangun solusi digital untuk kebutuhan bisnis.
+13:40:49 Bisnis digital ataupun Umkm. Itu bebas untuk teman, teman.
+13:40:54 Oke.
+13:40:56 Nah, bagaimana sistem web itu bisa membantu bisnis Umkm mengelola operasional, meningkatkan produk fit produktifitas dan memberi layanan yang baik Kepada para pelanggan atau bahkan pihak internal. Contohnya, karyawan karyawan di bisnis tersebut. Teman, teman.
+13:41:12 Nah, untuk skopnya. Skopnya itu terfokus pada pembangunan bisnis digital. Aplikasi bisnis digital. Segala hal yang mendukung bisnis digital tersebut. Di situlah yang menjadi fokus utama dalam pembahas.
+13:41:27 Pembangunan website yang teman teman akan bangun nanti. Ya.
+13:41:31 Bebas berenovasi. Yang penting Tetap relevan, teman teman. Oke, Karena kami tidak pernah membatasi teman. Teman berinovasi berkreativitas karena sejatinya, Kreativitas dan inovasi itu tidak ada batasnya. Oke.
+13:41:44 Dan contohnya, di sini adalah Inventory Management Marketplace. Umkm, pos atau Transaction Crm, Hr dan Payroll Dashboard Business, dan sebagainya Ini hanyalah contoh.
+13:41:55 Sisanya bisa teman, teman, inovasikan sendiri padukan ataupun.
+13:42:00 Teman teman punya ide ide lain yang lebih kreatif di luar Daripada contoh contoh ini, itu bisa teman teman bangun sendiri Karena inovasi tidak ada batasnya.
+13:42:13 Dan.
+13:42:14 Di sini sebagai koordinasi, Saya ingin menekankan kepada teman teman untuk memulainya dari masalah, bukan fitur.
+13:42:21 Karena takutnya ketika teman teman nanti sudah membangun sangat jauh, teman teman malah melenceng dari skop utama yang difokuskan yaitu Membangun sebuah solusi untuk bisnis digital atau Umkm.
+13:42:35 Oke, jadi, teman, teman, fokus ke masalah.
+13:42:38 Terus penggunanya siapa?
+13:42:41 Dan solusinya apa? Dan dampaknya Apa.
+13:42:45 Oke, sampai di sini. Jelas, teman, teman.
+13:42:48 Contoh seperti pencatatan stokmen manual. Tentu, ini menjadi sebuah masalah utama di kebanyakan bisnis. Apalagi khususnya Indonesia. Ya.
+13:42:57 Dan penggunanya siapa? Umkm, Warung Madura atau warung Padang terserah teman, teman. Terus solusinya. Apa teman teman membuat aplikasi inventori atau kasir dan sebagainya?
+13:43:10 Dampaknya? Apa Stok lebih terpantau? Karyawan lebih tertracking dengan baik. Dan kesalahan. Kesalahan pencatatan itu bisa dikurangi atau diminimalisir, Teman teman. Nah, seperti itu. Jadi, fokuslah kepada masalah, bukan kepada fitur doang. Bukan berarti fitur tidak penting.
+13:43:26 Tapi yang menjadi fokus adalah masalah yang akan teman teman selesaikan. Karena di situ menjadi salah satu penilaian dewan juri nanti. Ke depannya.
+13:43:40 Dan.
+13:43:42 Di sini, saya mengharapkan teman teman untuk bisa membuat website yang harus benar benar berfungsi.
+13:43:48 Seperti yang di Guide Book tuliskan dan mungkin teman, teman. Semua pada Baca.
+13:43:52 Yang penting dalam website yang kalian bangun. Ini adalah pengolahan data. Seperti form input validasi.
+13:44:01 Krut dan sebuah sistem yang betul betul menjadi sebuah fungsional yang.
+13:44:06 Berguna dan berdampak pada bisnis digital. Dan, umkm.
+13:44:10 Dan interaksi database itu penting sehingga di sini, kami menekankan sebuah aplikasi yang sangat, sangat berinteraksi dengan database.
+13:44:22 Dan ketika ada fitur pintar atau otomatisasi di sini, fitur pintar tidak harus yang selalu berkecimpung atau berhubungan dengan Ea, teman. Teman. Akan tetapi, Ea. Itu adalah salah satu fitur atau keunggulan yang bisa teman teman.
+13:44:37 Buat nanti di sistemnya. Teman teman, Ya.
+13:44:41 Akan tetapi, Tim Garda atau tim Jtnc tidak mengharuskan atau tidak mewajibkan bahwa Ai Itu harus. Ada di sistem teman teman karena sejatinya. Sebuah fitur yang memunculkan atau menampilkan sebuah akumule akumulasi. Dan juga.
+13:45:01 Data data penting untuk di track dengan chart. Itu merupakan salah satu hal atau contoh sistem pintar. Sederhananya seperti itu. Ya.
+13:45:09 Pastikan alur utama dapat didemonstrasikan, Ya, Pastikan alur utama atau fitur utama itu bisa didemonstrasikan sampai awal sampai selesai, bukan? Hanya menampilkan halaman yang terlihat menarik aja. Oke, Karena kesalahan.
+13:45:23 Peserta biasanya yang sering ditemui adalah mereka terlalu fokus pada user interface. Sedangkan user Experience nya itu malah dikesampingkan atau malah.
+13:45:33 Kurang jadinya. Dan itu sangat disayangkan ketika dewan juri nanti menguji.
+13:45:38 Website atau aplikasi yang telah teman teman buat selama ini.
+13:45:44 Oke, teknologi untuk teknologi bebas. Tapi yang penting, arsitektur harus masuk. Harus masuk akal.
+13:45:50 Teknologi bebas, Tapi arsitektur harus rapi. Oke.
+13:45:55 Struktur harus rapi. Maksud saya, oke? Karena di Gate Book memperbolehkan frame work modern selama penggunaannya dijelaskan nanti di proposal. Oke, nanti teman, teman. Semua para peserta atau tim.
+13:46:08 Nanti diminta untuk mencantumkan alasan.
+13:46:11 Di proposal. Kenapa teman teman menggunakan teknologi ini? Contoh ada yang menggunakan La Ravel? Karena saya terbiasa menggunakan Laraffael, apalagi Di pembaharuan La Ravel versi. Sekarang itu kecepatannya. Sudah tidak selambat seperti yang sebelumnya. Itu bisa jadi alasan, teman, teman. Atau mungkin.
+13:46:29 Ekspres saya menggunakan ekspres. Karena bagi saya, ekspres lebih bagus, lebih mudah dan lebih enak ketimbang Larafeld dan sebagainya gitu. Itu alasan alasan yang bisa teman teman cantumkan. Akan tetapi, di laporan nanti, pastikan bahasa yang teman teman gunakan. Itu bahasa yang.
+13:46:45 Formal dan juga enak untuk dibaca. Dewan juri.
+13:46:49 Mungkin untuk mahasiswa Sudah terbiasa membuat laporan laporan yang jelas seperti ini untuk di kita.
+13:46:54 Sampaikan kepada dosen atau kepada pengajar kalian, mungkin. Nah, untuk para siswa yang mungkin belum atau sangat jarang membuat laporan. Kami minta laporannya. Itu yang jelas menggunakan bahasa yang lugas. Bahasa yang mudah dimengerti dan tidak.
+13:47:11 Pastikan bahasanya itu formal, ya? Tidak menggunakan bahasa sehari. Hari yang mungkin tidak sopan. Atau mungkin bahasa gaul Bahasa Indonesia bercampur Inggris yang membingungkan. Jangan seperti itu, oke?
+13:47:23 Terus untuk front and back end. Aipi itu bebas bebas. Apakah kami harus menggunakan Fpi bebas? Tidak, larangan. Tidak ada larangan. Tidak ada kewajiban, teman. Teman Mengguna api atau tidak, Oke.
+13:47:37 Database juga terserah Bu Esql Postri dan sebagainya.
+13:47:41 Terus diploy. Pastikan website teman teman nanti di Deploy atau diaplikasikan. Dipublikasikan? Maksud saya supaya memudahkan dewan juri.
+13:47:51 Foy I teman, teman.
+13:47:53 Di perlombaan ini, ada ratusan tim dan tidak memungkinkan dewan juri untuk mengotak atik atau men download dulu file website kalian satu per satu. Karena itu membutuhkan waktu yang sangat lama sehingga supaya waktunya efisien dan efekti.
+13:48:09 Dewan Juri bisa langsung membuka link publik yang telah teman teman hosting.
+13:48:15 Terserah menggunakan Share, hosting atau Vps dan sebagainya. Oke, cari yang murah, murah, Tidak masalah, tapi.
+13:48:23 Dipastikan pada hari penilaian.
+13:48:27 Dewan Juri nanti. Itu semua bisa dibuka dengan sangat, sangat lancar dan sangat, sangat. Mantaplah pokoknya. Oke, saya izin Minum dulu. Teman, teman. Ya.
+13:48:37 Karena kering, nih.
+13:48:40 Izin, izin.
+13:48:42 Oke.
+13:48:43 Contoh teknologi yang bisa teman teman pakai Seperti React Next, Snuks View, Laravel dan sebagainya. Tuh terserah, teman. Teman yang penting. Jelaskan alasannya apa? Oke.
+13:48:55 Selanjutnya adalah.
+13:48:57 Kualitas minimum, Ya, Kualitas minimum website. Clean itu seperti apa sih? Nanti pastikan responsif.
+13:49:04 Hargai, user.
+13:49:07 Entah tampilannya di desktop tablet atau smartphone itu, Pastikan kalian menghargai user sebagai programmer. Ya, harus menghargai user.
+13:49:16 Barangkali nanti Dewan juri buka lewat.
+13:49:20 Ipad, laptop.
+13:49:22 Atau Hp. Itu tidak memungkinkan. Teman, teman dan.
+13:49:28 Dengan.
+13:49:29 Minimal responsif kalian. Itu bisa bagus. Itu menjadi nilai yang bakal diperhitungkan oleh dewan juri. Nanti.
+13:49:39 Senjanya lah Kompatibilitas, Ya, Uji di browser utama. Seperti Chrome Firefox. Safari Edge. Atau kalian mau tambah di Duck Duck, go.
+13:49:50 Terus, Yandex. Terserah yang penting jalan dengan baik, oke?
+13:49:55 Terus fungsionalitas. Hindari error pada alur utama. Ini penting banget. Berikan feedback juga penting. Jangan sampai user menunggu lama. Tanpa Ada feedback. Apakah programnya jalan dengan baik? Programnya ada kendala error jaringan yang.
+13:50:13 Bermasalah dan sebagainya. Itu pastikan feedback itu ada. Teman. Validasi juga ada. Apakah dia berhasil atau gagal memasukkan data contohnya Dan pesan status itu juga penting.
+13:50:24 Ya, terus keamanan Dasar seperti validasi input. Lindungi credential dan jauhi Unggah file Enp. Atau mungkin nanti apik yang mungkin Kalian bakal push ke repository kalian. Itu pastikan berhati hati dalam mengunggah hal tersebut.
+13:50:39 Karena kita sebagai panitianya tadi, kecolongan video tidak selalu masuk. Ini bahaya nih. Ada orang orang nakal nih. Kayaknya nih. Kalian harus hati hati. Jangan sampai keamanan. Keamanan Data kalian malah.
+13:50:51 Di.
+13:50:52 Gunakan oleh orang orang tak bertanggung jawab. Ya, terus diploinin. Deployment.
+13:50:57 Website wajib Live di platform public dan dapat diakses di selama kompetisi selama kompetisi saja. Oke, selama kompetisi berjalan gitu.
+13:51:09 Nah, depositori untuk depositori. Kenapa sih harus ada depositori? Nah, karena depositori itu adalah kualitas teknis. Ya, karena repositori itu menjadi.
+13:51:18 Bukti bahwa.
+13:51:20 Website atau aplikasi yang kalian bangun. Ini adalah original Bukti nyata bahwa ini adalah aplikasi kalian gitu.
+13:51:28 Terlihat jelas dari komit pertama sampai komit terakhir. Itu bahwa bukti progress kalian berjalan gitu.
+13:51:35 Di Revisi Tori. Ini.
+13:51:37 Kami harapkan struktur rapi, ritmi jelas dan git histori wajar. Pastikan komit digunakan dengan bahasa yang mudah dimengerti atau menggunakan Bahasa bahasa teknis yang baik dan nanti tidak membingungkan dewan juri karena revisitori juga bakal dihitung. Teman.
+13:51:53 Contohnya, mungkin di repository. Kalian menggunakan spesif.
+13:51:59 Commit dengan teks resolve error di halaman dashboard ini. Misal gitu ketimbang.
+13:52:06 Menggunakan bahasa yang cuma teman, teman atau kelompok. Kalian mengerti Doang itu malah menjadi penilaian yang kurang bagi dewan juri nantinya.
+13:52:14 Terus untuk dokumentasi Fpi, skema database, screenshoot dan petunjuk setup yang relevan itu. Nanti bisa teman Teman, Cantumkan di resmi. Dan juga sekalian di proposal. Mungkin untuk gambar. Bisa kalian masukkan ke dalam proposal? Laporan proposal? Ya.
+13:52:32 Nah.
+13:52:33 Contoh yang mudah diperiksa dan rapi.
+13:52:38 Itu adalah contohnya. Ti. Kami tidak mewajibkan contoh struktur data struktur folder nya seperti ini. Tapi ini hanyalah contoh seperti Front N nya. Itu jelas back end. Jelas database nya. Jelas, konfliknya jelas. Dan.
+13:52:53 Aset asetnya jelas. Itu perlu teman. Teman, jangan sampai nanti. Ketika dewan juri membuka revis history kalian malah bingung. Ini File ini ditaruh di mana? Jangan sampai file konflik ditaruh di aset Jangan sampai kebalikannya dan.
+13:53:09 Bercampur campur hingga membingungkan dewan juri, jangan sampai. Nah, sekali lagi.
+13:53:14 Struktur ini tidak wajib seperti ini karena sejatinya. Tiap developer atau programmer beda beda style nya yang penting, rapi, jelas dan tidak membingungkan.
+13:53:25 Terus readmi. Itu minimal berisi deskripsi masalah dan solusi fitur utama dan target pengguna, teksteknya dan arsitekturnya. Dan cara instalasi Itu penting banget bagi teman, teman, yang mungkin sering publikasi Sas atau.
+13:53:41 Sebagai berbagai macam aplikasi yang mungkin.
+13:53:43 Ingin teman teman seberluaskan kepada orang orang untuk dipakai dengan free atau berbayar, Mungkin ya, cara instalasi dan menjalankan aplikasi itu penting, terus. Environment Variables yang dibutuhkan link website, screenshot, dan dokumentasi itu.
+13:53:58 Mungkin bisa dimasukkan ke dalam readmi, tapi kalau tidak bisa masukkan gambar itu di bagian proposal teman teman.
+13:54:05 Ingat, jangan pernah memasukkan komit password, token apik dan credential database secara asal. Karena itu sangat berbahaya sekali.
+13:54:14 Nah, untuk proposal. Ya, ini ada Us Case Study proposal. Itu menjelaskan alasan sistem dibuat bagaimana sistem dirancang dan apa yang sudah diimplementasikan. Oke, Nah, ini kan sudah dijelaskan di gadebook lengkapnya. Bisa, teman Teman, baca di Gate Book, Ya.
+13:54:29 Iq. Jangan membalas malas membaca, oke?
+13:54:33 Oke, yang penting itu adalah judul karya nama tim latar belakang, masalah bisnis, tujuan, manfaat, solusi, teknologi.
+13:54:42 Arsitektur fitur utama dan sebagainya. Itu format Pdf. Juga bisa, Teman, Teman, perhatikan.
+13:54:48 Video demo. Demo juga menunjukkan perkenalan masalah. Solusi demo sistem. Dan jangan terlalu lama. Lama. Tiga sampai lima menit doang. Ingat, ada ratusan tim di sini. Dewan juri tidak bisa.
+13:54:59 Menghabiskan waktunya selama seharian, Dua hari hingga seminggu untuk menonton video tersebut. Jadi, tiga sampai lima menit saja. Ya, dan Pastikan itu bisa diakses public. Entah itu Youtube, Google, Drive atau sejenisnya, tapi kami sarankan Youtube dan Google Drive aja sesuai arahan kami.
+13:55:15 Supaya tidak membingungkan.
+13:55:17 Lah, teman. Teman. Enggak usah takut. Apakah bakal ditonton orang lain? Karena algoritma Youtube tidak seagresif Tik Tok yang sekali Pos langsung disebarkan ke orang orang Random. Tidak Youtube. Dan apalagi Google Drive. Ini hanya yang punya link biasa yang bisa nonton kecuali kalian adalah Youtuber terkenal.
+13:55:35 Gitu. Dan bagaimana karya dinilai.
+13:55:37 Pastinya adalah yang pertama adalah fungsionalitas dan kualitas implementasi ini penting banget. Alur utama penting. Jangan sampai kalian mengedepankan Uai hingga mengesampingkan Ux, oke?
+13:55:49 Terus relevansi. Masalah juga penting Jangan sampai keluar dari Skope yang telah ditentukan. Kualitas teknis dan arsitektur juga penting. User Experience dan Interest Design. Nah, ini juga penting, tapi dia di bagian bawah.
+13:56:01 Maksudnya user Experience itu pada desain interface nya. Ya.
+13:56:07 Terus dampak bisnis dan skalabilitas juga penting. Dan yang terakhir adalah dokumentasi demo dan presentasi. Pastikan apa yang kalian jelaskan. Itu.
+13:56:17 Lugas tidak membingungkan. Karena jika website kalian bagus, tapi penjelasan kalian kurang. Wah, itu.
+13:56:25 Bisa menjadi perhitungan juga, Pak. Di pada dewan juri nantinya.
+13:56:31 Strategi. Jangan hanya mengejar tampilan. Tunjukkan masalah nyata. Pastikan fitur utama stabil. Buat karya yang mudah dinilai, oke?
+13:56:41 Ini ceklis sebelum di submit. Ya, tentukan website nya gimana? Sudah baguskah Sudah lancar kah? Gimana proposalnya? Gimana demonya Gimana Surat pernyataan keaslian karya. Jangan lupa dengan Materai. Pastikan itu semua orisinal. Karena.
+13:56:58 Sebagai programmer atau developer, kita semua pasti mengedepankan dan.
+13:57:03 Aware terhadap hukum, lisensi dan hak cipta teman, teman.
+13:57:08 Nama file proposal sesuai format. Jangan lupa, karena ini penting.
+13:57:12 Terus catat tanggalnya. Ini ya, kalian.
+13:57:17 Seperti yang pernah kalian baca di Gate Book.
+13:57:19 Tidak perlu saya jelaskan lagi.
+13:57:21 Danau Orisinalitas dan tanggung jawab. Tanggung jawab karya itu juga penting.
+13:57:27 Dan sampai di sini, penjelasan saya sebagai kor telah selesai.
+13:57:33 Selanjutnya akan saya.
+13:57:36 Berikan kesempatannya kepada Mbak. Bening sebagai Mc.
+13:57:48 Baik, terima kasih atas pemaparannya, Kak Husama. Dan sebelum memasuk ke sesi selanjutnya, diharapkan kepada seluruh peserta agar tetap mengikuti agenda ini dengan baik dan kondusif. Langsung saja, kita buka sesi tanya. Jawab terkhusus untuk kategori web Development bagi teman teman peserta web Development yang masih memiliki.
+13:58:06 Pertanyaan terkait teknis. Silahkan menggunakan Fiturise Hand untuk bertanya langsung atau dapat langsung drop pertanyaan di kolom chat Zoom, dan Agar kondusif juga untuk pertanyaan akan dipilih. Dan kami akan menampung tiga pertanyaan terlebih dahulu.
+13:58:33 Baik, Kak. Langsung saja kepada Kak Jowan. Orlando purba bisa Open Camp dan Open Mix. Serta sebutkan namanya sebelum bertanya. Setelah.
+13:59:00 Diharapkan untuk Kak Joan Orlando Purba. Bisa langsung saja. Open Cam dan Open Mic.
+13:59:17 Jika kami berikan waktu sebentar, Jika tidak dilanjut, Oke.
+13:59:21 Sudah bisa, Kak. Kakak mau nanya?
+13:59:49 Kajuan mungkin terkendala terkait sinyalnya. Boleh disampaikan di kolom chat Zoom. Kak.
+14:00:21 Baik, mungkin bisa langsung. Saya dijab oleh kak Husamanya terkait pertanyaan kajuan Orlando purba. Mau nanya? Proposalnya tuh. Boleh.
+14:00:31 Proposal kreatif atau format formal. Kak.
+14:00:44 Oke, baik, saya izin menjawab Ya, untuk proposalnya. Itu tidak ada batasan. Apakah teman teman formal atau kreatif itu bebas?
+14:00:53 Tidak ada, tidak ada aturan untuk Hal tersebut saja. Yang penting.
+14:00:59 Untuk yang terstruktur yang struktur. Strukturnya tadi sudah tercantum di Guide Book dan saya sebutkan tadi.
+14:01:07 Itu pastikan harus diikuti seperti marginnya. Gimana font nya Gimana terus Line High nya? Gimana itu tetap diperhatikan, Oke.
+14:01:24 Oke, apakah terjawab? Kak Johan.
+14:01:28 Baik, selanjutnya saya akan lanjut ke pertanyaan selanjutnya Kepada.
+14:01:34 Api Sate Madura diharapkan untuk Open Cam dan Open Mic. Kak, sebelum bertanya.
+14:01:42 Saya izin bertanya, Kak, Untuk pengguna penggunaan Ai yang digunakan untuk membantu penulisan koding atau pembuatan aset itu diperbolehkan. Tidak, Kak.
+14:01:56 Baik, pertanya pertanyaan yang sangat bagus untuk Tim Api Sate Madura. Nah, di sini untuk penggunaan air, tidak ada salahnya. Ya, karena.
+14:02:07 Di zaman sekarang memang penggunaan air. Itu sangat masif dan tidak ada salahnya. Yang penting, teman teman yang di mana Kalian membuat sesuatu? Entah, coding An. Gambar itu bisa dipertanggungjawabkan Dan mohon sopan santunnya dalam gambar.
+14:02:24 Atau struktur kode itu yang penting, jelas. Dan bisa kalian pahami sendiri gitu? Ya? Jadi, tidak ada salahnya Teman, teman Untuk pecut pecut. Hi, tidak masalah. Yang penting. Kalian paham apa yang kalian buat, Oke, Karena.
+14:02:38 Apalagi waktu yang sangat singkat dalam sebulan. Ya, kurang lebih.
+14:02:42 Membuat aplikasi yang sangat, sangat powerful. Terus benar Baik.
+14:02:48 Kadang kita juga butuh pecut Ea. Tidak ada salahnya. Yang penting Batasi hemat air.
+14:02:54 Ya, oke.
+14:02:54 Oke, oke, baik, Kak, terima kasih. Untuk jawabannya. Ya.
+14:02:57 Sama sama. Pertanyaan yang bagus, Sering lulus.
+14:03:00 Kepiting purbaya. Let s go peting purba.
+14:03:07 Oke, selanjutnya saya akan.
+14:03:13 Saya akan pilih melalui kolom chat Zoom. Ada yang bertanya, Kak Usama, apakah untuk aset desain? Seperti logo, ikon dan lain lain boleh menggunakan Ai atau pihak ketiga.
+14:03:25 Oke, untuk itu bebas bebas. Tidak ada larangan. Ya?
+14:03:30 Karena apalagi. Ai, logo, Ai, itu tidak ada hak ciptanya. Ya.
+14:03:35 Jadi bebas. Tidak ada, tidak salahnya. Oke.
+14:03:38 Jadi pecut saja Ai kalian, oke? Meskipun.
+14:03:42 Bagi pengguna Facebook mungkin tidak suka dengan perkataan saya ini. Oke, tapi Fedcoding.
+14:03:48 Itu sangat beautiful, teman teman. Jadi tidak masalah. Yang penting kalian paham, Oke.
+14:03:54 Ya, Jadi, Lombok Fredcoding. Oke, tidak masalah yang penting. Apa yang kalian buat itu dipertanggungjawabkan.
+14:03:59 Bahkan kalau kalian mau coding sendiri, tidak masalah. Tidak masalah, ya? Kalau kalian mau coding sendiri, yang penting.
+14:04:05 Membedakan adalah dokumentasinya.
+14:04:08 Five. Koter belum tentu bisa membuat dokumentasinya. Penjelasannya itu.
+14:04:13 Jelas dan lugas. Oke.
+14:04:16 Tapi bagi orang yang paham dengan.
+14:04:19 Alurnya yang mereka buat, kode yang mereka bangun. Meskipun Five Coding, mereka bakal membuat dokumentasinya dengan sangat jelas dan sangat, Sangat bagus, tentunya. Dan ini menjadi perhatian perhatian dewan juri ke depannya. Oke?
+14:04:38 Baik, karena masih ada waktu untuk bertanya. Boleh sa langsung.
+14:04:45 Saja yang ingin bertanya. Bisa Rice Hand.
+14:04:48 Untuk Kapi Sate Madura. Apakah ada yang ingin ditanyakan kembali?
+14:04:52 Ada kak untuk database itu nanti ada. Sudah ada data yang tersedia atau belum, Kak? Ya, Jadi ketika nanti live.
+14:05:02 Live. Ininya live website nya. Itu sudah disediakan data. Atau memang dikosongkan dulu gitu? Untuk misalnya data Totoda atau data kategori dan lain lain sebagainya. Gitu.
+14:05:13 Oke, pertanyaan yang bagus. Diisi aja langsung dengan Seat atau data. Dami bebas.
+14:05:19 Oke, jadi buat website tersebut yang sudah kalian bangun. Itu seperti website yang sudah jalan. Teman teman.
+14:05:25 Baik.
+14:05:25 Oke, gitu. Jadi dewan juri itu sedang melihat gitu. Oke, jalannya kayak gini nih. Website nya Sudah ada gambaran gitu, Jadi sudah ada kelihatan lah. Bagaimana ketika sistem itu berjalan? Nantinya?
+14:05:36 Gitu. Oke.
+14:05:38 Oke, baik, terima kasih, Kak.
+14:05:38 Jelas ya, sama sama.
+14:05:46 Boleh langsung lanjut ke pertanyaan selanjutnya. Untuk apa yang sudah Rice Hand.
+14:05:56 Ini.
+14:05:58 Saya ingin tanya itu dewan juri itu. Coba.
+14:06:01 Website kita. Nah, kalau misalkan website kita itu nanti ada penggantian. Di mana roll admin? Apakah sendiri? Ini nanti dikasih roll.
+14:06:10 Proses tersebut. Atau teori itu hanya sebagai user dari website kami. Begitu.
+14:06:20 Saya izin jawab, Mbak. Bening, ya.
+14:06:23 Oke.
+14:06:24 Boleh saya ulang pertanyaan tadi, Mas? Tadi? Kalau nggak salah, saya dengar. Apakah dewan juri ketika mendapati error itu harus gimana?
+14:06:34 Maksud saya, ini gojeknya. Itu kan? Misalkan, nanti ada role admin.
+14:06:39 Iya.
+14:06:40 Nah, apakah dewan duri nanti itu di roll tersebut? Atau tunjuk itu nanti? Hanya sebagai Kak.
+14:06:53 Baik.
+14:06:48 Oke, nanti dewan juri itu mendapat semua akses roll. Oke, otentikasi dan otorisasi. Semua Dapat itu semua untuk mencobanya.
+14:06:58 Yang penting, ketika teman, teman, misalnya di admin, ada password email, nomor telepon itu. Nanti pastikan cantumkan yang benar di Proposal kalian atau di Redmi? Kalian.
+14:07:09 Atau di proposol deh. Supaya aman.
+14:07:12 Untuk dewan juri itu. Misal, aku mau coba halaman admin nih.
+14:07:16 E mail nya. Ini email nya. Email. Terserah. Terus.
+14:07:21 Password nya. Ini gitu.
+14:07:22 Oke.
+14:07:23 Oke, baik, berarti untuk otentikasinya. Data otentifikasinya dicantumkannya di proposalnya.
+14:07:31 Gitu.
+14:07:32 Oke.
+14:07:34 Sama sama.
+14:07:35 Waalaikumsalam.
+14:07:38 Oke, kalau sama, mungkin boleh lanjut ke pertanyaan yang ada di kolom komentar Bahwa untuk demo videonya itu maksimal lima menit.
+14:07:45 Apakah berfokus pada demo website nya? Atau harus ada presentasi.
+14:07:50 Oke.
+14:07:53 Kalau saran dari saya, ya.
+14:07:56 Sebagai peserta itu, sebaiknya kalian seperti presentasi tipis tipis pada alur utama. Oke, pastikan alur utama itu kalian jelaskan. Karena Mungkin dalam waktu lima menit. Saya tahu, mungkin tidak bisa semuanya dijelaskan. Ya.
+14:08:12 Akan tetapi, jelaskan secara presentasi.
+14:08:16 Waste ini bangun. Untuk apa solusinya? Apa dan alurnya Gimana kalian buat sampai di sini jelas? Nah, nanti.
+14:08:24 Pastinya, dengan waktu yang lima menit dan kurang itu, Dewan juri bakal mengeksplor sendiri website website yang telah teman teman bangun. Itu sampai di sini. Jelas.
+14:08:38 Oke, boleh lanjutkan sama Kak Fadia yang sudah Rice Hand mungkin bisa on cam dan on mix.
+14:08:44 Maaf, Kak, Untuk Ponken. Tidak bisa paling online saja.
+14:08:50 Baik, boleh dilanjutkan ke pertanyaannya, Pak.
+14:08:53 Oke, untuk pertanyaan saya. Ini mengenai temanya sih, Kak.
+14:08:59 Webnya itu.
+14:09:01 Saya butuh penjelasan aja sih webnya itu. Apakah harus berfokus atau wajib pada operasional gitu, atau boleh web yang secara tidak langsung membantu?
+14:09:12 Operasional si Umkm, tetapi lebih membantu untuk memperluas Opportunity dari si Umkm. Ini tuh, Kak.
+14:09:22 Oke, ini pertanyaan bagus. Pertanyaan daging banget nih. Bebas, bebas, Mas. Yang penting bagaimana masnya itu bisa membantu mendorong bisnis Digital atau Umkm, yang Masnya mau bantu? Itu untuk bisa lebih.
+14:09:36 Terbantu lebih luas. Jangkauannya. Opportunity nya bebas.
+14:09:49 Oke.
+14:09:39 Jadi tidak mesti seperti yang dicontohkan. Yang tadi saya sebutkan tadi bebas. Oke, yang penting, Skope dalam bisnis digital atau Umkm yang tadi saya sebutkan. Oke? Dan tertulis di Guide Box.
+14:09:50 Oke, baik, terima kasih, Kak.
+14:09:52 Oke, siap sama sama.
+14:09:57 Lanjut lagi kepada pertanyaan yang ada di Kolom Chan Zoom. Pak Soma.
+14:10:01 Apakah penggunaan database autentikasi dan integrasi back end menjadi aspek penting dalam menilai pematangan? Sebuah produk web development.
+14:10:11 Tentu, tentu.
+14:10:13 Jadi, pikirkan dan bangun secara matang dan maksimal dan pastikan ini jangan ada kesalahan karena ada kesalahan di Front and.
+14:10:20 Itu masih bisa dimaafkan ketika memang ada masalah di back End dan.
+14:10:25 Interaksi antara database dan sistem. Oke.
+14:10:28 Jadi ini adalah aspek yang sangat, sangat, penting bagi saya.
+14:10:31 Karena bagi saya pun, selama negara website.
+14:10:36 Di beberapa.
+14:10:38 Perusahaan perusahaan itu biasanya.
+14:10:42 Back end Itu sangat sangat penting ketika.
+14:10:46 Ingin mengejar waktu bisnis ketimbang Front and Front and itu bisa di update kapan pun. Tapi back end itu menjadi fokus utama gitu, oke?
+14:11:07 Selanjutnya mungkin ada pertanyaan di kolom Chat Zoom lagi. Kak Usama, ada yang bertanya bahwa ini kan temanya? Umkm, Kak. Tapi kalau bikin bukan Umkm. Namun, isinya manajemen gudang atau logistik untuk mendukung Company gitu.
+14:11:21 Gimana lebih Stable dari Umkm? Bisa kah, Kak.
+14:11:31 Oke, dari pihak Jtnc tidak mempersalahkan itu. Jadi tidak apa apa.
+14:11:37 Jadi tidak hanya Umkm, Ya, tadi kan? Saya sebutkan Umkm di akhiratnya. Tapi yang jelas bisnis bisnis dan Umkm.
+14:11:46 Ya.
+14:11:48 Sama sama Johan. Orlando. Sehat selalu, Ya, jadi fokusnya tidak hanya di Umkm, tapi di.
+14:11:56 Bisnis lingkup, apapun itu. Oke.
+14:12:03 Baik, karena masih ada waktunya lagi. Ada yang bertanya di kategori Web Development, kan? Bisa membuat fitur Ai. Apakah di Web Development. Ada batasan pembuatan fitur Ai dengan kategori lomba Ai Agent.
+14:12:25 Oke, pertanyaan bagus. Dari siapa tadi.
+14:12:30 Oke, pertanyaan sebenarnya itu nanti dijelaskan. Sebenarnya, di bagian saya kebetulan bagian eko area urgent nya. Dan itu harusnya kalau Kakak ingin mengembangkan Ai yang berhubungan dengan Aia. Agent nantinya itu masuk di lombak A. Agent.
+14:12:45 Seperti itu, Hartain. Tapi karena Kakak memang pengen menambahkan suatu fitur cerdas yang dikatakan oleh Mas Usama. Tadi itu bisa dimasukkan ke arah sana.
+14:12:55 Tadi tidak menjadi apa? Poin mungkin tidak menjadi poin utama dari yang penting di Web Development nya. Apa inovasi yang Teman, teman, bawa itu. Apa itu sebenarnya seperti itu?
+14:13:13 Baik, Kak, mungkin ini merupakan satu pertanyaan terakhir sebelum memasuki agenda. Selanjutnya. Izin bertanya jika back End dan front and dibuat terpisah. Apakah harus dalam satu repositori yang sama atau boleh terpisah?
+14:13:28 Kalau depositori itu disatukan aja, foldernya aja dipisah, ya?
+14:13:33 Jadi supaya tidak membingungkan, nantinya dewan juri harus lompat lompat ke depositori lain, oke?
+14:13:41 Gitu. Jadi foldernya diatur dirapikan sebagaimana mestinya bagi teman teman.
+14:13:46 Yang penting repositoring nya sama dan di satu lingkup yang sama gitu. Jadi tidak jadi tidak membingungkan dewan juri nantinya, oke?
+14:13:55 Mungkin ada satu pertanyaan nih. Saya pilih sendiri, Mbak Bening. Atau boleh.
+14:14:00 Boleh Kak.
+14:14:01 Oke, tadi ada yang nanya. Saya baca bahwa res secara resmi lomba ini dimulai tanggal sembilan belas Oktober. Ya, sampai sepuluh November, Ya.
+14:14:11 Nah, sedangkan beberapa di antara kami sudah ada yang buat, apakah tidak dipermasalahkan? Tentu tidak dipermasalahkan. Iya.
+14:14:17 Di A. A Tamardin.
+14:14:19 Tidak dipermasalahkan, teman. Teman. Untuk yang sudah membuat sebelum tanggal sembilan belas ini. Oke, yang penting, yang penting secara history.
+14:14:28 Secara history digit kalian. Itu jelas kapan dibuatnya.
+14:14:32 Oke, nah, terus bagaimana Kak yang baru? Daftar.
+14:14:38 Di beberapa hari ini, ketinggalan dong. Belum tentu ketinggalan teman teman. Karena.
+14:14:43 Dalam jangka waktu satu bulan ini, ada tim yang mungkin masih malas, Malasan atau buatnya baru dikit dan.
+14:14:51 Mungkin nanti ide galian yang lebih bagus dan lebih kreatif daripada tim tim. Yang Mulia duluan gitu, jadi tidak, tidak masalah teman, teman. Apalagi ini kan.
+14:15:00 Pujet A. Ya, Beda dengan dulu yang di mana. Kalau ada error, harus cari sendiri. Baca di Stake Over Flow sendiri. Kalau enggak ada di Stake Overflow, harus nanya di komunitas. Entah dislek Discord Facebook, Sedangkan sekarang kan harus.
+14:15:14 Anti Gravity Codex, tolong saya. Nah, jadi tidak masalah. Meskipun kalau saya pun larang kalian teman teman semua Five Coding. Saya yakin.
+14:15:24 Ada nakal, nakal, Nggak pasti, teman. Teman. Semua untuk adalah Five Coding aja. Jadi hal yang seperti itu di luar kendali saya dan saya sebagai panitia hanya bisa memberikan.
+14:15:35 Arahan yang penting, Teman, teman, Dokumentasi yang jelas lugas tidak membingungkan. Dewan juri nanti.
+14:15:40 Oke.
+14:15:42 Gitu. Saya ceritakan kembali ke Mbak. Bening.
+14:15:46 Baik, terima kasih, Kak Salma. Mungkin selanjutnya Jika ada pertanyaan, langsung, boleh ditanyakan di Wa Grup saja.
+14:15:51 Pertanyaan tadi merupakan pertanyaan terakhir untuk Web Development. Karena kita akan beralih kepada agenda selanjutnya.
+14:15:59 Langsung saja kita lanjutkan ke agenda berikutnya. Yaitu pembedahan spesifikasi teknis untuk kategori Ai Agent dan sesi ini akan melupas Tuntas mengenai Use Case Ai pada Industri Enterprise. Format pengumpulan antar muka sistem, serta batas batas penggunaan model pihak ketiga.
+14:16:15 Kepada pemateri Ai. Agent Saudara Khoirudin Efendi. Waktu dan layar kami. Silakan.
+14:16:24 Pagi. Selamat siang, semuanya. Para peserta Gt and C. Dua ribu, dua, enam.
+14:16:30 Sebentar, saya siapkan dulu Slide.
+14:16:47 Udah, udah masuk. Di.
+14:16:49 Oke.
+14:17:05 Udah, totalnya.
+14:17:10 Oke, selamat siang. Kita kembali ke produk.
+14:17:15 A Agent Development. Kita di kategori ini dan saya. Sebelumnya, saya ucapkan terima kasih banyak kepada seluruh jajaran panitia di Tni, C, Dua ribu, dua puluh enam. Dan saya ucapkan juga terima kasih kepada seluruh peserta di Tni. C.
+14:17:28 Yang telah berkontribusi dan mengikuti perlombaan yang kami adakan.
+14:17:35 Di tahun ini. Nah, di kategori ini, kita coba berdiskusi terkait tekni Secara teknikal, yang nanti pengembangannya seperti apa?
+14:17:43 Yang bakal kalian menjadi bahan pengembangan.
+14:17:47 Nah, di di teknikal ini, temanya hampir mirip dengan yang dijelaskan oleh Mas Usama tadi berkaitan dengan.
+14:17:56 Enterprise atau kebutuhan bisnis secara operasional seperti apa.
+14:18:11 Nah, harapannya peserta nanti bisa mengembangkan. Yang bisa melakukan. Bukan cuma membalas suatu chat boat, semacam dari Ap api, Misalnya Lmm dari Chat Gbt. Kemudian langsung dilempar ke Back and.
+14:18:26 Kemudian Bkn menampilkan ke found N Enggak kayak seperti itu. Jadi, agen yang diharapkan oleh Gdn Ic. Dua ribu delapan memberikan tantangan.
+14:18:35 Berupa.
+14:18:36 Kemenangan bisa membangun suatu work flow Ai yang setiap agen memiliki teks atau tugas tugas tertentu. Misal dari mulai melakukan Planning. Kemudian bagaimana menggunakan Tools? Menghubungkan Tools Tools? Apa yang bakal digunakan oleh agen tersebut?
+14:18:51 Nah, harapannya bisa digunakan untuk operasional perusahaan. Tersebut. Misal kita lanjut di bagian ini.
+14:19:01 Nah, contohnya.
+14:19:03 Itu seperti customer service asisten. Jadi, di mana si Ea? Ini membantu pihak perusahaan untuk.
+14:19:12 Melakukan.
+14:19:13 Servis kepada customer nya dimulai. Misal, customer Nge chat di laman apa? Wa segala macamnya nanti di ea tersebut bisa melakukan analisa supaya terjadi suatu closing gitu, Misalnya, contohnya. Jadi bisa bikin invoice laporan sehingga membantu.
+14:19:31 Secara otonom untuk perusahaan. Bagaimana.
+14:19:36 Hal hal yang biasanya dikerjakan oleh manusia bisa diotomalisasikan oleh Ai seperti itu. Jadi, ini lanjutan dari web Death. Sebenarnya, Yang saat ini memang lagi booming lagi. Benar benar ramai banget.
+14:19:50 Karena.
+14:19:52 Juga arahnya ke arah agen juga. Makanya dari ini, Gti Mec.
+14:19:59 Menggagas perlombaan ini sebagai wadah untuk teman, Teman.
+14:20:03 Bagaimana teman teman bisa berkembang bersama kami melalui kompetisi ini?
+14:20:10 Nah, untuk Skope. Atau untuk waktu yang ditargetkan, itu sekitar.
+14:20:15 Sama seperti Web Deft. Tanggal sepuluh. Harapannya teman teman sudah bisa men submit.
+14:20:22 Menyelesaikan project yang sudah di dirancang. Sepuluh november jam dua puluh tiga, lima puluh sembilan.
+14:20:32 Nah, untuk aturannya.
+14:20:35 Ini saya ambil dari Good Box. Ya, kurang lebih dalam. Tim tersebut bisa mandiri atau tiga orang bebas lintas industri. Kemudian, untuk satu karya per tim itu, harapannya bisa menghasilkan satu karya.
+14:20:47 Kemudian, Untuk tema wajib sesuai dengan skopnya, yaitu untuk operasional bisnis yang lanjutan dari Mas Susama tadi.
+14:20:55 Kemudian untuk karya ke depan, teman teman bisa original. Artinya orisinal nanti. Walaupun teman teman nanti pakai Library atau.
+14:21:05 Berupa frame box. Misal kayak teman teman menggunakan Hermes gitu, kan? Nanti kita perlu jelaskan di teknisnya supaya temennya punya batasan. Bagaimana karya karya tersebut? Tetap original. Kemudian di bagian komposisi tim.
+14:21:18 Kemarin banyak yang merubah harapannya. Panitia sedikit lebih. Tegaskan supaya tidak terjadi konflik. Ke depannya.
+14:21:24 Untuk output, harusnya kita menghindari keluaran Sara. Pornografi seperti tadi harusnya tidak muncul. Ya.
+14:21:33 Kemudian kekerasan dan provokasi.
+14:21:36 Hindari itu, Oke.
+14:21:39 Nah, kita masuk di bagian yang paling serius, yaitu terkait Technical Recruitment. Kebutuhan teknik. Nah, untuk teknologinya, teman teman bebas Menggunakan teknologi apa sebenarnya untuk back and our found and nya nanti? Untuk agennya juga bebas. Kita belum membebaskan. Nah.
+14:21:54 Kita bahas dulu dari layar yang paling utama. Layar otaknya dulu, yaitu gunakan teman teman. Bisa gunakan elemen api yang Sudah ter yang sudah ada. Misal kayak Ggbt atau Gemini atau dari model model yang tersedia.
+14:22:09 Kalau maupun menggunakan model teman, teman sendiri. Model yang teman teman mau latih sendiri, tidak masalah yang jelas apa yang Kami harapkan kita enggak mempermasalahkan terkait modal yang temen Gunakan.
+14:22:20 Kemudian terkait Paint Work juga. Kami membebaskan teman, teman. Mau pakai Lancen atau.
+14:22:27 Non kode, misalnya. Pakai N Delapan N.
+14:22:30 Atau teman teman pakai yang sudah ter develop dengan baik. Boleh seperti Hermes atau Open Law.
+14:22:36 Tau. Tapi tetap kita untuk layarnya. Itu berada di.
+14:22:41 Paling bawah.
+14:22:42 Sehingga nanti lahirnya harapannya. Enggak. Cuma kita meng grapping suatu chat. Boat itu misal dari api Chgbt gitu. Cuma cuma Mengambil responnya saja tanpa mengolah hal tersebut gitu. Harapannya di fitur lanjutan wajib ini.
+14:22:57 Teman teman bisa melakukan A. Agent nya bisa melakukan suatu planning atau merencanakan suatu langkah berikutnya.
+14:23:05 Kemudian mengambil suatu integrasi. Apitu.
+14:23:08 Ataupun data yang di database ataupun.
+14:23:12 Lebih bagus lagi ditambahkan Rhag untuk mengambil satu dokumen kayak gitu. Dan harapannya.
+14:23:18 Dan diwajibkan juga untuk diploment secara public. Jadi agen ini harus memiliki sedikit antar muka gitu, Bu. Bukan sedikit. Harus ada antar mukanya.
+14:23:28 Supaya si Dewan Juri atau para para dewan juri bisa menilai dengan mudah kelayakan sistem yang dibangun oleh teman teman.
+14:23:38 Nah, yang di bagian dilarang ini, teman. Teman perlu perhatikan banget. Karena.
+14:23:43 Ketika kita pingin membangun suatu agen, itu bukan sekedar chatboard biasa yang mengambil api dari provider yang tersedia. Kemudian ditampilkan. Responnya tidak seperti itu. Jadi kita tetap perlu melakukan.
+14:24:00 Pengolahan lagi diselesaikan dengan kebutuhan bisnisnya seperti itu.
+14:24:07 Nah, nanti output utama kurang lebih sama seperti disampaikan oleh usama terkait.
+14:24:14 Bagaimana antar mukanya? Repo Gibabnya. Reponya nanti untuk Aijen.
+14:24:18 Bisa dipisah. Enggak apa? Apa karena ada Layer a Agent nya sendiri. Kemudian ada fampa juga sendiri. Nanti boleh dipisah Untuk antara Ai Agent nya nanti.
+14:24:28 Itu Work flow. Ya, untuk Ipo. Ya, kemudian untuk proposal itu.
+14:24:33 Sepertinya saya lihat mirip banget yang disampaikan oleh Mas Hutama tadi. Atau dibaca oleh Goodbook?
+14:24:39 Untuk video demo juga sama. Kita membatasi sampai lima menit. Harapannya, teman, teman.
+14:24:45 Bisa menjelaskan demo tersebut dengan baik. Seperti pitching deck. Jatuhnya nanti.
+14:24:50 Nah, ini untuk proses Ya, Kita memberikan apa? Saran kepada teman. Teman dimulai dari problem. Tentu, ketika kita membangun suatu Sistem atau agen. Ini masalah utamanya. Apa sih yang bakal kita selesaikan? Itu penting, teman. Supaya.
+14:25:05 Produk yang bakal kita Develop itu benar benar. Memang dipakai untuk menyelesaikan suatu masalah sehingga ini bisa terjual.
+14:25:14 Dan bonusnya untuk teman, teman, semuanya. Kemudian Garda Tech. Karena ini berhubungan dengan Garda Tech nanti. Karya teman, teman yang Memang layak. Benar benar dibutuhkan. Industri.
+14:25:24 Kami bisa menjebati hal tersebut.
+14:25:27 Seperti itu.
+14:25:30 Kemudian terkait proposal.
+14:25:33 Nanti untuk di Share aja. Karena tinggal dibaca.
+14:25:37 Video demo juga sama.
+14:25:41 Terkait submit ini.
+14:25:43 Harapannya tanggal sepuluh teman. Teman sudah melakukan submit. Dan jangan sampai.
+14:25:50 Waktu terlewat gitu, kan? Nah, untuk yang perlu kalian serahkan. Pertama, nama tim yang tertera di golfom nantinya. Kemudian Link.
+14:25:58 Web. Agennya bisa persisnya online karena bisa. Mungkin web itu bisa.
+14:26:03 Kemudian untuk keponya, jangan lupa. Kemudian proposal Pdf dengan template.
+14:26:08 Penamaan Gt Inence. Dua ribu dua, enam. Unders Underscore. Agen Underscore. Nama tim Pdf.
+14:26:14 Jangan lupa surat pernyataan. Dilengkapi dengan.
+14:26:19 Materai.
+14:26:21 Nah, ini penting terkait penilaian bobot mana saja yang nanti menjadi bahan pertimbangan juri yang pertama. Kemampuan dari agen sendiri. Jadi, teman teman harus bisa membedakan mana yang disebut dengan Chat Boat mana yang disebut dengan A? Agent.
+14:26:36 Karena ini menjadi poin utama, Jangan, jangan yang kalian kembangkan atau teman Teman, Kembangkan itu berupa checkboard doang. Kemudian penilaian Berikutnya terkait penalaran perencanaan dan keputusan. Jadi, agen di sini, harapannya bisa.
+14:26:51 Memberikan keputusan terkait dari perencanaan yang sudah dilakukan seperti itu. Kemudian, untuk alat dan eksekusi, Tindakan ini besarnya sekitar lima Belas persen dari penggunaan alat. Kenapa teman teman ini dijelaskan sama Aksi tekuteksinya nanti dijelaskan di dalam proposal teman Tem.
+14:27:06 Jadi, supaya tim juri nanti memudahkan bagaimana? Kenapa alasan teman teman pakai teknis ini? Apakah karena lebih cepat atau lebih efisien gitu, kan?
+14:27:17 Kemudian terkait inovasi dan kreativitas. Inovasi Apa sih yang kalian berikan?
+14:27:22 Sehingga menjawab suatu permasalahan. Suatu bisnis yang.
+14:27:25 Berkaitan juga dengan dampak dan masalah nilai bisnisnya. Kemudian, untuk dan demonstrasi juga kalian perhatikan juga.
+14:27:33 Sehingga kalian mendapatkan poin yang cukup bagus. Seratus persen Harapannya gitu.
+14:27:41 Kita masuk di babak pengisian untuk bawa siang kita. Nilai dari proposal karya akhir, nilai interface. Kemudian video demokrasi.
+14:27:48 Kemudian ketika teman teman lolos, nantinya akan diambil lima besar. Ya, lima top finalis yang nanti akan pitching deck bersama juri untuk menjelaskan terkait.
+14:27:59 Air Asia yang dibangun pada tanggal empat belas November. Jadi, langsung teman teman. Nanti presentasi di depan juri. Seperti halnya lomba lomba yang lain.
+14:28:08 Nah, ini ceklis yang penting, teman. Teman, siapkan, kan?
+14:28:12 Pertama terkait karya sesuai subtema Harapannya gitu industri. Kemudian fitur lanjutan.
+14:28:20 Kemudian proposal video sesuai format Link, lef, demo, atau publik. Kemudian surat keasihan. Sama seperti tadi.
+14:28:28 Jangan lupa untuk Link. Live Demo tidak dapat diakses. Ini penting supaya teman teman tidak kehilangan poin di situ. Repo juga. Jangan sampai privat.
+14:28:39 Ketiganya. Jangan cuma chat Gbt Weaper atau cuma mengambil api doang? Tidak tanpa pengolahan apapun.
+14:28:45 Yang keempat terkait.
+14:28:47 Proposal tanpa aksi satu metrik. Jangan sampai arsitekturnya teman. Teman tidak sangkutkan. Karena di dalam poin penilaian di bagian nomor Empat ini. Terdapat poin terkait arsitekturnya.
+14:29:04 Yang terakhir. Pengumpulan melewati deadline. Jangan sampai teman teman.
+14:29:09 Oke, ternyata kita sudah di di ujung question kita untuk membuka kita. Kembalikan Ke kak bening selaku moderatornya.
+14:29:22 Baik, terima kasih banyak atas pemaparannya. Sama seperti agenda sebelumnya. Kami akan membuka sesi qna Khusus untuk teman teman peserta Kategori Ai Agent. Dan silakan dapat menggunakan Fitur Ryzen. Atau gunakan kolom komentar untuk bertanya.
+14:29:36 Mengenai kendala teknis atau hal yang belum dibuang.
+14:29:46 Boleh kode ibu Rais.
+14:29:48 Bisa untuk segera. Open Meat dan Open Camp.
+14:29:53 Izin izin tidak bisa Open Camp untuk kali ini. Maaf.
+14:29:58 Perkenalkan aku salah satu tim dari doa Ibu di bidang agen. Nah, aku mau nanya. Tadi, kan dijelaskan bahwa.
+14:30:06 Model itu diambil dari Fpi langsung. Gimana jika kita menggunakan router dan menggunakan combo provider nya? Lalu kita ambil api Dari router yang sudah kami deploy di Vps tersebut.
+14:30:20 Terima kasih.
+14:30:22 Oke, pertanyaan dari doa. Ibu izin menjawab kak bening langsung. Nah, untuk untuk modelnya atau provider nya. Teman Teman punya Kebebasan karena provider nya itu, kan? Sekarang untuk provider. Banyak banget, teman. Teman.
+14:30:34 Hingga teman teman bisa menggunakan provider. Provider yang gratis. Karena itu mungkin menjadi bahan kita. Ya, karena.
+14:30:40 Karena kita tidak membatasi terkait model. Apa yang teman mau pakai? Provider Apa yang mau pakai? Itu keputusan teman, teman. Semuanya seperti itu.
+14:30:53 Baik, Kakak tanggung jawabkan.
+14:30:52 Baik, Kak, Terima kasih atas jawabannya.
+14:30:56 Oke, baik, terima kasih untuk yang bertanya. Bisa langsung rise Hand untuk sementara ini, saya akan pilihkan melalui kolom chat Zoom nya. Kak Udin, izin bertanya untuk sistem Ai agent ini, kan? Saat ini masih berjalan di N lokal. Kira Kira untuk mekanisme pengujian oleh dewan juri nanti. Mekanismenya seperti apa? Dan apakah dari tim Kami perlu deploy ke Fps atau kru terlebih dahulu agar juri bisa akses Langsung atau pengujiannya cukup via demo. Share Screen.
+14:31:23 Atau laptop? Peserta.
+14:31:27 Tadi harapannya izin menjawab Kakak Mending langsung Harapannya wajib untuk di Deplo supaya memudahkan. Benar, Saya tahu sama Mas Susama Tadi kita harapannya apa? Untuk memudahkan dewan juri Untuk melakukan penilaian secara cepat? Kalau Mungkin di lokal secara demo, mungkin.
+14:31:44 Kurang maksimal karena Parajuri perlu melakukan eksplorasi sendiri. Supaya benar benar, karya teman teman bisa dirasakan. Dampaknya nantinya seperti itu. Jadi, Nanti teman teman tinggal alihkan ke Vps atau saran Saya Mungkin teman teman karena waktunya satu bulan, Ya.
+14:32:00 Kalau memang bisa pakai Vps, mungkin dari sumu Port yang lebih murah lagi. Juga bisa. Yang sesuai kebutuhan aja. Teman, Teman.
+14:32:16 Berlanjut ke protein sebelum selanjutnya. Untuk surat keaslian, Apakah ada format yang perlu dicontoh?
+14:32:30 Format.
+14:32:30 Boleh langsung dijawab. Kak Udin.
+14:32:32 Oke, untuk formatnya.
+14:32:35 Ada di Google. Trav, teman. Teman. Mungkin dari tim.
+14:32:39 Acara sudah disiapkan terkait format. Oke, ternyata sudah disiapkan. Teman teman tinggal diakses di Google Drive nantinya. Ya, diinfokan lagi Di grup atau di Follow Up. Jika panitianya lupa.
+14:32:58 Baik, terima kasih, Kak Udin. Lanjut ke pertanyaan selanjutnya.
+14:33:01 Nanti pada agen perlu deployment publik yang besar berupa repository gitu, Pak. Atau World Vlog. Kalau pakai, kan bisa share Work Form nya. Jika menggunakan hermas nantinya, apa yang perlu diputusnya ke di.
+14:33:18 Bisa diulangi lagi. Yang pertanyaan mana, Kak?
+14:33:20 Pertanyaan di kolom Chat Zoom dari Ai. Agent Bola.
+14:33:25 Nanti kan? Ai Aginya perlu diploma publik yang bisa berupa repostory gitu atau Work Flows.
+14:33:31 Uh, uh.
+14:33:32 Dan kalau bisa, nanti bisa. Share work form nya. Jika menggunakan Hermes nantinya, apa yang perlu dipublikasikan ke dewan juri?
+14:33:41 Kalau untuk Hermes nanti, yang jelas apa arsitekturnya, teman Teman, Sampaikan di proposal supaya nanti. Karena Hermes sendiri, kan? Arsitektur Yang sudah jadi kan jadinya teman. Teman tidak mengembangin seperti Lancen segala macamnya, ya. Jadi kalau bisa.
+14:33:57 Di Publish atau link nya bisa disampaikan. Itu bagus gitu, kan? Tapi arsitekturnya nanti. Tolong disampaikan di Pdf saja seperti itu untuk yang pakai Hermes. Dan untuk yang pakai N delapan N. Harapannya bisa di Share. Karena untuk melihat bagaimana alur kinerja aia yang teman buat sebagai.
+14:34:16 Penilaian nantinya seperti itu. Yang bagi Lancen tinggal dipublis saja di Epo kidapnya karena mungkin tinggal dilihatkan Roadnot. Apa saja itu.
+14:34:25 Mungkin itu.
+14:34:26 Kan kalau di Hermes itu kan.
+14:34:30 Dia sudah jadi antara Skill ataupun list List, agent nya. Atau nanti Pem tinggal memakai aja. Sebenarnya.
+14:34:37 Seperti itu, Kak. Bening.
+14:34:40 Oke, baik, terima kasih, Kak Udin. Untuk teman. Teman yang ingin bertanya langsung. Bisa langsung saja. Rais Hand. Untuk saat ini. Saya akan membacakan pertanyaan melalui kolom chat Zoom. Ada yang bertanya bahwa untuk Aia agen mewadahinya, apakah harus website atau bagaimana Kak.
+14:34:59 Nah, untuk bagian ini, sebenarnya. Karena kita diminta untuk online, Ya.
+14:35:05 Karena lebih mudahnya kita menggunakan wadahnya sebagai website. Tapi kalau memungkinkan, teman teman mau pakai model android atau flutter? Atau Mau pakai model android itu?
+14:35:15 Tidak masalah yang nanti tinggal. Teman teman Publish saja. Aplikasinya.
+14:35:19 Yang udah dikompel, Ya, Maksudnya sudah dikompel menjadi suatu aplikasi sehingga nanti dewan juri tinggal menginstal. Atau bagaimana itu kalau Website kan? Jauh Lebih mudah, teman. Teman. Tinggal dikasih link nya aja tanpa harus kirim aplikasinya seperti itu.
+14:35:37 Baik, pertanyaan selanjutnya. Kak Audi, Apakah selama pengerjaan diperlukan adanya dokumentasi.
+14:35:45 Sama pengerjaan atau tidak. Atau hanya di akhir, seperti yang diminta, yaitu live Demo.
+14:35:52 Untuk dokumentasi nanti. Dilihat dari Repo Gita, talian yang menggunakan sehingga untuk demokrasi. Fokuskan aja di akhir saja. Enggak apa? Apa.
+14:36:01 Yang jelas menjelaskan terkait teknologinya seperti apa yang sesuai dengan Good Book nya seperti itu.
+14:36:11 Baik, terima kasih. Terima kasih, Kak Udin. Untuk selanjutnya. Karena masih ada waktu yang tersisa, Teman, teman, boleh langsung saja. Rice Hand atau drop Pertanyaan di kolom Chat. Zoom, Teman, teman.
+14:36:29 Dua Ibu mungkin.
+14:36:34 Baik untuk kado Ibu, Apakah masih ada pertanyaan yang ingin ditanyakan?
+14:37:08 Baik untuk kado Ibu. Itu mungkin tadi belum.
+14:37:15 Itu Rais Handling tadi kak.
+14:37:55 Baik, Kak Udin. Untuk pertanyaan selanjutnya, ada pertanyaan terbaru. Apakah wajib menggunakan.
+14:38:01 Arsitektur and.
+14:38:04 Atau boleh, seperti Hermes atau Nine. Router.
+14:38:11 Oke, untuk arsitekturnya. Ada tiga pilihan. Teman. Teman di sini Kita benar. Benar terbuka untuk arsitekturnya. Yang jelas Nanti teman Teman tinggal menambahkan Value. Apa yang teman selesaikan gitu? Misal dari teman. Teman. Ada yang menggunakan n delapan N boleh saja, karena mungkin itu Low Code Nanti tinggal dihubungkan saja dengan Bign yang.
+14:38:29 Kemenan untuk pakai di web gitu. Boleh saja kemudian. Kalau pakai Hermes juga sama. Karena itu cuma list. Nanti teman Teman tetep apa? Melakukan pengelolaan di situ?
+14:38:39 Kalau untuk Nine router ini. Setahu saya, dia cuma api Gateway yang membantu para developer supaya model model ini yang Dari anta provider. Bisa di manajemen dengan baik.
+14:38:52 Seperti itu.
+14:38:57 Baik, terima kasih, Kak Audi.
+14:39:01 Kita Masih ada waktu yang tersisa, teman. Teman, Jika ada pertanyaan yang ingin ditanyakan, bisa langsung saja. Ya?
+14:39:25 Baik untuk selanjutnya. Jika masih ada pertanyaan, nantinya bisa ditanyakan di Wa. Grup.
+14:39:31 Untuk selanjut untuk tadi merupakan pertanyaan terakhir dan.
+14:39:37 Dengan berakhirnya sesi qna Dari ai Agent ini maka, berakhirlah seluruh rangkaian technical Meeting Garda Tech National Innovation Competition Dua. Ribu Dua puluh enam sesi pertama. Dan sebelum kita akhiri, mari kita lakukan sesi dokumentasi sejenak kepada seluruh peserta web Development dan Air Agent Dimohon untuk menyalakan kameranya. Masing masing.
+14:40:16 Baik, dalam hitungan ketiga. Teman, teman, satu, dua, tiga.
+14:40:44 Dan terima kasih, kami ingatkan kembali untuk memperhatikan secara detail panduan di dalam Guide Fook. Dan jangan sampai terlewat. Tenggat Waktu pengumpulan pada Selasa Sepuluh November. Dua ribu dua puluh enam.
+14:40:54 Saya ucapkan selamat sore dan para peserta sesi satu dipersilakan untuk lift dari ruang zoom ini.
+14:41:01 Terima kasih.
+
