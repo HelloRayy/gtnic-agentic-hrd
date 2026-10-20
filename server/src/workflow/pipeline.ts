@@ -63,7 +63,7 @@ export class AuditPipeline {
           traceStore.log(
             'OBSERVATION',
             'GITHUB_AUDIT',
-            `Repo ${repo}: CI/CD=${evidence.hasCiCd}, Tests=${evidence.hasTests}, Docker=${evidence.hasDocker}, Manifests=${evidence.manifestFiles.length}`
+            `Repo ${repo}: CI/CD=${evidence.hasCiCd}, Tests=${evidence.hasTests}, Docker=${evidence.hasDocker}, Commits=${evidence.commitCountSample}, Squashed/Migrated=${evidence.isSquashedOrMigrated}`
           );
         }
       }

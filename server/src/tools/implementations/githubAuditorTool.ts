@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { config } from '../../config/env.js';
-import type { BaseTool } from '../registry.js';
+import type { BaseTool, ToolParamDef } from '../registry.js';
 import type { RepoAuditEvidence } from '../../core/types.js';
 
 const octokit = new Octokit({
@@ -10,6 +10,9 @@ const octokit = new Octokit({
 export class GithubTriageTool implements BaseTool<{ username: string }, string[]> {
   public name = 'github_triage';
   public description = 'Discovers and filters original, active public repositories for a candidate.';
+  public parameterSchema: Record<string, ToolParamDef> = {
+    username: { type: 'string', required: true, description: 'GitHub username of the candidate' },
+  };
 
   public async execute(params: { username: string }): Promise<string[]> {
     try {
@@ -23,7 +26,11 @@ export class GithubTriageTool implements BaseTool<{ username: string }, string[]
       const originalRepos = repos.filter(r => !r.fork && !r.archived);
       return originalRepos.slice(0, 2).map(r => r.name);
     } catch (err: any) {
-      console.warn(`[GithubTriageTool] Failed for ${params.username}:`, err.message);
+      if (err.status === 403) {
+        console.warn(`[GithubTriageTool] Rate limit reached for GitHub API. Provide GITHUB_TOKEN in .env to expand limit.`);
+      } else {
+        console.warn(`[GithubTriageTool] Failed for ${params.username}:`, err.message);
+      }
       return [];
     }
   }
@@ -31,7 +38,11 @@ export class GithubTriageTool implements BaseTool<{ username: string }, string[]
 
 export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: string }, RepoAuditEvidence | null> {
   public name = 'github_repo_audit';
-  public description = 'Performs structural codebase audit (tree level-3, manifests, tests, CI/CD, Docker).';
+  public description = 'Performs structural codebase audit (tree level-3, manifests, tests, CI/CD, Docker, and commit lens).';
+  public parameterSchema: Record<string, ToolParamDef> = {
+    owner: { type: 'string', required: true, description: 'Repository owner or organization' },
+    repo: { type: 'string', required: true, description: 'Repository name' },
+  };
 
   public async execute(params: { owner: string; repo: string }): Promise<RepoAuditEvidence | null> {
     const { owner, repo } = params;
@@ -72,7 +83,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
       );
 
       const manifestFiles: { path: string; dependencies: string[] }[] = [];
-      const manifestCandidates = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt'];
+      const manifestCandidates = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'pom.xml', 'build.gradle'];
 
       for (const candidate of manifestCandidates) {
         if (filePaths.includes(candidate)) {
@@ -87,13 +98,27 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
                   deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
                 } catch {}
               } else {
-                deps = decoded.split('\n').filter(l => l.trim().length > 0).slice(0, 15);
+                deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//')).slice(0, 15);
               }
               manifestFiles.push({ path: candidate, dependencies: deps });
             }
           } catch {}
         }
       }
+
+      // Anti-False-Positive Git Lens: Inspect commit activity
+      let recentCommitSample: string[] = [];
+      let isSquashedOrMigrated = false;
+      let commitCountSample = 0;
+
+      try {
+        const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 5 });
+        commitCountSample = commits.length;
+        recentCommitSample = commits.map(c => c.commit.message.split('\n')[0].slice(0, 70));
+        if (commits.length === 1 && (recentCommitSample[0]?.toLowerCase().includes('initial') || recentCommitSample[0]?.toLowerCase().includes('import'))) {
+          isSquashedOrMigrated = true;
+        }
+      } catch {}
 
       return {
         repoName: repo,
@@ -108,9 +133,17 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         hasTests,
         hasCiCd,
         hasDocker,
+        commitCountSample,
+        isSquashedOrMigrated,
+        recentCommitSample,
+        license: repoInfo.license?.spdx_id || null,
       };
     } catch (err: any) {
-      console.warn(`[GithubRepoAuditTool] Failed for ${owner}/${repo}:`, err.message);
+      if (err.status === 403) {
+        console.warn(`[GithubRepoAuditTool] GitHub API Rate Limit exceeded for ${owner}/${repo}.`);
+      } else {
+        console.warn(`[GithubRepoAuditTool] Failed for ${owner}/${repo}:`, err.message);
+      }
       return null;
     }
   }

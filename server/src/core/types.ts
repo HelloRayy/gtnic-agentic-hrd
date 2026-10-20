@@ -20,6 +20,10 @@ export interface RepoAuditEvidence {
   hasTests: boolean;
   hasCiCd: boolean;
   hasDocker: boolean;
+  commitCountSample: number;
+  isSquashedOrMigrated: boolean;
+  recentCommitSample: string[];
+  license: string | null;
 }
 
 export interface EvidenceItem {
