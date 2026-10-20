@@ -26,16 +26,24 @@ export interface EvidenceItem {
   claim: string;
   status: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL';
   evidenceSummary: string;
-  repoAnchor?: string;
-  fileAnchor?: string;
+  repoAnchor: string | null;
+  fileAnchor: string | null;
 }
 
 export interface InterviewQuestion {
   topic: string;
   question: string;
   context: string;
-  codeAnchor?: string;
+  codeAnchor: string | null;
   expectedInsight: string;
+}
+
+export interface TraceEvent {
+  step: string;
+  phase: 'PLAN' | 'TOOL_CALL' | 'OBSERVATION' | 'REFLECTION';
+  timestamp: string;
+  detail: string;
+  metadata?: Record<string, any>;
 }
 
 export interface TechnicalDossier {
@@ -46,4 +54,13 @@ export interface TechnicalDossier {
   interviewKit: InterviewQuestion[];
   auditedRepos: string[];
   executionTimeMs: number;
+  traceEvents?: TraceEvent[];
+}
+
+export interface AuditInput {
+  cvBuffer?: Buffer;
+  cvText?: string;
+  jobTitle?: string;
+  jobDesc?: string;
+  manualGithubUrl?: string;
 }

@@ -4,10 +4,14 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { config } from './config/env.js';
-import { auditRouter } from './routes/auditRoutes.js';
+import { initializeTools } from './tools/index.js';
+import { auditRouter } from './api/routes/auditRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Initialize Tool Registry
+initializeTools();
 
 const app = express();
 
@@ -15,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API routes
+// Mount API routes
 app.use('/api', auditRouter);
 
 // Serve compiled client static files in production or if dist exists
@@ -29,5 +33,6 @@ if (fs.existsSync(clientDistPath)) {
 
 app.listen(config.port, () => {
   console.log(`[TalentTrace AI] Server listening on port ${config.port} (${config.nodeEnv})`);
+  console.log(`[TalentTrace AI] Active Router Model: ${config.router.defaultModel}`);
   console.log(`[TalentTrace AI] Health check available at http://localhost:${config.port}/api/health`);
 });

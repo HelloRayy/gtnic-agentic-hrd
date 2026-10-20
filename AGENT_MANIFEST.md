@@ -22,12 +22,11 @@
 
 | Domain Fitur | Controller / Service / Business Logic | Leaf Component / UI Target |
 | :--- | :--- | :--- |
-| **Auth & Session** | `src/services/auth/` | `src/features/auth/components/` |
-| **Agent Core & Reasoning** | `src/services/agent/` | `src/features/agent/components/` |
-| **RAG & Knowledge Base** | `src/services/rag/` | `src/features/knowledge/components/` |
-| **Tool Calling & API Integration** | `src/services/tools/` | `src/features/tools/components/` |
-| **Chat & Interaction UI** | `src/features/chat/controllers/` | `src/features/chat/components/` |
-| **Enterprise Dashboard & KPI** | `src/services/analytics/` | `src/features/dashboard/components/` |
+| **Agent Core & Reasoning** | `server/src/core/`, `server/src/workflow/` | `client/src/features/audit/` |
+| **Tool Calling & Registry** | `server/src/tools/` | `client/src/features/tools/` |
+| **Memory & Traceability** | `server/src/memory/` | `client/src/features/trace/` |
+| **Prompts & Synthesis** | `server/src/prompts/`, `server/src/providers/` | `client/src/features/audit/` |
+| **API Transport & Routing** | `server/src/api/` | `client/src/services/` |
 
 *(Perbarui tabel ini saat membuat modul atau domain baru).*
 

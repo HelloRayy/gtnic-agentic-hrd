@@ -13,6 +13,7 @@ auditRouter.get('/health', (_req, res) => {
   res.json({
     status: 'healthy',
     agent: 'TalentTrace AI Agent Core',
+    model: 'gemini-3.8-flash',
     timestamp: new Date().toISOString(),
   });
 });

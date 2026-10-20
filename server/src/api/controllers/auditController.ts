@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { executeAgentAudit } from '../services/agentService.js';
+import { auditPipeline } from '../../workflow/pipeline.js';
 
 export async function handleAuditRequest(req: Request, res: Response): Promise<void> {
   try {
@@ -14,7 +14,7 @@ export async function handleAuditRequest(req: Request, res: Response): Promise<v
       return;
     }
 
-    const dossier = await executeAgentAudit({
+    const dossier = await auditPipeline.execute({
       cvBuffer,
       cvText,
       jobTitle: jobTitle || 'Fullstack Engineer',
@@ -27,7 +27,7 @@ export async function handleAuditRequest(req: Request, res: Response): Promise<v
       data: dossier,
     });
   } catch (err: any) {
-    console.error('Audit handler error:', err);
+    console.error('[AuditController] Error:', err);
     res.status(500).json({
       success: false,
       error: err.message || 'Internal Agent Execution Error',
@@ -47,7 +47,7 @@ Experience:
 Implemented automated testing pipelines and containerized deployments.
     `.trim();
 
-    const dossier = await executeAgentAudit({
+    const dossier = await auditPipeline.execute({
       cvText: sampleCvText,
       jobTitle: 'Senior Fullstack Engineer (Enterprise)',
       jobDesc: 'Requires 4+ years React, TypeScript, Node.js, Docker, and CI/CD pipelines.',
