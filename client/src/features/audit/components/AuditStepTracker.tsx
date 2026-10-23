@@ -52,8 +52,7 @@ export function AuditStepTracker({ events, isCompleted = false }: AuditStepTrack
         if (hasStep('INGESTION_COMPLETED') || hasStep('GITHUB_TRIAGE') || hasStep('SYNTHESIS')) {
           return 'COMPLETED';
         }
-        return hasStep('INGESTION') ? 'IN_PROGRESS' : 'PENDING';
-
+        return 'IN_PROGRESS';
       case 1: // Triage
         if (hasStep('GITHUB_AUDIT') || hasStep('FALLBACK_MODE') || hasStep('SYNTHESIS')) {
           return 'COMPLETED';
