@@ -2,7 +2,7 @@ import { toolRegistry } from '../tools/index.js';
 import { routerClient } from '../providers/routerClient.js';
 import { TraceStore } from '../memory/traceStore.js';
 import { SYSTEM_PROMPT_ENTERPRISE_AUDITOR } from '../prompts/systemPrompts.js';
-import { formatSynthesisPrompt } from '../prompts/templates.js';
+import { formatSynthesisPrompt, formatAssessmentPrompt, formatInterviewPrompt } from '../prompts/templates.js';
 import type {
   AuditInput,
   CandidateProfile,
@@ -72,8 +72,28 @@ export class AuditPipeline {
       traceStore.log('REFLECTION', 'FALLBACK_MODE', 'No GitHub username detected. Switching to Enterprise Experience Density Index mode.');
     }
 
-    // 3. Synthesis Phase via 9router (Gemini 3.8 Flash)
+    // 3. Synthesis Phase via Parallel Dual-Stream Gateway (Gemini 3.8 Flash Low)
     traceStore.log('PLAN', 'SYNTHESIS', 'Synthesizing Claim-vs-Evidence matrix and formulating tailored contextual interview questions.');
+
+    // Pre-match physical facts deterministically in Node.js
+    const allDeps = auditedRepos.flatMap(r => r.manifestFiles.flatMap(m => m.dependencies.map(d => d.toLowerCase())));
+    const verifiedSkills: string[] = [];
+    const missingSkills: string[] = [];
+
+    for (const skill of candidate.claimedSkills) {
+      const lower = skill.toLowerCase();
+      if (allDeps.some(d => d.includes(lower))) {
+        verifiedSkills.push(skill);
+      } else {
+        missingSkills.push(skill);
+      }
+    }
+
+    const preMatchedFacts = {
+      matchedDeps: Array.from(new Set(allDeps)).slice(0, 30),
+      verifiedSkills,
+      missingSkills,
+    };
 
     let overallAssessment = '';
     let evidenceMatrix: EvidenceItem[] = [];
@@ -82,18 +102,30 @@ export class AuditPipeline {
 
     if (routerClient.isConfigured) {
       try {
-        const prompt = formatSynthesisPrompt(candidate, jobTitle, jobDesc, auditedRepos);
-        const parsed = await routerClient.completeStructured(SYSTEM_PROMPT_ENTERPRISE_AUDITOR, prompt);
+        const assessmentPrompt = formatAssessmentPrompt(candidate, jobTitle, jobDesc, auditedRepos, preMatchedFacts);
+        const interviewPrompt = formatInterviewPrompt(candidate, jobTitle, jobDesc, auditedRepos, preMatchedFacts);
 
-        overallAssessment = parsed.overallAssessment || 'Assessment completed.';
-        evidenceMatrix = parsed.evidenceMatrix || [];
-        interviewKit = parsed.interviewKit || [];
-        clarificationPrompts = parsed.clarificationPrompts || [];
+        traceStore.log('TOOL_CALL', 'DUAL_SYNTHESIS', 'Dispatching parallel dual-stream synthesis (Assessment + Interview Kit)');
 
-        const resolvedModel = parsed._resolvedModel ? ` (${parsed._resolvedModel})` : '';
-        traceStore.log('OBSERVATION', 'SYNTHESIS_SUCCESS', `Autonomous verification reasoning completed by LLM gateway${resolvedModel}.`);
-      } catch (err: any) {
-        traceStore.log('REFLECTION', 'SYNTHESIS_FALLBACK', `LLM error (${err.message}). Falling back to deterministic matching.`);
+        const [assessmentRes, interviewRes] = await Promise.all([
+          routerClient.completeStructured(SYSTEM_PROMPT_ENTERPRISE_AUDITOR, assessmentPrompt),
+          routerClient.completeStructured(SYSTEM_PROMPT_ENTERPRISE_AUDITOR, interviewPrompt),
+        ]);
+
+        overallAssessment = assessmentRes.overallAssessment || 'Assessment completed.';
+        evidenceMatrix = assessmentRes.evidenceMatrix || [];
+        interviewKit = interviewRes.interviewKit || [];
+        clarificationPrompts = interviewRes.clarificationPrompts || [];
+
+        const modelUsed = assessmentRes._resolvedModel || interviewRes._resolvedModel || 'LLM';
+        traceStore.log(
+          'OBSERVATION',
+          'SYNTHESIS_SUCCESS',
+          `Dual-stream parallel synthesis completed in record time via ${modelUsed}.`
+        );
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        traceStore.log('REFLECTION', 'SYNTHESIS_FALLBACK', `Parallel LLM error (${message}). Falling back to single-stream or deterministic.`);
       }
     }
 
@@ -139,7 +171,6 @@ export class AuditPipeline {
     traceStore.log('PLAN', 'SELF_CORRECTION', 'Executing Grounding Verification Gate across synthesized evidence.');
     let correctionCount = 0;
 
-    const allDeps = auditedRepos.flatMap(r => r.manifestFiles.flatMap(m => m.dependencies.map(d => d.toLowerCase())));
     for (const item of evidenceMatrix) {
       if (item.status === 'VERIFIED') {
         const hasManifestEvidence = allDeps.some(d => d.includes(item.claim.toLowerCase()));

@@ -8,14 +8,16 @@ const __dirname = path.dirname(__filename);
 
 const possibleEnvPaths = [
   path.resolve(process.cwd(), '.env'),
+  path.resolve(process.cwd(), '../.env'),
   path.resolve(process.cwd(), 'server/.env'),
+  path.resolve(__dirname, '../../../.env'),
   path.resolve(__dirname, '../../.env'),
   path.resolve(__dirname, '../.env'),
 ];
 
 for (const p of possibleEnvPaths) {
   if (fs.existsSync(p)) {
-    dotenv.config({ path: p });
+    dotenv.config({ path: p, override: true });
     break;
   }
 }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { handleAuditRequest, handleSampleAudit, handleStreamAudit } from '../controllers/auditController.js';
+import { config } from '../../config/env.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -13,7 +14,7 @@ auditRouter.get('/health', (_req, res) => {
   res.json({
     status: 'healthy',
     agent: 'TalentTrace AI Agent Core',
-    model: 'gemini-3.8-flash',
+    model: config.router.defaultModel,
     timestamp: new Date().toISOString(),
   });
 });
