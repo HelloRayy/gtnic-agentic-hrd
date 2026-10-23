@@ -69,3 +69,46 @@ export interface TechnicalDossier {
   executionTimeMs: number;
   traceEvents?: TraceEvent[];
 }
+
+export interface GoogleAuthStatus {
+  isConfigured: boolean;
+  isAuthenticated: boolean;
+  email: string | null;
+}
+
+export interface ScheduleInterviewPayload {
+  candidateName: string;
+  candidateEmail: string;
+  jobTitle: string;
+  startTime: string;
+  durationMinutes?: number;
+  interviewTopics?: string[];
+  interviewerNotes?: string;
+  sendEmail?: boolean;
+}
+
+export interface ScheduleInterviewResponse {
+  success: boolean;
+  data?: {
+    calendar: {
+      status: string;
+      eventId: string;
+      eventLink?: string;
+      meetLink?: string;
+      startTime: string;
+      endTime: string;
+      summary: string;
+      attendees: string[];
+      isLive: boolean;
+    };
+    mail?: {
+      status: string;
+      messageId: string;
+      recipient: string;
+      subject: string;
+      isLive: boolean;
+      previewBody: string;
+    } | null;
+  };
+  error?: string;
+}

@@ -27,6 +27,7 @@
 | **Memory & Traceability** | `server/src/memory/` | `client/src/features/trace/` |
 | **Prompts & Synthesis** | `server/src/prompts/`, `server/src/providers/` | `client/src/features/audit/` |
 | **API Transport & Routing** | `server/src/api/` | `client/src/services/` |
+| **Workspace Integrations** | `server/src/services/googleAuthService.ts` | `client/src/features/audit/components/InterviewActionCard.tsx` |
 
 *(Perbarui tabel ini saat membuat modul atau domain baru).*
 

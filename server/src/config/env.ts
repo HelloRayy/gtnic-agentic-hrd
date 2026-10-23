@@ -30,4 +30,9 @@ export const config = {
     defaultModel: process.env.ROUTER_MODEL || 'gemini-3.8-flash',
   },
   geminiApiKey: process.env.GEMINI_API_KEY || '',
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID || '',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    redirectUri: process.env.GOOGLE_REDIRECT_URI || `http://localhost:${process.env.PORT || '5000'}/api/auth/google/callback`,
+  },
 };

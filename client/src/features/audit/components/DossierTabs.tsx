@@ -3,6 +3,7 @@ import Lozenge from '@atlaskit/lozenge';
 import SectionMessage from '@atlaskit/section-message';
 import Badge from '@atlaskit/badge';
 import type { TechnicalDossier, EvidenceItem } from '../../../types/audit.js';
+import { InterviewActionCard } from './InterviewActionCard.js';
 
 interface DossierTabsProps {
   dossier: TechnicalDossier;
@@ -37,6 +38,8 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
           <p>{dossier.overallAssessment}</p>
         </SectionMessage>
       </div>
+      <InterviewActionCard dossier={dossier} />
+
 
       <Tabs id="dossier-tabs">
         <TabList>

@@ -1,4 +1,10 @@
-import type { TechnicalDossier, TraceEvent } from '../types/audit.js';
+import type {
+  TechnicalDossier,
+  TraceEvent,
+  GoogleAuthStatus,
+  ScheduleInterviewPayload,
+  ScheduleInterviewResponse,
+} from '../types/audit.js';
 
 const API_BASE = '/api';
 
@@ -98,4 +104,57 @@ export async function checkServerHealth(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+export async function fetchGoogleAuthStatus(): Promise<GoogleAuthStatus> {
+  try {
+    const res = await fetch(`${API_BASE}/auth/google/status`);
+    if (!res.ok) {
+      return { isConfigured: false, isAuthenticated: false, email: null };
+    }
+    const data = await res.json();
+    return {
+      isConfigured: Boolean(data.isConfigured),
+      isAuthenticated: Boolean(data.isAuthenticated),
+      email: data.email || null,
+    };
+  } catch {
+    return { isConfigured: false, isAuthenticated: false, email: null };
+  }
+}
+
+export async function fetchGoogleAuthUrl(): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE}/auth/google/url`);
+    const data = await res.json();
+    return data.success && data.url ? data.url : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function disconnectGoogleAccount(): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/auth/google/disconnect`, { method: 'POST' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function dispatchScheduleInterview(
+  payload: ScheduleInterviewPayload
+): Promise<ScheduleInterviewResponse> {
+  const res = await fetch(`${API_BASE}/action/schedule-interview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Failed to schedule interview: ${res.statusText}`);
+  }
+
+  return res.json();
 }

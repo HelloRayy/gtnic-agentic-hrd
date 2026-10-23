@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { config } from './config/env.js';
 import { initializeTools } from './tools/index.js';
 import { auditRouter } from './api/routes/auditRoutes.js';
-
+import { googleAuthRouter } from './api/routes/googleAuthRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount API routes
 app.use('/api', auditRouter);
+app.use('/api', googleAuthRouter);
 
 // Serve compiled client static files in production or if dist exists
 const clientDistPath = path.resolve(__dirname, '../../client/dist');
