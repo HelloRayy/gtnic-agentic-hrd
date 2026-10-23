@@ -48,6 +48,9 @@ export interface InterviewQuestion {
   context: string;
   codeAnchor: string | null;
   expectedInsight: string;
+  greenFlags?: string[];
+  redFlags?: string[];
+  investigationTarget?: string;
 }
 
 export interface TraceEvent {

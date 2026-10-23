@@ -7,6 +7,7 @@ import Button from '@atlaskit/button/standard-button';
 import { ExternalLink, GitBranch, Mail, Copy, Check, FileText } from 'lucide-react';
 import type { TechnicalDossier, EvidenceItem } from '../../../types/audit.js';
 import { InterviewActionCard } from './InterviewActionCard.js';
+import { InvestigationCard } from './InvestigationCard.js';
 
 interface DossierTabsProps {
   dossier: TechnicalDossier;
@@ -165,7 +166,7 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
       <Tabs id="dossier-tabs">
         <TabList>
           <Tab>Matriks Bukti ({dossier.evidenceMatrix.length})</Tab>
-          <Tab>Panduan Wawancara ({dossier.interviewKit.length})</Tab>
+          <Tab>Radar Investigasi & Sinyal ({dossier.interviewKit.length})</Tab>
           <Tab>Poin Klarifikasi ({dossier.clarificationPrompts.length})</Tab>
           <Tab>Jejak Penalaran CoT ({dossier.traceEvents?.length || 0})</Tab>
         </TabList>
@@ -210,34 +211,11 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
           </div>
         </TabPanel>
 
-        {/* Tab 2: Panduan Wawancara */}
+        {/* Tab 2: Radar Investigasi & Sinyal Interview */}
         <TabPanel>
           <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
             {dossier.interviewKit.map((q, idx) => (
-              <div key={idx} style={{ border: '1px solid #EBECF0', borderRadius: 6, padding: 14, background: '#FAFBFC' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontWeight: 600, color: '#0052CC', fontSize: 13 }}>{q.topic}</span>
-                  {q.codeAnchor && (
-                    <a
-                      href={githubUsername ? `https://github.com/${githubUsername}/${q.codeAnchor}` : `https://github.com/search?q=${q.codeAnchor}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: 11, color: '#6B778C', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                    >
-                      Repo: {q.codeAnchor} <ExternalLink size={10} />
-                    </a>
-                  )}
-                </div>
-                <div style={{ fontWeight: 600, fontSize: 14, color: '#172B4D', marginBottom: 6 }}>
-                  {q.question}
-                </div>
-                <p style={{ margin: '0 0 6px 0', fontSize: 12, color: '#5E6C84' }}>
-                  <strong>Konteks:</strong> {q.context}
-                </p>
-                <p style={{ margin: 0, fontSize: 12, color: '#006644' }}>
-                  <strong>Wawasan yang Diharapkan:</strong> {q.expectedInsight}
-                </p>
-              </div>
+              <InvestigationCard key={idx} item={q} index={idx} githubUsername={githubUsername} />
             ))}
           </div>
         </TabPanel>

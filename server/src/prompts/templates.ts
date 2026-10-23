@@ -80,18 +80,32 @@ Klaim Tanpa Bukti Publik: ${preMatchedFacts.missingSkills.join(', ') || 'Semua t
 ${sanitizeForPrompt(repos)}
 </untrusted_code_evidence>
 
-INSTRUKSI INTERVIEW KIT (FULL BAHASA INDONESIA):
-1. "interviewKit": Susun 3-4 pertanyaan wawancara arsitektural mendalam dalam Bahasa Indonesia yang berakar pada keputusan kode kandidat atau menguji klaim yang belum memiliki bukti publik.
-2. "clarificationPrompts": Susun 2-3 poin klarifikasi sopan dan taktis dalam Bahasa Indonesia untuk membantu pewawancara menanyakan hal-hal yang ambigu (misal akun git lokal, repositori tutorial, atau proyek privat).
-3. Format output WAJIB HANYA JSON valid:
+INSTRUKSI RADAR INVESTIGASI & KISI WAWANCARA (FULL BAHASA INDONESIA):
+Bukan sekadar memberi teks pertanyaan kaku untuk dibaca robotik, tapi berikan "Lembar Intelijen Teknis (Investigation Cheat-Sheet)" bagi tim penilai/Tech Lead:
+1. "investigationTarget": Tuliskan fokus celah yang perlu dibuktikan (misal: 'Membedakan apakah pengalaman arsitektur mikroservis kandidat benar-benar nyata di kantor lama atau hanya klaim teoritis').
+2. "context": Paparkan fakta forensik konkret yang ditemukan pada audit repositori kandidat (misal: 'Kandidat mengklaim Go 5 tahun, namun repositori publik hanya berupa skrip CLI tanpa bukti unit testing atau API layer').
+3. "question": Berikan "Panduan Alur Obrolan Terbuka" (Exploratory Discussion Probe) untuk pewawancara, bukan pertanyaan interogasi kaku (misal: 'Ajak kandidat mendiskusikan arsitektur backend Go paling kompleks yang pernah ia tangani di produksi dan bagaimana strategi penanganan concurrency-nya').
+4. "greenFlags": Berikan 2 tanda konkret jika kandidat BENAR-BENAR kompeten (misal: ['Menjelaskan penanganan goroutine leak dengan context.WithCancel', 'Paham konfigurasi connection pooling database']).
+5. "redFlags": Berikan 2 tanda jika kandidat HANYA HAFAL TEORI atau MEMBUAL (misal: ['Hanya mengulang definisi dasar tanpa contoh implementasi nyata', 'Tidak paham cara tracing bug konkurensi di produksi']).
+6. "clarificationPrompts": Berikan 2-3 poin klarifikasi taktis dan sopan seputar kepemilikan kode, commit git lokal, atau proyek privat NDA.
+7. Format output WAJIB HANYA JSON valid:
 {
   "interviewKit": [
     {
-      "topic": "Topik Rekayasa (Bahasa Indonesia)",
-      "question": "Pertanyaan wawancara teknis Bahasa Indonesia",
-      "context": "Konteks temuan audit kodingan Bahasa Indonesia",
+      "topic": "Fokus Investigasi Teknis (Bahasa Indonesia)",
+      "investigationTarget": "Tujuan verifikasi celah (Bahasa Indonesia)",
+      "context": "Fakta forensik repositori (Bahasa Indonesia)",
+      "question": "Panduan alur diskusi terbuka (Bahasa Indonesia)",
       "codeAnchor": "nama repositori atau null",
-      "expectedInsight": "Wawasan yang diharapkan dari kandidat Bahasa Indonesia"
+      "greenFlags": [
+        "Tanda kompeten konkret 1",
+        "Tanda kompeten konkret 2"
+      ],
+      "redFlags": [
+        "Tanda bualan/teori 1",
+        "Tanda bualan/teori 2"
+      ],
+      "expectedInsight": "Wawasan kunci yang dicari (Bahasa Indonesia)"
     }
   ],
   "clarificationPrompts": [
