@@ -18,6 +18,7 @@ export default function App() {
   const [googleStatus, setGoogleStatus] = useState<GoogleAuthStatus | null>(null);
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
+  const isExecutingRef = useRef(false);
   useEffect(() => {
     fetchGoogleAuthStatus().then(setGoogleStatus);
   }, []);
@@ -41,6 +42,8 @@ export default function App() {
   }, [isLoading]);
 
   const handleRunAudit = async (formData: FormData) => {
+    if (isExecutingRef.current) return;
+    isExecutingRef.current = true;
     setIsLoading(true);
     setError(null);
     setTraceEvents([]);
@@ -52,20 +55,25 @@ export default function App() {
         onComplete: (result) => {
           setDossier(result);
           setIsLoading(false);
+          isExecutingRef.current = false;
         },
         onError: (err) => {
           setError(err);
           setIsLoading(false);
+          isExecutingRef.current = false;
         },
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg || 'Audit execution failed');
       setIsLoading(false);
+      isExecutingRef.current = false;
     }
   };
 
   const handleLoadSample = async () => {
+    if (isExecutingRef.current) return;
+    isExecutingRef.current = true;
     setIsLoading(true);
     setError(null);
     setTraceEvents([]);
@@ -77,16 +85,19 @@ export default function App() {
         onComplete: (result) => {
           setDossier(result);
           setIsLoading(false);
+          isExecutingRef.current = false;
         },
         onError: (err) => {
           setError(err);
           setIsLoading(false);
+          isExecutingRef.current = false;
         },
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg || 'Sample audit failed');
       setIsLoading(false);
+      isExecutingRef.current = false;
     }
   };
 

@@ -3,7 +3,13 @@ import { config } from '../config/env.js';
 
 export class RouterClient {
   private client: OpenAI | null = null;
-  private readonly fallbackModels = ['claude-3-5-sonnet', 'gpt-4o'];
+  private readonly fallbackModels = [
+    'ag/gemini-3.8-flash-low',
+    'ag/gemini-3.8-flash',
+    'gemini-3.8-flash',
+    'claude-3-5-sonnet',
+    'gpt-4o',
+  ];
 
   constructor() {
     if (config.router.apiKey) {
@@ -33,7 +39,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 25000 : 35000;
+      const modelTimeout = isPrimary ? 45000 : 50000;
 
       try {
         console.log(`[RouterClient] Dispatching synthesis to model: ${model} (timeout: ${modelTimeout}ms)...`);
