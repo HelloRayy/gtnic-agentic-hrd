@@ -1,7 +1,13 @@
 import Lozenge from '@atlaskit/lozenge';
-import Badge from '@atlaskit/badge';
+import Button from '@atlaskit/button/standard-button';
+import type { GoogleAuthStatus } from '../../../types/audit.js';
 
-export function AuditHeader() {
+interface AuditHeaderProps {
+  onOpenIntegrations: () => void;
+  googleStatus?: GoogleAuthStatus | null;
+}
+
+export function AuditHeader({ onOpenIntegrations, googleStatus }: AuditHeaderProps) {
   return (
     <header style={{ marginBottom: 24, borderBottom: '1px solid #EBECF0', paddingBottom: 16 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -13,10 +19,18 @@ export function AuditHeader() {
             Autonomous Technical Screener & Portfolio Auditor for Enterprise Teams
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Lozenge appearance="success">GTNIC 2026</Lozenge>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Button appearance="subtle" onClick={onOpenIntegrations}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+              <span>HRD Connectors</span>
+              {googleStatus?.isAuthenticated ? (
+                <Lozenge appearance="success">Connected</Lozenge>
+              ) : (
+                <Lozenge appearance="default">OAuth</Lozenge>
+              )}
+            </span>
+          </Button>
           <Lozenge appearance="new">Gemini 3.8 Flash</Lozenge>
-          <Badge max={99}>{94}</Badge>
         </div>
       </div>
     </header>

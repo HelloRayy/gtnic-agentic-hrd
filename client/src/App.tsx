@@ -3,8 +3,10 @@ import { AuditHeader } from './features/audit/components/AuditHeader.js';
 import { AuditInputForm } from './features/audit/components/AuditInputForm.js';
 import { AuditProgress } from './features/audit/components/AuditProgress.js';
 import { DossierTabs } from './features/audit/components/DossierTabs.js';
-import { streamAuditExecution } from './services/auditApi.js';
-import type { TechnicalDossier, TraceEvent } from './types/audit.js';
+import { streamAuditExecution, fetchGoogleAuthStatus } from './services/auditApi.js';
+import { GoogleAuthBanner } from './features/integrations/components/GoogleAuthBanner.js';
+import { HrdIntegrationsModal } from './features/integrations/components/HrdIntegrationsModal.js';
+import type { TechnicalDossier, TraceEvent, GoogleAuthStatus } from './types/audit.js';
 
 export default function App() {
   const [dossier, setDossier] = useState<TechnicalDossier | null>(null);
@@ -12,10 +14,13 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [traceEvents, setTraceEvents] = useState<TraceEvent[]>([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-
+  const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
+  const [googleStatus, setGoogleStatus] = useState<GoogleAuthStatus | null>(null);
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
-
+  useEffect(() => {
+    fetchGoogleAuthStatus().then(setGoogleStatus);
+  }, []);
   useEffect(() => {
     if (isLoading) {
       startTimeRef.current = Date.now();
@@ -53,8 +58,9 @@ export default function App() {
           setIsLoading(false);
         },
       });
-    } catch (err: any) {
-      setError(err.message || 'Audit execution failed');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Audit execution failed');
       setIsLoading(false);
     }
   };
@@ -77,15 +83,25 @@ export default function App() {
           setIsLoading(false);
         },
       });
-    } catch (err: any) {
-      setError(err.message || 'Sample audit failed');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || 'Sample audit failed');
       setIsLoading(false);
     }
   };
 
   return (
     <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 16px', minHeight: '100vh', background: '#FFFFFF' }}>
-      <AuditHeader />
+      <GoogleAuthBanner />
+      <AuditHeader
+        onOpenIntegrations={() => setIsIntegrationsOpen(true)}
+        googleStatus={googleStatus}
+      />
+      <HrdIntegrationsModal
+        isOpen={isIntegrationsOpen}
+        onClose={() => setIsIntegrationsOpen(false)}
+        onStatusChange={setGoogleStatus}
+      />
       <AuditInputForm
         isLoading={isLoading}
         onSubmit={handleRunAudit}

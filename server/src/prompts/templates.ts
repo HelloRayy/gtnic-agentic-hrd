@@ -13,50 +13,53 @@ export function formatSynthesisPrompt(
 ): string {
   return `
 <job_specification>
-Role: ${jobTitle}
-Description: ${jobDesc}
+Posisi / Role: ${jobTitle}
+Deskripsi Pekerjaan: ${jobDesc}
 </job_specification>
 
 <candidate_profile>
-Name: ${candidate.name}
-Claimed Skills: ${candidate.claimedSkills.join(', ')}
-Summary: ${candidate.summary || 'None'}
+Nama: ${candidate.name}
+Klaim Keahlian: ${candidate.claimedSkills.join(', ')}
+Ringkasan Profil: ${candidate.summary || 'Tidak ada'}
 </candidate_profile>
 
 <untrusted_code_evidence>
 ${sanitizeForPrompt(repos)}
 </untrusted_code_evidence>
 
-INSTRUCTIONS:
-1. Compare each claimed skill against the physical evidence found in the repos (manifest dependencies, CI/CD, tests, file tree, commits).
-2. For each major claim, assign status: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL'.
-3. Formulate 3-4 tailored contextual interview questions based on the candidate's real code decisions.
-4. AMBIGUITY & CLARIFICATION: Formulate 2-3 friendly clarification prompts under "clarificationPrompts" for anything ambiguous (e.g., git author name vs github username, unlinked git configs, skills likely used in private NDA projects, etc.).
-5. Strictly follow Explainable AI: DO NOT output arbitrary scores.
-6. Use null instead of undefined for missing string properties.
-7. Return ONLY a valid JSON object matching this schema:
+INSTRUKSI MUTLAK (FULL BAHASA INDONESIA):
+1. SEMUA HASIL NARASI WAJIB MENGGUNAKAN BAHASA INDONESIA YANG PROFESIONAL, LUGAS, DAN OBJEKTIF. Dilarang menggunakan bahasa Inggris untuk kolom "overallAssessment", "evidenceSummary", pertanyaan/konteks "interviewKit", dan "clarificationPrompts".
+2. "overallAssessment": Tulis ringkasan eksekutif teknis yang komprehensif dalam Bahasa Indonesia (2-3 paragraf padat). Jelaskan kesesuaian profil kandidat dengan kualifikasi posisi yang dilamar, temuan audit fisik di GitHub (kualitas kode, kelengkapan tes/CI/CD), perbandingan klaim vs fakta nyata, dan rekomendasi langkah lanjut bagi tim penilai.
+3. Cocokkan setiap klaim keahlian dengan bukti fisik nyata di repositori (manifest dependencies, CI/CD, unit tests, struktur folder, riwayat commit).
+4. Status bukti wajib salah satu dari: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL'.
+5. "evidenceSummary": Tulis temuan bukti spesifik dalam Bahasa Indonesia (misal: 'Ditemukan dependensi express dan typescript di package.json repositori X', atau 'Tidak ditemukan bukti penggunaan di repositori publik kandidat').
+6. "interviewKit": Susun 3-4 pertanyaan wawancara kontekstual dalam Bahasa Indonesia yang berfokus langsung pada keputusan arsitektur dan potongan kode nyata yang ditemukan di repositori kandidat.
+7. "clarificationPrompts": Susun 2-3 poin klarifikasi ramah dalam Bahasa Indonesia untuk membantu pewawancara menanyakan hal-hal yang ambigu (seperti perbedaan nama akun git, repositori tutorial, atau proyek privat non-publik).
+8. Prinsip Explainable AI: DILARANG memberikan skor persentase atau angka acak.
+9. Gunakan null jika tidak ada jangkar repositori atau file.
+10. Kembalikan HANYA format JSON valid tanpa tanda kutip markdown pembungkus:
 {
-  "overallAssessment": "string summarizing technical match",
+  "overallAssessment": "Ringkasan penilaian teknis eksekutif lengkap dalam Bahasa Indonesia",
   "evidenceMatrix": [
     {
-      "claim": "string",
+      "claim": "nama keahlian / teknologi",
       "status": "VERIFIED" | "NO_PUBLIC_EVIDENCE" | "PARTIAL",
-      "evidenceSummary": "string",
-      "repoAnchor": "string or null",
-      "fileAnchor": "string or null"
+      "evidenceSummary": "Rincian bukti dalam Bahasa Indonesia",
+      "repoAnchor": "nama repositori atau null",
+      "fileAnchor": "path file atau null"
     }
   ],
   "interviewKit": [
     {
-      "topic": "string",
-      "question": "string",
-      "context": "string",
-      "codeAnchor": "string or null",
-      "expectedInsight": "string"
+      "topic": "Topik Rekayasa (Bahasa Indonesia)",
+      "question": "Pertanyaan wawancara teknis dalam Bahasa Indonesia",
+      "context": "Konteks temuan kodingan dalam Bahasa Indonesia",
+      "codeAnchor": "nama repositori atau null",
+      "expectedInsight": "Wawasan yang diharapkan dari jawaban kandidat dalam Bahasa Indonesia"
     }
   ],
   "clarificationPrompts": [
-    "string (friendly clarification item for interviewer, e.g. 'Konfirmasi apakah username git X adalah akun lokal kandidat')"
+    "Poin klarifikasi untuk pewawancara dalam Bahasa Indonesia"
   ]
 }
 `.trim();

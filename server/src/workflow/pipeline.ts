@@ -106,8 +106,8 @@ export class AuditPipeline {
           claim: skill,
           status: isPresent ? ('VERIFIED' as const) : ('NO_PUBLIC_EVIDENCE' as const),
           evidenceSummary: isPresent
-            ? 'Found matching package dependency in audited repository manifest.'
-            : 'No direct reference in public manifest dependencies. Recommended for verbal clarification.',
+            ? 'Ditemukan paket dependensi yang cocok pada manifest repositori yang diaudit.'
+            : 'Tidak ditemukan referensi langsung pada manifest repositori publik. Direkomendasikan untuk klarifikasi lisan saat wawancara.',
           repoAnchor: auditedRepos[0]?.repoName || null,
           fileAnchor: null,
         };
@@ -115,24 +115,24 @@ export class AuditPipeline {
 
       interviewKit = [
         {
-          topic: 'Architecture & Modularity',
-          question: `In repository ${auditedRepos[0]?.repoName || 'primary'}, how did you manage state and component boundaries?`,
-          context: `Audited file tree indicates ${auditedRepos[0]?.primaryLanguage || 'standard'} structure.`,
+          topic: 'Arsitektur & Modularitas Kode',
+          question: `Pada repositori ${auditedRepos[0]?.repoName || 'utama'}, bagaimana Anda mengelola batasan komponen dan pemisahan logika bisnis?`,
+          context: `Struktur folder repositori menunjukkan susunan berbasis ${auditedRepos[0]?.primaryLanguage || 'standar'}.`,
           codeAnchor: auditedRepos[0]?.repoName || null,
-          expectedInsight: 'Demonstrates deep understanding of system boundaries and clean code separation.',
+          expectedInsight: 'Memahami prinsip pemisahan tanggung jawab (separation of concerns) dan kebersihan arsitektur sistem.',
         },
         {
-          topic: 'Testing & Reliability',
+          topic: 'Keandalan & Pengujian Otomatis',
           question: auditedRepos[0]?.hasTests
-            ? 'We noticed automated test suites in your repo. How do you approach integration vs unit test coverage?'
-            : 'What automated testing strategy would you implement if this codebase scaled to 100k daily active users?',
-          context: auditedRepos[0]?.hasTests ? 'Automated test suite detected.' : 'No CI/CD unit tests found in public tree.',
+            ? 'Kami mendeteksi adanya automated test suite di repositori Anda. Bagaimana strategi Anda membagi cakupan unit test vs integration test?'
+            : 'Strategi pengujian otomatis apa yang akan Anda terapkan jika codebase ini diskalakan ke 100 ribu pengguna aktif harian?',
+          context: auditedRepos[0]?.hasTests ? 'Ditemukan rangkaian automated test.' : 'Belum ditemukan unit test atau konfigurasi CI/CD di repositori publik.',
           codeAnchor: auditedRepos[0]?.repoName || null,
-          expectedInsight: 'Clarity on test-driven development and deployment reliability.',
+          expectedInsight: 'Kejelasan wawasan kandidat terhadap test-driven development dan keandalan rilis produksi.',
         },
       ];
 
-      overallAssessment = `Automated audit verified ${evidenceMatrix.filter(e => e.status === 'VERIFIED').length} out of ${candidate.claimedSkills.length} claims against public repository manifests.`;
+      overallAssessment = `Audit otomatis berhasil memverifikasi ${evidenceMatrix.filter(e => e.status === 'VERIFIED').length} dari total ${candidate.claimedSkills.length} klaim keahlian kandidat terhadap manifest repositori publik yang diaudit.`;
     }
 
     // 4. Grounding Verification Gate & Ambiguity Clarification Synthesis
@@ -146,7 +146,7 @@ export class AuditPipeline {
         const hasRepoAnchor = item.repoAnchor && auditedRepos.some(r => r.repoName === item.repoAnchor);
         if (!hasManifestEvidence && !hasRepoAnchor) {
           item.status = 'PARTIAL';
-          item.evidenceSummary += ' [Self-Correction: Downgraded to PARTIAL due to absence of physical manifest anchor]';
+          item.evidenceSummary += ' [Koreksi Mandiri: Diturunkan ke PARTIAL karena tidak ditemukan jangkar fisik manifest]';
           correctionCount++;
         }
       }
