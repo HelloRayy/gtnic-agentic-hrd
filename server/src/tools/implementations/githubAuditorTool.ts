@@ -90,25 +90,28 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json'
       );
 
-      const manifestFiles: { path: string; dependencies: string[] }[] = [];
-      for (const manifestPath of manifestPaths) {
-        try {
-          const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: manifestPath });
-          if ('content' in contentData && typeof contentData.content === 'string') {
-            const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
-            let deps: string[] = [];
-            if (manifestPath.endsWith('package.json')) {
-              try {
-                const parsed = JSON.parse(decoded);
-                deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
-              } catch {}
-            } else {
-              deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//') && !l.startsWith('#')).slice(0, 15);
+      const manifestResults = await Promise.all(
+        manifestPaths.map(async (manifestPath) => {
+          try {
+            const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: manifestPath });
+            if ('content' in contentData && typeof contentData.content === 'string') {
+              const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
+              let deps: string[] = [];
+              if (manifestPath.endsWith('package.json')) {
+                try {
+                  const parsed = JSON.parse(decoded) as { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
+                  deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
+                } catch {}
+              } else {
+                deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//') && !l.startsWith('#')).slice(0, 15);
+              }
+              return { path: manifestPath, dependencies: deps };
             }
-            manifestFiles.push({ path: manifestPath, dependencies: deps });
-          }
-        } catch {}
-      }
+          } catch {}
+          return null;
+        })
+      );
+      const manifestFiles = manifestResults.filter((m): m is { path: string; dependencies: string[] } => m !== null);
 
       const hasTests = filePaths.some(p =>
         p.includes('.test.') || p.includes('.spec.') || p.includes('__tests__') || p.endsWith('_test.go')

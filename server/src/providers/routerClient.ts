@@ -33,7 +33,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 8000 : 60000;
+      const modelTimeout = isPrimary ? 25000 : 35000;
 
       try {
         console.log(`[RouterClient] Dispatching synthesis to model: ${model} (timeout: ${modelTimeout}ms)...`);
@@ -66,15 +66,26 @@ export class RouterClient {
     throw lastError || new Error('All configured router models failed to respond.');
   }
 
-  private cleanAndParseJson(raw: string): any {
+  private cleanAndParseJson(raw: string): Record<string, unknown> {
     let clean = raw.trim();
-    if (clean.startsWith('```json')) {
-      clean = clean.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-    } else if (clean.startsWith('```')) {
-      clean = clean.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    if (clean.includes('```json')) {
+      const match = clean.match(/```json\s*([\s\S]*?)\s*```/);
+      if (match) clean = match[1];
+    } else if (clean.includes('```')) {
+      const match = clean.match(/```\s*([\s\S]*?)\s*```/);
+      if (match) clean = match[1];
     }
     clean = clean.replace(/:\s*undefined\b/g, ': null');
-    return JSON.parse(clean.trim());
+    try {
+      return JSON.parse(clean.trim()) as Record<string, unknown>;
+    } catch {
+      const start = clean.indexOf('{');
+      const end = clean.lastIndexOf('}');
+      if (start !== -1 && end !== -1 && end > start) {
+        return JSON.parse(clean.slice(start, end + 1)) as Record<string, unknown>;
+      }
+      throw new Error('Failed to parse structured JSON from LLM response.');
+    }
   }
 }
 
