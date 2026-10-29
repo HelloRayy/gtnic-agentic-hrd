@@ -32,24 +32,32 @@ Tata letak antarmuka dirancang menyerupai antarmuka IDE modern (seperti Cursor /
      * Tombol aksi eksekusi: Jadwalkan Google Calendar (Meet link) dan Kirim Gmail 1-klik.
 ---
 
-## 2. Rincian 5 Fitur Utama Produk Final
+## 2. Rincian Fitur Utama Produk Final
 
 1. **Candidate Explorer & Ingestion Hub**:
    - Mendukung input multi-kandidat (unggah berkas CV, input batch, atau mode kandidat dengan NDA tanpa GitHub).
+   - **AI Policy Toggle**: Pengaturan kebijakan lowongan `[ Toleransi AI: Diizinkan (AI-Assisted OK) / Murni Manual ]`.
    - Pengelompokan status pelamar yang teratur dan mudah dipantau.
 
-2. **Autonomous Codebase Forensics Engine (Core AI)**:
+2. **Autonomous Codebase Forensics & Technical Ownership Verifier (Core AI)**:
    - Membedah repositori GitHub asli milik kandidat secara otonom (manifes dependensi, struktur direktori level 3, authorship Git, dan unit test).
+   - **Filosofi Technical Ownership (Bukan AI Witch-Hunt)**: Agen tidak menghukum kandidat karena menggunakan AI koding (Cursor/Copilot), melainkan menguji kepemilikan teknis: apakah kandidat benar-benar memahami kode yang dibuatnya.
    - Memetakan klaim di CV terhadap bukti kode nyata secara transparan tanpa skor arbitrer.
+   - Merumuskan pertanyaan wawancara spesifik dengan *Green Flags* (sinyal kandidat paham logika & trade-off arsitektur) dan *Red Flags* (sinyal copy-paste buta).
 
-3. **AI Deliberation Partner (Chat Konsultasi Interaktif)**:
+3. **Take-Home Challenge & Sandbox Code Reviewer**:
+   - Menilai repositori tugas teknis mandiri (*take-home challenge*) atau arsip ZIP yang dikirimkan kandidat.
+   - Mengaudit arsitektur, cakupan unit test, penanganan error, dan menghasilkan draf code review otomatis layaknya Tech Lead senior.
+
+4. **AI Deliberation Partner (Chat Konsultasi Interaktif)**:
    - Asisten konsultasi cerdas di panel tengah yang memiliki memori audit kode kandidat.
-   - Memberikan jawaban berbasis fakta dengan mengutip nama berkas dan baris kode riil saat ditanya oleh Tech Lead.
+   - Memberikan jawaban berbasis fakta dengan mengutip nama berkas dan baris kode riil saat ditanya oleh Tech Lead seputar pemahaman kandidat.
 
-4. **Head-to-Head Candidate Benchmark (Fitur Komparasi)**:
-   - Membandingkan 2 hingga 3 kandidat finalis secara berdampingan pada panel kerja.
-   - Menilai kekuatan arsitektur, kelengkapan pengujian, dan kedalaman teknologi masing-masing kandidat secara objektif.
+5. **Head-to-Head Candidate Benchmark (Fitur Komparasi Finalis)**:
+   - Membandingkan 2 hingga 3 kandidat finalis secara berdampingan pada satu layar kerja.
+   - Menyandingkan kedalaman arsitektur, kelengkapan pengujian, dan kesiapan stack teknologi masing-masing kandidat secara objektif.
 
-5. **Action Dispatcher & Constructive Feedback Engine**:
-   - Terintegrasi langsung dengan Google Workspace (Calendar & Gmail) untuk eksekusi undangan wawancara 1-klik.
-   - Menghasilkan draf umpan balik penolakan teknis yang ramah dan konstruktif untuk kandidat yang belum lolos, menghentikan kebiasaan *ghosting* rekrutmen.
+6. **Action Dispatcher, Constructive Feedback & Executive Export**:
+   - Terintegrasi langsung dengan Google Workspace (Calendar & Gmail) untuk eksekusi undangan wawancara 1-klik (slot meeting + link Google Meet).
+   - **Constructive Engineering Feedback Engine**: Menghasilkan draf umpan balik penolakan teknis yang ramah dan membangun bagi kandidat yang belum lolos, menghentikan kebiasaan *ghosting* rekrutmen dan menjaga reputasi *employer branding*.
+   - **Executive PDF Export**: Kemampuan mengekspor laporan investigasi teknis lengkap ke berkas PDF resmi untuk dibagikan ke jajaran pimpinan (CTO/VP of Engineering).
