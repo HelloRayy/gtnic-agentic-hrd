@@ -4,7 +4,9 @@ import type {
   GoogleAuthStatus,
   ScheduleInterviewPayload,
   ScheduleInterviewResponse,
-} from '../types/audit.js';
+  DiscoveredRepo,
+  ConstructiveFeedbackDraft,
+} from '@/types/audit.js';
 
 const API_BASE = '/api';
 
@@ -157,4 +159,54 @@ export async function dispatchScheduleInterview(
   }
 
   return res.json();
+}
+
+export async function discoverCandidateRepos(
+  usernameOrUrl: string,
+  targetSkills?: string[]
+): Promise<DiscoveredRepo[]> {
+  const skillsQuery = targetSkills && targetSkills.length > 0 ? `&skills=${encodeURIComponent(targetSkills.join(','))}` : '';
+  const res = await fetch(`${API_BASE}/discover-repos?url=${encodeURIComponent(usernameOrUrl)}${skillsQuery}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal memuat repositori GitHub kandidat.');
+  }
+  const json = await res.json();
+  return json.repos || [];
+}
+
+export async function sendDeliberationQuestion(
+  dossier: TechnicalDossier,
+  question: string
+): Promise<{ answer: string; anchors: string[] }> {
+  const res = await fetch(`${API_BASE}/deliberate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dossier, question }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal berkonsultasi dengan AI Deliberation Partner.');
+  }
+  const json = await res.json();
+  return {
+    answer: json.answer || '',
+    anchors: json.anchors || [],
+  };
+}
+
+export async function generateConstructiveFeedback(
+  dossier: TechnicalDossier
+): Promise<ConstructiveFeedbackDraft> {
+  const res = await fetch(`${API_BASE}/constructive-feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dossier }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal menyusun umpan balik konstruktif.');
+  }
+  const json = await res.json();
+  return json.draft;
 }

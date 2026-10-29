@@ -3,12 +3,18 @@ import Button from '@atlaskit/button/standard-button';
 import Lozenge from '@atlaskit/lozenge';
 import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
-import type { TechnicalDossier, GoogleAuthStatus, ScheduleInterviewResponse } from '@/types/audit.js';
+import type {
+  TechnicalDossier,
+  GoogleAuthStatus,
+  ScheduleInterviewResponse,
+  ConstructiveFeedbackDraft,
+} from '@/types/audit.js';
 import {
   fetchGoogleAuthStatus,
   fetchGoogleAuthUrl,
   disconnectGoogleAccount,
   dispatchScheduleInterview,
+  generateConstructiveFeedback,
 } from '@/services/auditApi.js';
 
 interface InterviewActionCardProps {
@@ -36,7 +42,9 @@ export function InterviewActionCard({ dossier }: InterviewActionCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<ScheduleInterviewResponse['data'] | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
+  const [feedbackDraft, setFeedbackDraft] = useState<ConstructiveFeedbackDraft | null>(null);
+  const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
+  const [feedbackCopied, setFeedbackCopied] = useState(false);
   useEffect(() => {
     fetchGoogleAuthStatus().then(setAuthStatus);
   }, []);
@@ -87,6 +95,26 @@ export function InterviewActionCard({ dossier }: InterviewActionCardProps) {
     }
   };
 
+  const handleDraftFeedback = async () => {
+    setIsGeneratingFeedback(true);
+    setErrorMsg(null);
+    try {
+      const draft = await generateConstructiveFeedback(dossier);
+      setFeedbackDraft(draft);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setErrorMsg(message);
+    } finally {
+      setIsGeneratingFeedback(false);
+    }
+  };
+
+  const handleCopyFeedback = () => {
+    if (!feedbackDraft) return;
+    navigator.clipboard.writeText(`Subject: ${feedbackDraft.subject}\n\n${feedbackDraft.body}`);
+    setFeedbackCopied(true);
+    setTimeout(() => setFeedbackCopied(false), 2000);
+  };
   return (
     <div
       style={{
@@ -128,6 +156,14 @@ export function InterviewActionCard({ dossier }: InterviewActionCardProps) {
           ) : null}
 
           <Button
+            appearance="default"
+            onClick={handleDraftFeedback}
+            isDisabled={isLoading || isGeneratingFeedback}
+          >
+            {isGeneratingFeedback ? <Spinner size="small" /> : 'Draft Feedback Konstruktif'}
+          </Button>
+
+          <Button
             appearance="primary"
             onClick={() => setIsOpen(!isOpen)}
             isDisabled={isLoading}
@@ -136,7 +172,6 @@ export function InterviewActionCard({ dossier }: InterviewActionCardProps) {
           </Button>
         </div>
       </div>
-
       {errorMsg && (
         <div style={{ marginTop: 12 }}>
           <SectionMessage appearance="error" title="Action Execution Failed">
@@ -235,6 +270,28 @@ export function InterviewActionCard({ dossier }: InterviewActionCardProps) {
             </Button>
           </div>
         </form>
+      )}
+
+      {feedbackDraft && (
+        <div style={{ marginTop: 16, background: '#FFFFFF', border: '1px solid #4C9AFF', borderRadius: 6, padding: 14 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <strong style={{ fontSize: 13, color: '#0747A6' }}>
+              Draf Umpan Balik Konstruktif (Anti-Ghosting Recruiter Feedback)
+            </strong>
+            <Button appearance="primary" onClick={handleCopyFeedback}>
+              {feedbackCopied ? 'Tersalin ke Clipboard!' : 'Setujui & Salin Draf'}
+            </Button>
+          </div>
+          <p style={{ margin: '0 0 6px 0', fontSize: 12, color: '#42526E' }}>
+            <strong>Subjek:</strong> {feedbackDraft.subject}
+          </p>
+          <textarea
+            value={feedbackDraft.body}
+            onChange={(e) => setFeedbackDraft({ ...feedbackDraft, body: e.target.value })}
+            rows={6}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 4, border: '1px solid #DFE1E6', fontSize: 12, lineHeight: 1.5, boxSizing: 'border-box' }}
+          />
+        </div>
       )}
     </div>
   );

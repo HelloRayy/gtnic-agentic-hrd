@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { handleAuditRequest, handleSampleAudit, handleStreamAudit } from '../controllers/auditController.js';
+import {
+  handleAuditRequest,
+  handleSampleAudit,
+  handleStreamAudit,
+  handleDiscoverRepos,
+  handleDeliberationChat,
+  handleConstructiveFeedback,
+} from '../controllers/auditController.js';
 import { config } from '../../config/env.js';
 
 const upload = multer({
@@ -23,3 +30,8 @@ auditRouter.get('/sample', handleSampleAudit);
 auditRouter.get('/sample/stream', handleStreamAudit);
 auditRouter.post('/audit', upload.single('cv'), handleAuditRequest);
 auditRouter.post('/audit/stream', upload.single('cv'), handleStreamAudit);
+
+auditRouter.get('/discover-repos', handleDiscoverRepos);
+auditRouter.post('/discover-repos', handleDiscoverRepos);
+auditRouter.post('/deliberate', handleDeliberationChat);
+auditRouter.post('/constructive-feedback', handleConstructiveFeedback);

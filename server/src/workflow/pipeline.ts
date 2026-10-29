@@ -45,15 +45,25 @@ export class AuditPipeline {
     const jobDesc = input.jobDesc || 'General Engineering Role';
     const auditedRepos: RepoAuditEvidence[] = [];
 
-    // 2. Triage & Deep Structural Audit Phase
     if (candidate.githubUsername) {
-      traceStore.log('TOOL_CALL', 'GITHUB_TRIAGE', `Searching public original repos for user: ${candidate.githubUsername}`);
-      const repoNames = await toolRegistry.executeTool<any, string[]>('github_triage', {
-        username: candidate.githubUsername,
-        targetSkills: candidate.claimedSkills,
-        maxRepos: 4,
-      });
-      traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
+      let repoNames: string[] = [];
+
+      if (input.selectedRepos && input.selectedRepos.length > 0) {
+        repoNames = input.selectedRepos;
+        traceStore.log(
+          'OBSERVATION',
+          'HUMAN_CURATION',
+          `Human Recruiter explicitly selected ${repoNames.length} repositories for audit: ${repoNames.join(', ')}`
+        );
+      } else {
+        traceStore.log('TOOL_CALL', 'GITHUB_TRIAGE', `Searching public original repos for user: ${candidate.githubUsername}`);
+        repoNames = await toolRegistry.executeTool<any, string[]>('github_triage', {
+          username: candidate.githubUsername,
+          targetSkills: candidate.claimedSkills,
+          maxRepos: 4,
+        });
+        traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
+      }
 
       for (const repo of repoNames) {
         traceStore.log('TOOL_CALL', 'GITHUB_AUDIT', `Auditing code structure, subfolder manifests, and authorship for: ${repo}`);

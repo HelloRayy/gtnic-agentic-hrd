@@ -12,3 +12,4 @@ export { InvestigationRadarTab } from './components/InvestigationRadarTab.js';
 export { ClarificationPromptsTab } from './components/ClarificationPromptsTab.js';
 export { TraceEventsTab } from './components/TraceEventsTab.js';
 export { TraceLog } from './components/TraceLog.js';
+export { DeliberationChatTab } from './components/DeliberationChatTab.js';

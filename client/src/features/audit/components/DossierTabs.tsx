@@ -11,7 +11,7 @@ import { EvidenceMatrixTab } from './EvidenceMatrixTab.js';
 import { InvestigationRadarTab } from './InvestigationRadarTab.js';
 import { ClarificationPromptsTab } from './ClarificationPromptsTab.js';
 import { TraceEventsTab } from './TraceEventsTab.js';
-
+import { DeliberationChatTab } from './DeliberationChatTab.js';
 interface DossierTabsProps {
   dossier: TechnicalDossier;
 }
@@ -152,12 +152,17 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
       {/* Tab Konten Interaktif */}
       <Tabs id="dossier-tabs">
         <TabList>
+          <Tab>Deliberasi AI (Tanya Co-Pilot)</Tab>
           <Tab>Matriks Bukti ({dossier.evidenceMatrix.length})</Tab>
           <Tab>Inspeksi Kode Web IDE ({dossier.auditedRepos.length})</Tab>
           <Tab>Radar Investigasi & Sinyal ({dossier.interviewKit.length})</Tab>
           <Tab>Poin Klarifikasi ({dossier.clarificationPrompts.length})</Tab>
           <Tab>Jejak Penalaran CoT ({dossier.traceEvents?.length || 0})</Tab>
         </TabList>
+
+        <TabPanel>
+          <DeliberationChatTab dossier={dossier} />
+        </TabPanel>
 
         <TabPanel>
           <EvidenceMatrixTab

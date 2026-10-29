@@ -117,3 +117,27 @@ export interface ScheduleInterviewResponse {
   };
   error?: string;
 }
+
+export interface DiscoveredRepo {
+  name: string;
+  description: string;
+  language: string;
+  stars: number;
+  lastUpdated: string;
+  isRecommended: boolean;
+  recommendationReason?: string;
+}
+
+export interface DeliberationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  anchors?: string[];
+}
+
+export interface ConstructiveFeedbackDraft {
+  subject: string;
+  body: string;
+  strengthsHighlighted: string[];
+  recommendedLearning: string[];
+}
