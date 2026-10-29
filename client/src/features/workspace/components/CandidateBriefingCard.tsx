@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, Award, AlertCircle } from 'lucide-react';
+import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 
@@ -40,9 +40,9 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
         {/* Skor & Metrik Bukti */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[7px] bg-[#f8f7f4] border border-[#e9e8e6] text-xs font-medium text-[#333641]">
-            <Award size={13} className="text-[#8492c6]" />
-            <span>Skor Faktual {candidate.matchScore}%</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[7px] bg-[#eef7ee] border border-[#c4e3c9] text-xs font-semibold text-[#2b8a3e]">
+            <CheckCircle2 size={13} className="text-[#2b8a3e]" />
+            <span>{verifiedCount}/{dossier.evidenceMatrix.length} Klaim Terverifikasi</span>
           </div>
           <span className="text-[10.5px] font-medium tabular-nums text-[#8c8d97] bg-[#fdfcfb] px-2 py-1 rounded border border-[#eeedea]">
             {(dossier.executionTimeMs / 1000).toFixed(1)}s audit

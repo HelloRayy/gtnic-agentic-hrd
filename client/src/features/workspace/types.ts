@@ -6,6 +6,7 @@ export interface WorkspaceCandidate {
   role: string;
   status: 'verified' | 'partial' | 'warning' | 'unverified';
   statusLabel: string;
+  stage: 'screening' | 'interview' | 'accepted';
   matchScore: number;
   avatarSeed: string;
   githubUrl: string;

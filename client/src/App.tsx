@@ -75,7 +75,12 @@ export default function App() {
             role: dossierResult.jobTitle || tempJobTitle,
             status: 'verified',
             statusLabel: 'TERVERIFIKASI',
-            matchScore: Math.floor(80 + Math.random() * 18),
+            stage: 'screening',
+            matchScore: Math.round(
+              ((dossierResult.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length) /
+                (dossierResult.evidenceMatrix.length || 1)) *
+                100
+            ),
             avatarSeed: (dossierResult.candidate.name || tempCandidateName)
               .split(' ')
               .map((w) => w[0])
@@ -235,6 +240,17 @@ export default function App() {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const handleMoveCandidateStage = (
+    candidateId: string,
+    newStage: 'screening' | 'interview' | 'accepted'
+  ) => {
+    setCandidates((prev) =>
+      prev.map((cand) =>
+        cand.id === candidateId ? { ...cand, stage: newStage } : cand
+      )
+    );
+  };
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#f8f7f4]">
       {/* Panel 1: Candidate Sidebar & Ingestion Queue */}
@@ -242,6 +258,7 @@ export default function App() {
         candidates={candidates}
         activeCandidateId={activeCandidateId}
         onSelectCandidate={setActiveCandidateId}
+        onMoveStage={handleMoveCandidateStage}
         onOpenUploadModal={() => setIsAddModalOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
         googleStatus={googleStatus}

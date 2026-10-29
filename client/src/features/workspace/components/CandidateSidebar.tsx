@@ -168,7 +168,9 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                       flexShrink: 0,
                     }}
                   >
-                    {cand.matchScore}%
+                    {cand.dossier?.evidenceMatrix
+                      ? `${cand.dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length}/${cand.dossier.evidenceMatrix.length} Bukti`
+                      : cand.statusLabel}
                   </small>
                 </div>
                 <div
