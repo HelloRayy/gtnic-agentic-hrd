@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "TalentTrace AI - Autonomous Technical Screener for Enterprise Teams",
   "scripts": {
+    "dev": "npm run dev:server & npm run dev:client",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build:server": "npm run build --prefix server",
