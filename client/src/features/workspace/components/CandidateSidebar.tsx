@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Users, Calendar } from 'lucide-react';
+import { Plus, User, Calendar } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
@@ -79,10 +79,79 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
               key={cand.id}
               onClick={() => onSelectCandidate(cand.id)}
               className={`nav-item ${isActive ? 'active' : ''}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '9px 12px',
+                marginBottom: 4,
+                borderRadius: 8,
+              }}
             >
-              <Users size={16} strokeWidth={isActive ? 2 : 1.65} />
-              <span>{cand.name}</span>
-              <small>{cand.matchScore}%</small>
+              <div
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 6,
+                  background: isActive ? '#e2e7f8' : '#f0eee9',
+                  color: isActive ? '#596aa9' : '#858690',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <User size={14} strokeWidth={isActive ? 2 : 1.75} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? '#333641' : '#4d4f59',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {cand.name}
+                  </span>
+                  <small
+                    style={{
+                      fontSize: 9.5,
+                      fontWeight: 500,
+                      color: isActive ? '#596aa9' : '#8c8d97',
+                      background: isActive ? '#e0e4f4' : '#eeede9',
+                      padding: '1px 5px',
+                      borderRadius: 4,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {cand.matchScore}%
+                  </small>
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: '#8c8d97',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    marginTop: 1,
+                    lineHeight: 1.25,
+                  }}
+                >
+                  {cand.role}
+                </div>
+              </div>
             </button>
           );
         })}
