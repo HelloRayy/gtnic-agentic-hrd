@@ -1,0 +1,56 @@
+import React from 'react';
+import { ExternalLink, RefreshCw } from 'lucide-react';
+import type { WorkspaceCandidate } from '../types.js';
+
+interface DeliberationTopbarProps {
+  candidate: WorkspaceCandidate;
+  isLoading: boolean;
+  onReaudit: () => void;
+  onOpenWebIde: () => void;
+}
+
+export const DeliberationTopbar: React.FC<DeliberationTopbarProps> = ({
+  candidate,
+  isLoading,
+  onReaudit,
+  onOpenWebIde,
+}) => {
+  return (
+    <header className="topbar select-none">
+      {/* Authentic OpenDots Breadcrumbs */}
+      <div className="breadcrumbs">
+        <span>TalentTrace</span>
+        <span>/</span>
+        <span>Antrean</span>
+        <span>/</span>
+        <strong>{candidate.name}</strong>
+      </div>
+
+      {/* Top Actions */}
+      <div className="flex items-center gap-3">
+        <span className="mode-badge live">
+          LIVE FORENSICS
+        </span>
+
+        <button
+          type="button"
+          onClick={onOpenWebIde}
+          className="text-button inline-flex items-center gap-1.5 cursor-pointer text-[#7f8290] hover:text-[#333641] transition-colors"
+        >
+          <ExternalLink size={13} className="text-[#8492c6]" />
+          <span>Web IDE (github.dev)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onReaudit}
+          disabled={isLoading}
+          className="primary inline-flex items-center gap-1.5 py-1.5 px-3 rounded-[8px] text-xs font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] shadow-[0_1px_2px_rgba(118,137,211,0.25)] transition-all cursor-pointer disabled:opacity-50"
+        >
+          <RefreshCw size={12} className={isLoading ? 'animate-spin' : ''} />
+          <span>{isLoading ? 'Mengaudit...' : 'Audit Ulang'}</span>
+        </button>
+      </div>
+    </header>
+  );
+};

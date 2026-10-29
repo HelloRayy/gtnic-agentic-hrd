@@ -34,4 +34,5 @@ auditRouter.post('/audit/stream', upload.single('cv'), handleStreamAudit);
 auditRouter.get('/discover-repos', handleDiscoverRepos);
 auditRouter.post('/discover-repos', handleDiscoverRepos);
 auditRouter.post('/deliberate', handleDeliberationChat);
+auditRouter.post('/audit/chat', handleDeliberationChat);
 auditRouter.post('/constructive-feedback', handleConstructiveFeedback);

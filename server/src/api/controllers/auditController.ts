@@ -276,18 +276,42 @@ export async function handleDiscoverRepos(req: Request, res: Response): Promise<
 
 export async function handleDeliberationChat(req: Request, res: Response): Promise<void> {
   try {
-    const { dossier, question } = req.body as { dossier: TechnicalDossier; question: string };
+    const body = req.body as Record<string, unknown>;
+    const question = typeof body.question === 'string'
+      ? body.question
+      : typeof body.message === 'string'
+      ? body.message
+      : '';
 
-    if (!dossier || !question) {
-      res.status(400).json({ success: false, error: 'Dossier dan pertanyaan wajib diisi.' });
+    if (!question) {
+      res.status(400).json({ success: false, error: 'Pertanyaan deliberasi wajib diisi.' });
       return;
     }
+
+    // Extract dossier either directly or reconstruct from flat payload fields
+    const rawDossier = body.dossier && typeof body.dossier === 'object' ? (body.dossier as Partial<TechnicalDossier>) : null;
+    const candidateName = typeof body.candidateName === 'string'
+      ? body.candidateName
+      : rawDossier?.candidate?.name || 'Kandidat';
+    const jobTitle = typeof body.jobTitle === 'string'
+      ? body.jobTitle
+      : rawDossier?.jobTitle || 'Software Engineer';
+    const auditedRepos: string[] = Array.isArray(body.auditedRepos)
+      ? (body.auditedRepos as string[])
+      : rawDossier?.auditedRepos || [];
+    const overallAssessment = typeof body.overallAssessment === 'string'
+      ? body.overallAssessment
+      : rawDossier?.overallAssessment || 'Assessment kandidat teknis.';
+
+    const evidenceMatrix = Array.isArray(rawDossier?.evidenceMatrix)
+      ? rawDossier.evidenceMatrix
+      : [];
 
     if (!routerClient.isConfigured) {
       res.json({
         success: true,
-        answer: `[Mode Simulasi Co-Pilot] Pertanyaan Anda terkait kandidat ${dossier.candidate.name}: "${question}". Kandidat ini memiliki ${dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length} klaim terverifikasi di repositori ${dossier.auditedRepos.join(', ')}. Disarankan mendalami topik arsitektur saat wawancara.`,
-        anchors: dossier.auditedRepos.slice(0, 2),
+        answer: `[Mode Simulasi Co-Pilot] Pertanyaan Anda terkait kandidat ${candidateName}: "${question}". Kandidat ini memiliki ${evidenceMatrix.filter((e) => e.status === 'VERIFIED').length} klaim terverifikasi di repositori ${auditedRepos.join(', ') || 'publik'}. Analisis codebase menunjukkan pola arsitektur yang konsisten dengan standar teknis modern.`,
+        anchors: auditedRepos.slice(0, 2),
       });
       return;
     }
@@ -300,14 +324,12 @@ Rules:
 4. Output valid JSON only: { "answer": "your answer in Bahasa Indonesia", "anchors": ["repo/file references"] }`.trim();
 
     const userPrompt = `
-Kandidat: ${dossier.candidate.name}
-Target Posisi: ${dossier.jobTitle}
-Repositori yang Diaudit: ${dossier.auditedRepos.join(', ')}
-Ringkasan Eksekutif: ${dossier.overallAssessment}
+Kandidat: ${candidateName}
+Target Posisi: ${jobTitle}
+Repositori yang Diaudit: ${auditedRepos.join(', ')}
+Ringkasan Eksekutif: ${overallAssessment}
 Matriks Bukti Klaim:
-${dossier.evidenceMatrix.map((e) => `- [${e.status}] ${e.claim}: ${e.evidenceSummary} (Repo: ${e.repoAnchor || 'null'})`).join('\n')}
-Poin Klarifikasi:
-${dossier.clarificationPrompts.join('\n')}
+${evidenceMatrix.map((e) => `- [${e.status}] ${e.claim}: ${e.evidenceSummary} (Repo: ${e.repoAnchor || 'null'})`).join('\n')}
 
 Pertanyaan Tim Rekruter/Tech Lead:
 ${question}
