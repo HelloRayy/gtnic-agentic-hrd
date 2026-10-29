@@ -1,6 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { config } from '../../config/env.js';
 import { auditCacheStore } from '../../memory/cacheStore.js';
+import { parseManifestContent } from './manifestParsers.js';
 import type { BaseTool, ToolParamDef } from '../registry.js';
 import type { RepoAuditEvidence, AuthorshipStatus } from '../../core/types.js';
 
@@ -8,29 +9,69 @@ const octokit = new Octokit({
   auth: config.githubToken || undefined,
 });
 
-export class GithubTriageTool implements BaseTool<{ username: string }, string[]> {
+export interface GithubTriageParams {
+  username: string;
+  targetSkills?: string[];
+  maxRepos?: number;
+}
+
+export class GithubTriageTool implements BaseTool<GithubTriageParams, string[]> {
   public name = 'github_triage';
-  public description = 'Discovers and filters original, active public repositories for a candidate.';
+  public description = 'Discovers and filters original, active public repositories for a candidate, scored by skill relevance.';
   public parameterSchema: Record<string, ToolParamDef> = {
     username: { type: 'string', required: true, description: 'GitHub username of the candidate' },
   };
 
-  public async execute(params: { username: string }): Promise<string[]> {
+  public async execute(params: GithubTriageParams): Promise<string[]> {
     try {
       const { data: repos } = await octokit.rest.repos.listForUser({
         username: params.username,
         sort: 'pushed',
         direction: 'desc',
-        per_page: 15,
+        per_page: 30,
       });
 
       const originalRepos = repos.filter(r => !r.fork && !r.archived);
-      return originalRepos.slice(0, 2).map(r => r.name);
-    } catch (err: any) {
-      if (err.status === 403) {
+      const targetSkillsLower = (params.targetSkills || []).map(s => s.toLowerCase());
+
+      const scored = originalRepos.map(r => {
+        let score = 0;
+        const nameLower = r.name.toLowerCase();
+        const descLower = (r.description || '').toLowerCase();
+        const langLower = (r.language || '').toLowerCase();
+        const rawTopics = 'topics' in r && Array.isArray(r.topics) ? r.topics : [];
+        const topics = rawTopics.map((t: string) => t.toLowerCase());
+        for (const skill of targetSkillsLower) {
+          if (langLower.includes(skill) || skill.includes(langLower)) score += 10;
+          if (nameLower.includes(skill)) score += 8;
+          if (descLower.includes(skill)) score += 5;
+          if (topics.some((t: string) => t.includes(skill))) score += 6;
+        }
+
+        const stars = typeof r.stargazers_count === 'number' ? r.stargazers_count : 0;
+        if (stars > 0) score += Math.min(stars, 5);
+
+        const dateStr = r.pushed_at || r.updated_at || '';
+        if (dateStr) {
+          const pushedDate = new Date(dateStr).getTime();
+          const oneYearAgo = Date.now() - 365 * 24 * 3600 * 1000;
+          if (pushedDate > oneYearAgo) score += 4;
+        }
+
+        return { repo: r, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      const limit = params.maxRepos || 4;
+      const selectedNames = scored.slice(0, limit).map(s => s.repo.name);
+      return selectedNames.length > 0 ? selectedNames : originalRepos.slice(0, limit).map(r => r.name);
+    } catch (err: unknown) {
+      const isRateLimit = typeof err === 'object' && err !== null && 'status' in err && (err as { status: number }).status === 403;
+      if (isRateLimit) {
         console.warn(`[GithubTriageTool] Rate limit reached for GitHub API. Provide GITHUB_TOKEN in .env to expand limit.`);
       } else {
-        console.warn(`[GithubTriageTool] Failed for ${params.username}:`, err.message);
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(`[GithubTriageTool] Failed for ${params.username}:`, msg);
       }
       return [];
     }
@@ -80,11 +121,20 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
       const ignoredPrefixes = ['node_modules/', 'dist/', 'build/', '.next/', 'vendor/', '.git/', 'coverage/'];
       const filePaths = rawFilePaths.filter(p => !ignoredPrefixes.some(prefix => p.startsWith(prefix)));
 
-      const manifestFileNames = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'pom.xml', 'build.gradle'];
+      const manifestFileNames = [
+        'package.json',
+        'go.mod',
+        'Cargo.toml',
+        'requirements.txt',
+        'Pipfile',
+        'pyproject.toml',
+        'pom.xml',
+        'build.gradle',
+      ];
       const manifestPaths = filePaths.filter(p => {
         const parts = p.split('/');
         return parts.length <= 4 && manifestFileNames.includes(parts[parts.length - 1]);
-      }).slice(0, 6);
+      }).slice(0, 8);
 
       const isMonorepo = manifestPaths.length > 1 || filePaths.some(p =>
         p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json'
@@ -96,15 +146,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
             const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: manifestPath });
             if ('content' in contentData && typeof contentData.content === 'string') {
               const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
-              let deps: string[] = [];
-              if (manifestPath.endsWith('package.json')) {
-                try {
-                  const parsed = JSON.parse(decoded) as { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
-                  deps = Object.keys({ ...parsed.dependencies, ...parsed.devDependencies }).slice(0, 20);
-                } catch {}
-              } else {
-                deps = decoded.split('\n').filter(l => l.trim().length > 0 && !l.startsWith('//') && !l.startsWith('#')).slice(0, 15);
-              }
+              const deps = parseManifestContent(manifestPath, decoded);
               return { path: manifestPath, dependencies: deps };
             }
           } catch {}
@@ -114,7 +156,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
       const manifestFiles = manifestResults.filter((m): m is { path: string; dependencies: string[] } => m !== null);
 
       const hasTests = filePaths.some(p =>
-        p.includes('.test.') || p.includes('.spec.') || p.includes('__tests__') || p.endsWith('_test.go')
+        p.includes('.test.') || p.includes('.spec.') || p.includes('__tests__') || p.endsWith('_test.go') || p.startsWith('tests/')
       );
 
       const hasCiCd = filePaths.some(p =>
@@ -125,6 +167,19 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         p.toLowerCase().includes('dockerfile') || p.toLowerCase().includes('docker-compose')
       );
 
+      // Virtual manifests for containerization and CI/CD
+      if (hasDocker) {
+        manifestFiles.push({
+          path: 'Dockerfile',
+          dependencies: ['docker', 'container', 'containerization'],
+        });
+      }
+      if (hasCiCd) {
+        manifestFiles.push({
+          path: '.github/workflows',
+          dependencies: ['ci/cd', 'github-actions', 'automation'],
+        });
+      }
       // Authorship Analysis (Fuzzy & Non-Punitive)
       let recentCommitSample: string[] = [];
       let commitAuthors: string[] = [];
@@ -196,11 +251,13 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
 
       auditCacheStore.set(owner, repo, result);
       return result;
-    } catch (err: any) {
-      if (err.status === 403) {
+    } catch (err: unknown) {
+      const isRateLimit = typeof err === 'object' && err !== null && 'status' in err && (err as { status: number }).status === 403;
+      if (isRateLimit) {
         console.warn(`[GithubRepoAuditTool] GitHub API Rate Limit exceeded for ${owner}/${repo}.`);
       } else {
-        console.warn(`[GithubRepoAuditTool] Failed for ${owner}/${repo}:`, err.message);
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(`[GithubRepoAuditTool] Failed for ${owner}/${repo}:`, msg);
       }
       return null;
     }

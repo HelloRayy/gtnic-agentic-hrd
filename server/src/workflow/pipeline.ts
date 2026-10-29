@@ -4,6 +4,7 @@ import { TraceStore } from '../memory/traceStore.js';
 import { SYSTEM_PROMPT_ENTERPRISE_AUDITOR } from '../prompts/systemPrompts.js';
 import { formatSynthesisPrompt, formatAssessmentPrompt, formatInterviewPrompt } from '../prompts/templates.js';
 import { findTransferableMatch } from '../core/techTaxonomy.js';
+import { createSandboxFallbackRepo } from './sandboxFallback.js';
 import type {
   AuditInput,
   CandidateProfile,
@@ -49,8 +50,9 @@ export class AuditPipeline {
       traceStore.log('TOOL_CALL', 'GITHUB_TRIAGE', `Searching public original repos for user: ${candidate.githubUsername}`);
       const repoNames = await toolRegistry.executeTool<any, string[]>('github_triage', {
         username: candidate.githubUsername,
+        targetSkills: candidate.claimedSkills,
+        maxRepos: 4,
       });
-
       traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
 
       for (const repo of repoNames) {
@@ -76,48 +78,7 @@ export class AuditPipeline {
           'RATE_LIMIT_FALLBACK',
           'GitHub API rate limit or empty original repo detected. Loading verified structural sandbox repository with live production demo.'
         );
-        auditedRepos.push({
-          repoName: 'distributed-order-service',
-          repoUrl: `https://github.com/${candidate.githubUsername}/distributed-order-service`,
-          description: 'High-throughput microservice order processing with event streaming and caching',
-          primaryLanguage: 'TypeScript',
-          stars: 42,
-          isFork: false,
-          lastUpdated: new Date().toISOString(),
-          manifestFiles: [
-            {
-              path: 'package.json',
-              dependencies: ['react', 'next', 'express', 'mysql2', 'typeorm', 'ioredis', 'amqplib', 'docker', 'jest'],
-            },
-          ],
-          fileTreeSample: [
-            'src/api/routes/orderRoutes.ts',
-            'src/services/orderService.ts',
-            'src/infra/database.ts',
-            'src/infra/queueConsumer.ts',
-            'tests/order.test.ts',
-            'Dockerfile',
-            '.github/workflows/ci.yml',
-          ],
-          hasTests: true,
-          hasCiCd: true,
-          hasDocker: true,
-          commitCountSample: 52,
-          isSquashedOrMigrated: false,
-          recentCommitSample: [
-            'feat: add distributed queue consumer with retry backoff',
-            'test: add integration test for order checkout',
-            'refactor: optimize redis cache invalidation TTL',
-          ],
-          license: 'MIT',
-          isMonorepo: false,
-          authorshipStatus: 'MATCHED',
-          authorshipNote: 'Git commit author matches candidate profile name.',
-          commitAuthors: [candidate.name],
-          isPotentialClone: false,
-          cached: true,
-          homepageUrl: 'https://distributed-order-demo.vercel.app',
-        });
+        auditedRepos.push(createSandboxFallbackRepo(candidate.githubUsername, candidate.name));
       }
     } else {
       traceStore.log('REFLECTION', 'FALLBACK_MODE', 'No GitHub username detected. Switching to Enterprise Experience Density Index mode.');
@@ -249,12 +210,29 @@ export class AuditPipeline {
 
     for (const item of evidenceMatrix) {
       if (item.status === 'VERIFIED') {
-        const hasManifestEvidence = allDeps.some(d => d.includes(item.claim.toLowerCase()));
+        const claimLower = item.claim.toLowerCase();
+        const hasManifestEvidence = allDeps.some(d => d.includes(claimLower));
         const hasRepoAnchor = item.repoAnchor && auditedRepos.some(r => r.repoName === item.repoAnchor);
-        if (!hasManifestEvidence && !hasRepoAnchor) {
-          item.status = 'PARTIAL';
-          item.evidenceSummary += ' [Koreksi Mandiri: Diturunkan ke PARTIAL karena tidak ditemukan jangkar fisik manifest]';
+        const hasLanguageOrFileMatch = auditedRepos.some(
+          r => r.primaryLanguage.toLowerCase().includes(claimLower) ||
+               r.fileTreeSample.some(f => f.toLowerCase().includes(claimLower))
+        );
+
+        if (!hasManifestEvidence && !hasRepoAnchor && !hasLanguageOrFileMatch) {
+          const trans = findTransferableMatch(item.claim, allDeps);
+          if (trans.isTransferable && trans.matchedDep) {
+            item.status = 'TRANSFERABLE';
+            item.evidenceSummary += ` [Koreksi Mandiri Grounding: Disesuaikan ke TRANSFERABLE karena terdeteksi teknologi serumpun '${trans.matchedDep}']`;
+          } else {
+            item.status = 'PARTIAL';
+            item.evidenceSummary += ' [Koreksi Mandiri Grounding: Diturunkan ke PARTIAL karena tidak ditemukan bukti artefak fisik pada manifest repositori]';
+          }
           correctionCount++;
+          traceStore.log(
+            'REFLECTION',
+            'GROUNDING_CORRECTION',
+            `Corrected claim '${item.claim}' to '${item.status}' based on deterministic manifest verification.`
+          );
         }
       }
     }

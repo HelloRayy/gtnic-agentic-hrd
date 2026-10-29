@@ -1,8 +1,11 @@
 import type { CandidateProfile, RepoAuditEvidence } from '../core/types.js';
 
-function sanitizeForPrompt(obj: any): string {
+function sanitizeForPrompt(obj: unknown): string {
   const json = JSON.stringify(obj, null, 2);
-  return json.replace(/<\/untrusted_code_evidence>/gi, '&lt;/untrusted_code_evidence&gt;');
+  const injectionRegex = /(ignore\s+all\s+(previous\s+)?instructions|system\s+prompt|you\s+must\s+say\s+verified|override\s+all\s+rules|developer\s+mode)/gi;
+  return json
+    .replace(/<\/untrusted_code_evidence>/gi, '&lt;/untrusted_code_evidence&gt;')
+    .replace(injectionRegex, '[SANITIZED_INJECTION_ATTEMPT]');
 }
 
 export function formatAssessmentPrompt(
