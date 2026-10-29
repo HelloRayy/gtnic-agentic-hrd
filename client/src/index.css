@@ -144,11 +144,11 @@ body {
 
 /* Sidebar Nav & Profile (OpenDots Exact Spec) */
 .sidebar {
-  width: 242px;
+  width: 280px;
   flex-shrink: 0;
   background: #fbfaf8;
   border-right: 1px solid var(--line);
-  padding: 31px 18px 20px;
+  padding: 28px 16px 20px;
   display: flex;
   flex-direction: column;
   height: 100vh;

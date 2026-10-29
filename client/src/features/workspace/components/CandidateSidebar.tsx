@@ -22,7 +22,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   googleStatus,
 }) => {
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" style={{ width: 280 }}>
       {/* Authentic OpenDots Wordmark */}
       <button type="button" className="wordmark">
         <span className="dotted-logo">
@@ -47,17 +47,32 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         </div>
       </div>
 
-      {/* Primary Ingestion Action Button */}
+      {/* Minimal OpenDots Ingestion Button as requested */}
       <button
         type="button"
         onClick={onOpenUploadModal}
-        className="primary full inline-flex items-center justify-center gap-2"
-        style={{ marginBottom: 18 }}
+        className="btn-press"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          width: '100%',
+          padding: '8px 12px',
+          borderRadius: 8,
+          border: '1px solid #e9e8e6',
+          backgroundColor: '#ffffff',
+          color: '#333641',
+          fontSize: 12,
+          fontWeight: 500,
+          marginBottom: 18,
+          cursor: 'pointer',
+          boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
+          transition: 'all 0.15s ease',
+        }}
       >
-        <Plus size={16} />
-        <span>Tambah Pelamar / CV</span>
+        <Plus size={15} strokeWidth={2} style={{ color: '#7285d5' }} />
+        <span>Tambah Pelamar</span>
       </button>
-
       {/* Candidates Queue (Dots Nav) */}
       <div className="nav-label">
         ANTREAN PELAMAR ({candidates.length})
