@@ -1,6 +1,6 @@
 import Lozenge from '@atlaskit/lozenge';
 import Spinner from '@atlaskit/spinner';
-import type { TraceEvent } from '../../../types/audit.js';
+import type { TraceEvent } from '@/types/audit.js';
 
 interface StepInfo {
   id: string;

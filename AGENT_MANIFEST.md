@@ -22,14 +22,14 @@
 
 | Domain Fitur | Controller / Service / Business Logic | Leaf Component / UI Target |
 | :--- | :--- | :--- |
-| **Agent Core & Reasoning** | `server/src/core/`, `server/src/workflow/` | `client/src/features/audit/` |
-| **Tool Calling & Registry** | `server/src/tools/` | `client/src/features/tools/` |
-| **Memory & Traceability** | `server/src/memory/` | `client/src/features/trace/` |
-| **Prompts & Synthesis** | `server/src/prompts/`, `server/src/providers/` | `client/src/features/audit/` |
-| **API Transport & Routing** | `server/src/api/` | `client/src/services/` |
-| **Workspace Integrations** | `server/src/services/googleAuthService.ts` | `client/src/features/integrations/`, `client/src/features/audit/components/InterviewActionCard.tsx` |
-
-*(Perbarui tabel ini saat membuat modul atau domain baru).*
+| **Agent Core & Reasoning** | `server/src/core/types.ts`, `server/src/workflow/pipeline.ts` | `client/src/features/audit/components/DossierTabs.tsx` |
+| **Evidence & Fact Matrix** | `server/src/prompts/templates.ts`, `server/src/workflow/pipeline.ts` | `client/src/features/audit/components/EvidenceMatrixTab.tsx` |
+| **Investigation Radar** | `server/src/prompts/templates.ts` | `client/src/features/audit/components/InvestigationRadarTab.tsx`, `InvestigationCard.tsx` |
+| **Code Inspector (IDE)** | `server/src/tools/implementations/githubAuditorTool.ts` | `client/src/features/audit/components/CodeInspectorTab.tsx` |
+| **Tool Calling & Registry** | `server/src/tools/index.ts`, `server/src/tools/registry.ts` | `server/src/tools/implementations/` |
+| **Memory & Traceability** | `server/src/memory/traceStore.ts`, `cacheStore.ts` | `client/src/features/audit/components/TraceEventsTab.tsx`, `TraceLog.tsx` |
+| **Workspace Integrations** | `server/src/services/googleAuthService.ts`, `googleAuthController.ts` | `client/src/features/integrations/components/HrdIntegrationsModal.tsx`, `client/src/features/audit/components/InterviewActionCard.tsx` |
+| **API Transport & Client** | `server/src/api/routes/`, `server/src/api/controllers/` | `client/src/services/auditApi.ts` |
 
 ---
 

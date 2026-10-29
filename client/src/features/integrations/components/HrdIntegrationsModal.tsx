@@ -3,12 +3,12 @@ import Button from '@atlaskit/button/standard-button';
 import Lozenge from '@atlaskit/lozenge';
 import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
-import type { GoogleAuthStatus } from '../../../types/audit.js';
+import type { GoogleAuthStatus } from '@/types/audit.js';
 import {
   fetchGoogleAuthStatus,
   fetchGoogleAuthUrl,
   disconnectGoogleAccount,
-} from '../../../services/auditApi.js';
+} from '@/services/auditApi.js';
 
 interface HrdIntegrationsModalProps {
   isOpen: boolean;

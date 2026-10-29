@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Badge from '@atlaskit/badge';
-import type { TraceEvent } from '../../../types/audit.js';
+import type { TraceEvent } from '@/types/audit.js';
 
 interface TraceLogProps {
   events: TraceEvent[];

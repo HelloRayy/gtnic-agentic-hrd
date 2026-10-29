@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@atlaskit/button/standard-button';
 import { ExternalLink, Copy, Check, ShieldAlert, CheckCircle2, HelpCircle } from 'lucide-react';
-import type { InterviewQuestion } from '../../../types/audit.js';
+import type { InterviewQuestion } from '@/types/audit.js';
 
 interface InvestigationCardProps {
   item: InterviewQuestion;

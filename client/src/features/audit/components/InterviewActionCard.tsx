@@ -3,13 +3,13 @@ import Button from '@atlaskit/button/standard-button';
 import Lozenge from '@atlaskit/lozenge';
 import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
-import type { TechnicalDossier, GoogleAuthStatus, ScheduleInterviewResponse } from '../../../types/audit.js';
+import type { TechnicalDossier, GoogleAuthStatus, ScheduleInterviewResponse } from '@/types/audit.js';
 import {
   fetchGoogleAuthStatus,
   fetchGoogleAuthUrl,
   disconnectGoogleAccount,
   dispatchScheduleInterview,
-} from '../../../services/auditApi.js';
+} from '@/services/auditApi.js';
 
 interface InterviewActionCardProps {
   dossier: TechnicalDossier;

@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { AuditHeader } from './features/audit/components/AuditHeader.js';
-import { AuditInputForm } from './features/audit/components/AuditInputForm.js';
-import { AuditProgress } from './features/audit/components/AuditProgress.js';
-import { DossierTabs } from './features/audit/components/DossierTabs.js';
-import { streamAuditExecution, fetchGoogleAuthStatus } from './services/auditApi.js';
-import { GoogleAuthBanner } from './features/integrations/components/GoogleAuthBanner.js';
-import { HrdIntegrationsModal } from './features/integrations/components/HrdIntegrationsModal.js';
-import type { TechnicalDossier, TraceEvent, GoogleAuthStatus } from './types/audit.js';
+import {
+  AuditHeader,
+  AuditInputForm,
+  AuditProgress,
+  DossierTabs,
+} from '@/features/audit/index.js';
+import {
+  GoogleAuthBanner,
+  HrdIntegrationsModal,
+} from '@/features/integrations/index.js';
+import { streamAuditExecution, fetchGoogleAuthStatus } from '@/services/auditApi.js';
+import type { TechnicalDossier, TraceEvent, GoogleAuthStatus } from '@/types/audit.js';
 
 export default function App() {
   const [dossier, setDossier] = useState<TechnicalDossier | null>(null);

@@ -1,7 +1,7 @@
 import Button from '@atlaskit/button/standard-button';
 import SectionMessage from '@atlaskit/section-message';
 import { ExternalLink, Code2, Terminal, CheckCircle2 } from 'lucide-react';
-import type { EvidenceItem, InterviewQuestion } from '../../../types/audit.js';
+import type { EvidenceItem, InterviewQuestion } from '@/types/audit.js';
 
 interface CodeInspectorTabProps {
   auditedRepos: string[];

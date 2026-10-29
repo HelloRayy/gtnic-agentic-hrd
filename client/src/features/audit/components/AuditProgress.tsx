@@ -2,7 +2,7 @@ import SectionMessage from '@atlaskit/section-message';
 import Badge from '@atlaskit/badge';
 import { AuditStepTracker } from './AuditStepTracker.js';
 import { TraceLog } from './TraceLog.js';
-import type { TraceEvent } from '../../../types/audit.js';
+import type { TraceEvent } from '@/types/audit.js';
 
 interface AuditProgressProps {
   isLoading: boolean;

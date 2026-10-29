@@ -1,6 +1,6 @@
 import Lozenge from '@atlaskit/lozenge';
 import Button from '@atlaskit/button/standard-button';
-import type { GoogleAuthStatus } from '../../../types/audit.js';
+import type { GoogleAuthStatus } from '@/types/audit.js';
 
 interface AuditHeaderProps {
   onOpenIntegrations: () => void;
