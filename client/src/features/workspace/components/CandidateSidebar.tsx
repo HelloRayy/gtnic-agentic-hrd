@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus, User, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, User, Calendar, GripVertical } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
@@ -8,6 +8,10 @@ interface CandidateSidebarProps {
   candidates: WorkspaceCandidate[];
   activeCandidateId: string;
   onSelectCandidate: (id: string) => void;
+  onMoveStage?: (
+    candidateId: string,
+    newStage: 'screening' | 'interview' | 'accepted'
+  ) => void;
   onOpenUploadModal: () => void;
   onOpenIntegrations: () => void;
   googleStatus: GoogleAuthStatus | null;
@@ -17,10 +21,24 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   candidates,
   activeCandidateId,
   onSelectCandidate,
+  onMoveStage,
   onOpenUploadModal,
   onOpenIntegrations,
   googleStatus,
 }) => {
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<string | null>(null);
+
+  const stages: Array<{
+    id: 'screening' | 'interview' | 'accepted';
+    label: string;
+    dotColor: string;
+  }> = [
+    { id: 'screening', label: 'Screening', dotColor: '#8c8d97' },
+    { id: 'interview', label: 'Interview', dotColor: '#7285d5' },
+    { id: 'accepted', label: 'Lolos / Lanjut', dotColor: '#8cac91' },
+  ];
+
   return (
     <aside className="sidebar" style={{ width: 280 }}>
       {/* Authentic OpenDots Wordmark */}
@@ -64,7 +82,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
           color: '#242424',
           fontSize: 13,
           fontWeight: 500,
-          marginBottom: 18,
+          marginBottom: 14,
           cursor: 'pointer',
           boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
           transition: 'all 0.15s ease',
@@ -74,22 +92,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         <span>Tambah Pelamar</span>
       </button>
 
-      {/* Candidates Queue (Dots Nav) */}
+      {/* Candidates Classified by 3 Stages with Hand Drag & Drop */}
       <div
-        className="nav-label"
-        style={{
-          fontSize: 11,
-          fontWeight: 600,
-          color: '#767676',
-          letterSpacing: '0.6px',
-          marginBottom: 8,
-          padding: '0 4px',
-        }}
-      >
-        ANTREAN PELAMAR ({candidates.length})
-      </div>
-      <nav
-        className="dots-nav"
         style={{
           overflowY: 'auto',
           flex: 1,
@@ -97,100 +101,224 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
           paddingRight: 2,
         }}
       >
-        {candidates.map((cand) => {
-          const isActive = cand.id === activeCandidateId;
+        {stages.map((stage) => {
+          const stageCandidates = candidates.filter(
+            (c) => (c.stage || 'screening') === stage.id
+          );
+          const isOver = dragOverStage === stage.id;
+
           return (
-            <button
-              type="button"
-              key={cand.id}
-              onClick={() => onSelectCandidate(cand.id)}
-              className={`nav-item ${isActive ? 'active' : ''}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '10px 12px',
-                marginBottom: 4,
-                borderRadius: 8,
-                border: 0,
-                backgroundColor: isActive ? '#eeeff7' : 'transparent',
-                color: isActive ? '#596aa9' : '#707070',
-                width: '100%',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'background 0.15s ease, color 0.15s ease',
-              }}
-            >
+            <div key={stage.id} style={{ marginBottom: 12 }}>
+              {/* Stage Category Header */}
               <div
                 style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: isActive ? '#e0e4f4' : '#f0eee9',
-                  color: isActive ? '#596aa9' : '#858690',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
+                  justifyContent: 'space-between',
+                  padding: '4px 6px',
+                  marginBottom: 4,
                 }}
               >
-                <User size={16} strokeWidth={isActive ? 2 : 1.75} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 6,
-                  }}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span
                     style={{
-                      fontSize: 13.5,
-                      fontWeight: isActive ? 600 : 550,
-                      color: '#242424',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      backgroundColor: stage.dotColor,
                     }}
-                  >
-                    {cand.name}
-                  </span>
-                  <small
+                  />
+                  <span
                     style={{
                       fontSize: 10.5,
-                      fontWeight: 550,
-                      color: isActive ? '#596aa9' : '#767676',
-                      background: isActive ? '#e0e4f4' : '#eeede9',
-                      padding: '2px 6px',
-                      borderRadius: 4,
-                      flexShrink: 0,
+                      fontWeight: 650,
+                      color: '#555660',
+                      letterSpacing: '0.6px',
+                      textTransform: 'uppercase',
                     }}
                   >
-                    {cand.dossier?.evidenceMatrix
-                      ? `${cand.dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length}/${cand.dossier.evidenceMatrix.length} Bukti`
-                      : cand.statusLabel}
-                  </small>
+                    {stage.label}
+                  </span>
                 </div>
-                <div
+                <span
                   style={{
-                    fontSize: 11.5,
-                    color: '#707070',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    marginTop: 2,
-                    lineHeight: 1.3,
+                    fontSize: 9.5,
+                    fontWeight: 600,
+                    color: '#8c8d97',
+                    backgroundColor: '#eeede9',
+                    padding: '1px 6px',
+                    borderRadius: 10,
                   }}
                 >
-                  {cand.role}
-                </div>
+                  {stageCandidates.length}
+                </span>
               </div>
-            </button>
+
+              {/* Drag & Drop Target Zone */}
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDragOverStage(stage.id);
+                }}
+                onDragLeave={() => {
+                  if (dragOverStage === stage.id) setDragOverStage(null);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const candId = e.dataTransfer.getData('text/plain');
+                  if (candId && onMoveStage) {
+                    onMoveStage(candId, stage.id);
+                  }
+                  setDragOverStage(null);
+                  setDraggingId(null);
+                }}
+                style={{
+                  minHeight: stageCandidates.length === 0 ? 38 : 'auto',
+                  borderRadius: 8,
+                  padding: 2,
+                  transition: 'all 0.15s ease',
+                  border: isOver
+                    ? '1.5px dashed #7285d5'
+                    : stageCandidates.length === 0
+                    ? '1px dashed #dedee6'
+                    : '1px solid transparent',
+                  backgroundColor: isOver ? '#eeeff7' : 'transparent',
+                }}
+              >
+                {stageCandidates.length === 0 ? (
+                  <div
+                    style={{
+                      fontSize: 10.5,
+                      color: '#a3a3ab',
+                      textAlign: 'center',
+                      padding: '10px 4px',
+                      userSelect: 'none',
+                    }}
+                  >
+                    Tarik kandidat ke sini
+                  </div>
+                ) : (
+                  stageCandidates.map((cand) => {
+                    const isActive = cand.id === activeCandidateId;
+                    const isDraggingThis = draggingId === cand.id;
+
+                    return (
+                      <div
+                        key={cand.id}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', cand.id);
+                          setDraggingId(cand.id);
+                        }}
+                        onDragEnd={() => {
+                          setDraggingId(null);
+                          setDragOverStage(null);
+                        }}
+                        style={{
+                          cursor: isDraggingThis ? 'grabbing' : 'grab',
+                          opacity: isDraggingThis ? 0.45 : 1,
+                          marginBottom: 4,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => onSelectCandidate(cand.id)}
+                          className={`nav-item ${isActive ? 'active' : ''}`}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 10,
+                            padding: '9px 11px',
+                            borderRadius: 8,
+                            border: 0,
+                            backgroundColor: isActive ? '#eeeff7' : '#ffffff',
+                            color: isActive ? '#596aa9' : '#707070',
+                            width: '100%',
+                            textAlign: 'left',
+                            boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
+                            transition: 'background 0.15s ease, color 0.15s ease',
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 30,
+                              height: 30,
+                              borderRadius: 7,
+                              background: isActive ? '#e0e4f4' : '#f0eee9',
+                              color: isActive ? '#596aa9' : '#858690',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <User size={15} strokeWidth={isActive ? 2 : 1.75} />
+                          </div>
+
+                          <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: 6,
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: 13,
+                                  fontWeight: isActive ? 600 : 550,
+                                  color: '#242424',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {cand.name}
+                              </span>
+                              <small
+                                style={{
+                                  fontSize: 10,
+                                  fontWeight: 550,
+                                  color: isActive ? '#596aa9' : '#767676',
+                                  background: isActive ? '#e0e4f4' : '#eeede9',
+                                  padding: '1.5px 5px',
+                                  borderRadius: 4,
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {cand.matchScore}%
+                              </small>
+                            </div>
+                            <div
+                              style={{
+                                fontSize: 11,
+                                color: '#707070',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                marginTop: 2,
+                                lineHeight: 1.3,
+                              }}
+                            >
+                              {cand.role}
+                            </div>
+                          </div>
+
+                          <GripVertical
+                            size={13}
+                            className="text-[#c0c3ce] shrink-0 opacity-40 hover:opacity-100"
+                          />
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           );
         })}
-      </nav>
+      </div>
 
       {/* Sidebar Footer with OpenDots Star Note and Integrations */}
       <div className="sidebar-bottom">
@@ -222,10 +350,10 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
           />
         </button>
 
-        <div className="dot-note" style={{ padding: '16px 10px 18px' }}>
+        <div className="dot-note" style={{ padding: '14px 10px 16px' }}>
           <span className="tiny-star" style={{ fontSize: 24 }}>✦</span>
-          <p style={{ fontSize: 11.5, color: '#707070', lineHeight: 1.6 }}>
-            AST Forensics & GitHub live check aktif untuk setiap pelamar.
+          <p style={{ fontSize: 11, color: '#707070', lineHeight: 1.6 }}>
+            Geser kartu pelamar dengan tangan untuk klasifikasi status otonom.
           </p>
         </div>
 
