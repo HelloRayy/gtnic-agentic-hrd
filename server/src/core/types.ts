@@ -32,11 +32,12 @@ export interface RepoAuditEvidence {
   commitAuthors: string[];
   isPotentialClone: boolean;
   cached?: boolean;
+  homepageUrl?: string | null;
 }
 
 export interface EvidenceItem {
   claim: string;
-  status: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL';
+  status: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL' | 'TRANSFERABLE';
   evidenceSummary: string;
   repoAnchor: string | null;
   fileAnchor: string | null;
@@ -71,8 +72,8 @@ export interface TechnicalDossier {
   auditedRepos: string[];
   executionTimeMs: number;
   traceEvents?: TraceEvent[];
+  liveDemos?: { repoName: string; url: string }[];
 }
-
 export interface AuditInput {
   cvBuffer?: Buffer;
   cvText?: string;

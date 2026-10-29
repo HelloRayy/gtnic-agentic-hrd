@@ -4,6 +4,7 @@ import SectionMessage from '@atlaskit/section-message';
 import Button from '@atlaskit/button/standard-button';
 import { ExternalLink, GitBranch, Mail, Copy, Check, FileText } from 'lucide-react';
 import type { TechnicalDossier } from '@/types/audit.js';
+import { LiveDemoCard } from './LiveDemoCard.js';
 import { InterviewActionCard } from './InterviewActionCard.js';
 import { CodeInspectorTab } from './CodeInspectorTab.js';
 import { EvidenceMatrixTab } from './EvidenceMatrixTab.js';
@@ -145,7 +146,7 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
           <p style={{ margin: 0, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{dossier.overallAssessment}</p>
         </SectionMessage>
       </div>
-
+      <LiveDemoCard liveDemos={dossier.liveDemos} />
       <InterviewActionCard dossier={dossier} />
 
       {/* Tab Konten Interaktif */}

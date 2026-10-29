@@ -36,14 +36,14 @@ ${sanitizeForPrompt(repos)}
 
 INSTRUKSI ANALISIS (FULL BAHASA INDONESIA):
 1. "overallAssessment": Tulis ringkasan eksekutif teknis yang tajam, komprehensif, dan profesional dalam Bahasa Indonesia (2-3 paragraf padat). Bahas kesesuaian profil kandidat terhadap posisi ${jobTitle}, analisis bukti nyata di repositori publik, temuan kualitas kode/testing/CI/CD, dan kesimpulan rekomendasi.
-2. "evidenceMatrix": Evaluasi setiap klaim keahlian kandidat. Status wajib: 'VERIFIED' | 'NO_PUBLIC_EVIDENCE' | 'PARTIAL'. Tulis evidenceSummary informatif dalam Bahasa Indonesia.
+2. "evidenceMatrix": Evaluasi setiap klaim keahlian kandidat. Status wajib salah satu: 'VERIFIED' (cocok langsung) | 'TRANSFERABLE' (ekuivalen/serumpun seperti PostgreSQL vs MySQL) | 'PARTIAL' | 'NO_PUBLIC_EVIDENCE'. Tulis evidenceSummary informatif dalam Bahasa Indonesia.
 3. Format output WAJIB HANYA JSON valid:
 {
   "overallAssessment": "Ringkasan penilaian teknis eksekutif lengkap Bahasa Indonesia",
   "evidenceMatrix": [
     {
       "claim": "nama teknologi / skill",
-      "status": "VERIFIED" | "NO_PUBLIC_EVIDENCE" | "PARTIAL",
+      "status": "VERIFIED" | "TRANSFERABLE" | "NO_PUBLIC_EVIDENCE" | "PARTIAL",
       "evidenceSummary": "Rincian bukti Bahasa Indonesia",
       "repoAnchor": "nama repositori atau null",
       "fileAnchor": "path file atau null"

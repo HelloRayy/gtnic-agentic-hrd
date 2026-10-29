@@ -191,6 +191,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         commitAuthors,
         isPotentialClone,
         cached: false,
+        homepageUrl: repoInfo.homepage ? repoInfo.homepage.trim() : null,
       };
 
       auditCacheStore.set(owner, repo, result);
