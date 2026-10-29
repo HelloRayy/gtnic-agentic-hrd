@@ -8,6 +8,7 @@ import { ExternalLink, GitBranch, Mail, Copy, Check, FileText } from 'lucide-rea
 import type { TechnicalDossier, EvidenceItem } from '../../../types/audit.js';
 import { InterviewActionCard } from './InterviewActionCard.js';
 import { InvestigationCard } from './InvestigationCard.js';
+import { CodeInspectorTab } from './CodeInspectorTab.js';
 
 interface DossierTabsProps {
   dossier: TechnicalDossier;
@@ -166,6 +167,7 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
       <Tabs id="dossier-tabs">
         <TabList>
           <Tab>Matriks Bukti ({dossier.evidenceMatrix.length})</Tab>
+          <Tab>Inspeksi Kode Web IDE ({dossier.auditedRepos.length})</Tab>
           <Tab>Radar Investigasi & Sinyal ({dossier.interviewKit.length})</Tab>
           <Tab>Poin Klarifikasi ({dossier.clarificationPrompts.length})</Tab>
           <Tab>Jejak Penalaran CoT ({dossier.traceEvents?.length || 0})</Tab>
@@ -210,6 +212,16 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
             ))}
           </div>
         </TabPanel>
+        {/* Tab 2: Inspeksi Kode Web IDE */}
+        <TabPanel>
+          <CodeInspectorTab
+            auditedRepos={dossier.auditedRepos}
+            githubUsername={githubUsername}
+            evidenceMatrix={dossier.evidenceMatrix}
+            interviewKit={dossier.interviewKit}
+          />
+        </TabPanel>
+
 
         {/* Tab 2: Radar Investigasi & Sinyal Interview */}
         <TabPanel>

@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { config } from '../../config/env.js';
 import { googleAuthService } from '../../services/googleAuthService.js';
 import { toolRegistry } from '../../tools/index.js';
 import type { ScheduleInterviewParams, ScheduleInterviewResult } from '../../tools/implementations/googleCalendarTool.js';
@@ -29,23 +30,25 @@ export async function handleGoogleOAuthCallback(req: Request, res: Response): Pr
   const code = req.query.code as string;
   const error = req.query.error as string;
 
+  const frontendUrl = process.env.CLIENT_URL || (config.nodeEnv === 'development' ? 'http://localhost:5173' : '');
+
   if (error) {
-    res.redirect('/?google_auth=error&reason=' + encodeURIComponent(error));
+    res.redirect(`${frontendUrl}/?google_auth=error&reason=` + encodeURIComponent(error));
     return;
   }
 
   if (!code) {
-    res.redirect('/?google_auth=error&reason=missing_code');
+    res.redirect(`${frontendUrl}/?google_auth=error&reason=missing_code`);
     return;
   }
 
   try {
     const result = await googleAuthService.exchangeCode(code);
-    res.redirect(`/?google_auth=success&email=${encodeURIComponent(result.email || '')}`);
+    res.redirect(`${frontendUrl}/?google_auth=success&email=${encodeURIComponent(result.email || '')}`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('[GoogleAuthController] Callback exchange failed:', message);
-    res.redirect('/?google_auth=error&reason=' + encodeURIComponent(message));
+    res.redirect(`${frontendUrl}/?google_auth=error&reason=` + encodeURIComponent(message));
   }
 }
 
