@@ -54,7 +54,7 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
 
           {item.fileAnchor && (
             <div className="pt-1 flex items-center justify-between text-[10px] text-[#8c8d97] border-t border-[#f4f3f0]">
-              <span className="font-mono text-[#7285d5] truncate max-w-[200px]">
+              <span className="text-[#7285d5] font-medium truncate max-w-[200px]">
                 {item.fileAnchor}
               </span>
               {item.repoAnchor && (

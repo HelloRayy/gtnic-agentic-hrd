@@ -13,9 +13,12 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { CandidateBriefingCard } from './CandidateBriefingCard.js';
+import type { WorkspaceCandidate } from '../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
 interface DeliberationChatViewProps {
+  candidate: WorkspaceCandidate;
   messages: DeliberationMessage[];
   candidateName: string;
   candidateRole?: string;
@@ -27,6 +30,7 @@ interface DeliberationChatViewProps {
 }
 
 export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
+  candidate,
   messages,
   candidateName,
   candidateRole = 'Senior Software Engineer',
@@ -143,84 +147,72 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
       {/* Authentic OpenDots Chat Transcript */}
       <div className="chat-transcript">
-        {messages.length === 0 ? (
-          <div className="chat-welcome">
-            <span className="eyebrow">A LITTLE SPACE TO DELIBERATE</span>
-            <h1>What’s on your mind?</h1>
-            <p>
-              Saya memegang memori penuh terhadap repositori publik dan klaim CV {candidateName}.
-              Tanyakan analisis arsitektur, bukti commit otentik, atau trade-off teknologi kandidat.
-            </p>
-            <p className="muted">
-              Percakapan deliberasi ini di-grounding secara deterministik pada AST kode sumber dan riwayat git.
-            </p>
+        {/* Super Complete Candidate Profile & Forensic Briefing Card */}
+        <CandidateBriefingCard candidate={candidate} />
 
-            <div className="suggestion-grid" style={{ marginTop: 24, textAlign: 'left' }}>
-              {suggestions.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => onSendMessage(item.prompt)}
-                  disabled={isDeliberating}
-                  className="suggestion"
-                >
-                  {item.icon}
-                  <strong>{item.title}</strong>
-                  <p>{item.desc}</p>
-                  <ArrowUpRight size={14} />
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            {messages.map((msg, index) => {
-              const isUser = msg.role === 'user';
-              return (
-                <div key={index} className={`chat-bubble ${isUser ? 'user' : 'assistant'}`}>
-                  <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+        {/* Quick Action Suggestion Cards */}
+        <div className="suggestion-grid" style={{ marginBottom: 12 }}>
+          {suggestions.map((item, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => onSendMessage(item.prompt)}
+              disabled={isDeliberating}
+              className="suggestion"
+            >
+              {item.icon}
+              <strong>{item.title}</strong>
+              <p>{item.desc}</p>
+              <ArrowUpRight size={14} />
+            </button>
+          ))}
+        </div>
 
-                  {msg.anchors && msg.anchors.length > 0 && (
-                    <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {msg.anchors.map((anchor, aIdx) => (
-                        <span
-                          key={aIdx}
-                          style={{
-                            fontSize: 10,
-                            background: '#e5f1ef',
-                            color: '#35766f',
-                            padding: '2px 7px',
-                            borderRadius: 4,
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 4,
-                            fontWeight: 500,
-                          }}
-                        >
-                          <Terminal size={10} /> {anchor}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+        {/* Dialogue Messages */}
+        {messages.map((msg, index) => {
+          const isUser = msg.role === 'user';
+          return (
+            <div key={index} className={`chat-bubble ${isUser ? 'user' : 'assistant'}`}>
+              <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
 
-                  {msg.timestamp && (
-                    <div
+              {msg.anchors && msg.anchors.length > 0 && (
+                <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {msg.anchors.map((anchor, aIdx) => (
+                    <span
+                      key={aIdx}
                       style={{
-                        fontSize: 9,
-                        marginTop: 4,
-                        textAlign: isUser ? 'right' : 'left',
-                        color: isUser ? 'rgba(255, 255, 255, 0.75)' : '#8c8d97',
-                        fontFamily: 'monospace',
+                        fontSize: 10,
+                        background: '#e5f1ef',
+                        color: '#35766f',
+                        padding: '2px 7px',
+                        borderRadius: 4,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        fontWeight: 500,
                       }}
                     >
-                      {msg.timestamp}
-                    </div>
-                  )}
+                      <Terminal size={10} /> {anchor}
+                    </span>
+                  ))}
                 </div>
-              );
-            })}
-          </>
-        )}
+              )}
+
+              {msg.timestamp && (
+                <div
+                  style={{
+                    fontSize: 9.5,
+                    marginTop: 4,
+                    textAlign: isUser ? 'right' : 'left',
+                    color: isUser ? 'rgba(255, 255, 255, 0.75)' : '#8c8d97',
+                  }}
+                >
+                  {msg.timestamp}
+                </div>
+              )}
+            </div>
+          );
+        })}
 
         {isDeliberating && (
           <div className="thinking">

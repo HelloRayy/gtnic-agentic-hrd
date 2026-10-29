@@ -27,7 +27,7 @@ export function TraceLog({ events }: TraceLogProps) {
         borderRadius: 4,
         background: '#091E42',
         color: '#F4F5F7',
-        fontFamily: 'SFMono-Medium, "SF Mono", "Segoe UI Mono", "Roboto Mono", monospace',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         fontSize: 12,
         padding: '12px 16px',
       }}

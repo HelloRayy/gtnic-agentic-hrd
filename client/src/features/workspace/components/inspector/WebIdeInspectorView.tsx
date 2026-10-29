@@ -83,7 +83,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Code2 size={14} className="text-[#8292d6] shrink-0" />
-                  <span className="text-xs font-semibold text-[#333641] truncate font-mono">
+                  <span className="text-xs font-semibold text-[#333641] truncate">
                     {repo}
                   </span>
                 </div>
@@ -132,7 +132,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
                 className="p-2 bg-white border border-[#e9e8e6] rounded-[7px] flex items-center justify-between text-xs"
               >
                 <div className="min-w-0">
-                  <div className="font-mono text-[10px] text-[#333641] truncate">
+                  <div className="text-[10.5px] font-medium text-[#333641] truncate">
                     {anchor.file}
                   </div>
                   <div className="text-[9px] text-[#8c8d97] truncate">

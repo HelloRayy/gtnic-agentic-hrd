@@ -556,13 +556,12 @@ body {
   background: #f7f7f9;
 }
 .browser-bar span {
-  font-size: 9px;
+  font-size: 10px;
   margin-left: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #686b76;
-  font-family: monospace;
 }
 
 /* Sidebar Footer */
@@ -623,8 +622,9 @@ body {
   max-width: 860px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px 36px 16px;
+  padding: 16px 28px 14px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .chat-persona {
@@ -716,12 +716,12 @@ body {
 
 .chat-transcript {
   overflow-y: auto;
-  flex: 1;
-  padding: 24px 0;
-  min-height: 100px;
+  flex: 1 1 0%;
+  min-height: 0;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .chat-welcome {
@@ -824,10 +824,12 @@ body {
   border: 1px solid #dedee6;
   border-radius: 20px;
   background: #ffffff;
-  padding: 8px 12px 8px 14px;
+  padding: 6px 12px;
   margin-top: auto;
-  box-shadow: 0 4px 14px rgba(57, 57, 74, 0.04);
+  box-shadow: 0 4px 14px rgba(57, 57, 74, 0.05);
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -838,22 +840,26 @@ body {
 
 .chat-compose-row {
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
 .chat-compose-row textarea {
+  flex: 1 1 0% !important;
+  width: auto !important;
+  min-width: 0 !important;
   border: 0 !important;
   outline: none !important;
   background: transparent !important;
-  padding: 8px 0;
-  resize: none;
-  font-size: 13px;
-  min-height: 38px;
-  max-height: 120px;
+  padding: 6px 4px !important;
+  resize: none !important;
+  font-size: 13px !important;
+  min-height: 36px !important;
+  max-height: 120px !important;
   box-shadow: none !important;
-  color: #333641;
-  line-height: 1.5;
+  color: #333641 !important;
+  line-height: 1.5 !important;
 }
 
 .chat-compose-row textarea::placeholder {
@@ -873,7 +879,7 @@ body {
   color: #ffffff;
   cursor: pointer;
   transition: all 0.15s ease;
-  margin-bottom: 3px;
+  margin: 0;
 }
 
 .chat-compose-row .send-button:disabled {

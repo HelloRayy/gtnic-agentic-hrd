@@ -160,7 +160,7 @@ export function CodeInspectorTab({
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <CheckCircle2 size={14} color="#00875A" />
                     <div>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: '#172B4D', fontFamily: 'monospace' }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#172B4D' }}>
                         {a.file || a.repo}
                       </span>
                       <span style={{ fontSize: 12, color: '#5E6C84', marginLeft: 8 }}>— {a.context}</span>

@@ -48,12 +48,12 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
                 Live Forensic Execution Stream (CoT 4-P)
               </span>
             </div>
-            <span className="text-[10px] font-mono text-[#8c8d97]">
+            <span className="text-[10px] text-[#8c8d97] font-medium tabular-nums">
               {elapsedSeconds.toFixed(1)}s
             </span>
           </div>
 
-          <div className="bg-[#242730] text-[#e2e4ed] p-2.5 rounded-[7px] font-mono text-[10px] max-h-24 overflow-y-auto space-y-1">
+          <div className="bg-[#242730] text-[#e2e4ed] p-2.5 rounded-[7px] text-[10.5px] max-h-24 overflow-y-auto space-y-1">
             {traceEvents.map((evt, idx) => (
               <div key={idx} className="flex items-start gap-2 leading-relaxed">
                 <span className="text-[#8c8d97] shrink-0">{evt.timestamp}</span>
@@ -80,6 +80,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
       {/* Full-Height Authentic OpenDots Chat Experience */}
       <div className="flex-1 overflow-hidden flex flex-col">
         <DeliberationChatView
+          candidate={candidate}
           messages={candidate.chatHistory}
           candidateName={candidate.name}
           candidateRole={candidate.role}
