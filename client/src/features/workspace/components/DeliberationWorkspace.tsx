@@ -59,8 +59,8 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         onOpenWebIde={onOpenWebIde}
       />
 
-      {/* Live CoT Execution Progress Stream (Active when running) */}
-      {(isLoading || traceEvents.length > 0) && (
+      {/* Live CoT Execution Progress Stream (Active only while running) */}
+      {isLoading && traceEvents.length > 0 && (
         <div className="mx-8 mt-3 bg-white rounded-[11px] border border-[#e9e8e6] p-3 shadow-[0_2px_8px_rgba(57,57,74,0.03)] space-y-2 shrink-0">
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">

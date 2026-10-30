@@ -89,67 +89,66 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
   return (
     <div className="live-chat">
-      {/* Authentic OpenDots Chat Persona Header */}
-      <header className="chat-persona">
-        <OpenDotsMascot color="blue" size="md" isWorking={isDeliberating} />
-        <div className="persona-meta">
-          <strong>TalentTrace Co-Pilot</strong>
-          <span>Candidate Deliberation Partner · Grounded in AST</span>
-        </div>
+      {/* Authentic OpenDots Chat Transcript (Scrolls Everything Naturally) */}
+      <div className="chat-transcript">
+        {/* Authentic OpenDots Chat Persona Header */}
+        <header className="chat-persona">
+          <OpenDotsMascot color="blue" size="md" isWorking={isDeliberating} />
+          <div className="persona-meta">
+            <strong>TalentTrace Co-Pilot</strong>
+            <span>Candidate Deliberation Partner · Grounded in AST</span>
+          </div>
 
-        <div className="chat-persona-actions">
-          {onSaveDossier && (
+          <div className="chat-persona-actions">
+            {onSaveDossier && (
+              <button
+                type="button"
+                className="icon-button"
+                title="Salin ringkasan dossier ke clipboard"
+                onClick={onSaveDossier}
+              >
+                <FilePlus size={16} />
+              </button>
+            )}
+
+            {onSchedule && (
+              <button
+                type="button"
+                className="icon-button"
+                title="Jadwalkan wawancara teknis di Google Calendar"
+                onClick={onSchedule}
+              >
+                <Clock3 size={16} />
+              </button>
+            )}
+
             <button
               type="button"
               className="icon-button"
-              title="Salin ringkasan dossier ke clipboard"
-              onClick={onSaveDossier}
-            >
-              <FilePlus size={16} />
-            </button>
-          )}
-
-          {onSchedule && (
-            <button
-              type="button"
-              className="icon-button"
-              title="Jadwalkan wawancara teknis di Google Calendar"
+              title="Google Meet live technical session"
               onClick={onSchedule}
             >
-              <Clock3 size={16} />
+              <Phone size={16} />
             </button>
+          </div>
+        </header>
+
+        {/* Authentic OpenDots Page Context Indicator */}
+        <div className="page-chat-context">
+          <span>Working on</span>
+          <strong style={{ color: '#333641' }}>{candidateName}</strong>
+          <span>·</span>
+          <span>{candidateRole}</span>
+          {auditedRepos.length > 0 && (
+            <>
+              <span>·</span>
+              <span style={{ color: '#7285d5' }}>{auditedRepos.length} Repos Terverifikasi</span>
+            </>
           )}
-
-          <button
-            type="button"
-            className="icon-button"
-            title="Google Meet live technical session"
-            onClick={onSchedule}
-          >
-            <Phone size={16} />
-          </button>
         </div>
-      </header>
 
-      {/* Authentic OpenDots Page Context Indicator */}
-      <div className="page-chat-context">
-        <span>Working on</span>
-        <strong style={{ color: '#333641' }}>{candidateName}</strong>
-        <span>·</span>
-        <span>{candidateRole}</span>
-        {auditedRepos.length > 0 && (
-          <>
-            <span>·</span>
-            <span style={{ color: '#7285d5' }}>{auditedRepos.length} Repos Terverifikasi</span>
-          </>
-        )}
-      </div>
-
-      {/* Authentic OpenDots Chat Transcript */}
-      <div className="chat-transcript">
         {/* Super Complete Candidate Profile & Forensic Briefing Card */}
         <CandidateBriefingCard candidate={candidate} />
-
         {/* Quick Action Suggestion Cards */}
         <div className="suggestion-grid" style={{ marginBottom: 12 }}>
           {suggestions.map((item, idx) => (
