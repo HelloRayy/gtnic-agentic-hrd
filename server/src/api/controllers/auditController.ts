@@ -21,7 +21,7 @@ export async function handleAuditRequest(req: Request, res: Response): Promise<v
   try {
     const cvBuffer = req.file?.buffer;
     const { jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body;
-
+    const effectiveGithubUrl = manualGithubUrl || req.body?.githubUrl;
     if (!cvBuffer && !cvText) {
       res.status(400).json({
         success: false,
@@ -35,7 +35,7 @@ export async function handleAuditRequest(req: Request, res: Response): Promise<v
       cvText,
       jobTitle: jobTitle || 'Fullstack Engineer',
       jobDesc: jobDesc || 'Building enterprise SaaS with React, TypeScript, and Node.js.',
-      manualGithubUrl,
+      manualGithubUrl: effectiveGithubUrl,
       selectedRepos: parseSelectedRepos(rawRepos),
     });
 
@@ -94,6 +94,7 @@ export async function handleStreamAudit(req: Request, res: Response): Promise<vo
   const isSample = req.path.includes('/sample') || req.query.sample === 'true';
   const cvBuffer = req.file?.buffer;
   const { jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body || {};
+  const effectiveGithubUrl = manualGithubUrl || req.body?.githubUrl;
 
   let input;
   if (isSample) {
@@ -117,7 +118,7 @@ Implemented automated testing pipelines and containerized deployments.
       cvText,
       jobTitle: jobTitle || 'Fullstack Engineer',
       jobDesc: jobDesc || 'Building enterprise SaaS with React, TypeScript, and Node.js.',
-      manualGithubUrl,
+      manualGithubUrl: effectiveGithubUrl,
       selectedRepos: parseSelectedRepos(rawRepos),
     };
   }

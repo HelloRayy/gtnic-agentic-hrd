@@ -48,11 +48,16 @@ export function Modal({
   };
 
   return (
-    <div className="modal-backdrop">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1f2128]/60 backdrop-blur-sm overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       {/* Modal Dialog Box */}
       <div
         className={cn(
-          'modal animate-in fade-in zoom-in-95 duration-150',
+          'relative w-full bg-white rounded-2xl border border-[#e9e8e6] shadow-[0_20px_60px_rgba(31,33,40,0.2)] overflow-hidden flex flex-col my-auto max-h-[92vh] animate-in fade-in zoom-in-95 duration-150',
           maxWidthStyles[maxWidth],
           className
         )}
@@ -60,12 +65,11 @@ export function Modal({
         <button
           type="button"
           onClick={onClose}
-          className="modal-close icon-button cursor-pointer"
+          className="absolute top-4 right-4 z-10 p-1.5 rounded-lg text-[#8c8d97] hover:text-[#333641] hover:bg-[#f4f3f0] transition-colors cursor-pointer"
           aria-label="Tutup"
         >
           <X size={16} />
         </button>
-        {/* Header */}
         {(title || description) && (
           <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-[#f0eee9]">
             <div>

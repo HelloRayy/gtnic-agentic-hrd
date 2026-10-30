@@ -102,18 +102,28 @@ export default function App() {
       await streamAuditExecution(formData, false, {
         onProgress: (event) => setTraceEvents((prev) => [...prev, event]),
         onComplete: (dossierResult: TechnicalDossier) => {
+          const verifiedCount = dossierResult.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
+          const totalClaims = dossierResult.evidenceMatrix.length || 1;
+          const score = Math.round((verifiedCount / totalClaims) * 100);
+
+          let candidateStatus: 'verified' | 'partial' | 'warning' | 'unverified' = 'verified';
+          let candidateStatusLabel = 'TERVERIFIKASI';
+          if (score < 45) {
+            candidateStatus = 'warning';
+            candidateStatusLabel = 'PERLU KLARIFIKASI';
+          } else if (score < 75) {
+            candidateStatus = 'partial';
+            candidateStatusLabel = 'SEBAGIAN';
+          }
+
           const newCandidate: WorkspaceCandidate = {
             id: `cand-${Date.now()}`,
             name: dossierResult.candidate.name || tempCandidateName,
             role: dossierResult.jobTitle || tempJobTitle,
-            status: 'verified',
-            statusLabel: 'TERVERIFIKASI',
+            status: candidateStatus,
+            statusLabel: candidateStatusLabel,
             stage: 'screening',
-            matchScore: Math.round(
-              ((dossierResult.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length) /
-                (dossierResult.evidenceMatrix.length || 1)) *
-                100
-            ),
+            matchScore: score,
             avatarSeed: (dossierResult.candidate.name || tempCandidateName)
               .split(' ')
               .map((w) => w[0])
