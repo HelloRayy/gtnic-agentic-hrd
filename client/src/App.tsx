@@ -4,7 +4,6 @@ import { DeliberationWorkspace } from '@/features/workspace/components/Deliberat
 import { ContextInspectorPanel } from '@/features/workspace/components/ContextInspectorPanel.js';
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
-import { PRESET_CANDIDATES } from '@/features/workspace/presetCandidates.js';
 import type { WorkspaceCandidate } from '@/features/workspace/types.js';
 import type { TraceEvent, GoogleAuthStatus, TechnicalDossier } from '@/types/audit.js';
 import {
@@ -13,9 +12,26 @@ import {
   fetchGoogleAuthStatus,
 } from '@/services/auditApi.js';
 
+const STORAGE_KEY = 'talenttrace_candidates_v1';
+
 export default function App() {
-  const [candidates, setCandidates] = useState<WorkspaceCandidate[]>(PRESET_CANDIDATES);
-  const [activeCandidateId, setActiveCandidateId] = useState<string>(PRESET_CANDIDATES[0].id);
+  const [candidates, setCandidates] = useState<WorkspaceCandidate[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [activeCandidateId, setActiveCandidateId] = useState<string | null>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const parsed: WorkspaceCandidate[] = saved ? JSON.parse(saved) : [];
+      return parsed.length > 0 ? parsed[0].id : null;
+    } catch {
+      return null;
+    }
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isDeliberating, setIsDeliberating] = useState(false);
@@ -31,8 +47,25 @@ export default function App() {
   const isExecutingRef = useRef(false);
 
   const activeCandidate =
-    candidates.find((c) => c.id === activeCandidateId) || candidates[0];
+    candidates.find((c) => c.id === activeCandidateId) || (candidates.length > 0 ? candidates[0] : null);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(candidates));
+    } catch (e) {
+      console.error('Failed to save candidates', e);
+    }
+  }, [candidates]);
+
+  useEffect(() => {
+    if (candidates.length > 0) {
+      if (!activeCandidateId || !candidates.some((c) => c.id === activeCandidateId)) {
+        setActiveCandidateId(candidates[0].id);
+      }
+    } else {
+      setActiveCandidateId(null);
+    }
+  }, [candidates, activeCandidateId]);
   useEffect(() => {
     fetchGoogleAuthStatus().then(setGoogleStatus);
   }, []);
@@ -118,14 +151,25 @@ export default function App() {
   };
 
   const handleReaudit = async () => {
-    if (isExecutingRef.current) return;
+    if (!activeCandidate || isExecutingRef.current) return;
     isExecutingRef.current = true;
     setIsLoading(true);
     setTraceEvents([]);
     setElapsedSeconds(0);
 
+    const formData = new FormData();
+    formData.append('candidateName', activeCandidate.name);
+    formData.append('jobTitle', activeCandidate.role);
+    formData.append('githubUrl', activeCandidate.githubUrl);
+    if (activeCandidate.dossier?.candidate?.summary) {
+      formData.append(
+        'cvText',
+        `${activeCandidate.name}\n${activeCandidate.dossier.candidate.summary}\nSkills: ${activeCandidate.dossier.candidate.claimedSkills.join(', ')}`
+      );
+    }
+
     try {
-      await streamAuditExecution(null, true, {
+      await streamAuditExecution(formData, false, {
         onProgress: (event) => setTraceEvents((prev) => [...prev, event]),
         onComplete: (dossierResult: TechnicalDossier) => {
           setCandidates((prev) =>
@@ -133,13 +177,13 @@ export default function App() {
               c.id === activeCandidateId
                 ? {
                     ...c,
-                    dossier: {
-                      ...dossierResult,
-                      candidate: {
-                        ...dossierResult.candidate,
-                        name: c.name,
-                      },
-                    },
+                    dossier: dossierResult,
+                    matchScore: Math.round(
+                      ((dossierResult.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length) /
+                        (dossierResult.evidenceMatrix.length || 1)) *
+                        100
+                    ),
+                    reposCount: dossierResult.auditedRepos.length,
                   }
                 : c
             )
@@ -159,8 +203,7 @@ export default function App() {
   };
 
   const handleSendMessage = async (messageText: string) => {
-    if (!messageText.trim() || isDeliberating) return;
-
+    if (!activeCandidate || !messageText.trim() || isDeliberating) return;
     const userTimestamp = new Date().toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
@@ -230,6 +273,7 @@ export default function App() {
   };
 
   const handleOpenWebIde = () => {
+    if (!activeCandidate) return;
     const firstRepo =
       activeCandidate.dossier.auditedRepos[0] ||
       activeCandidate.githubUrl.replace('https://github.com/', '');
@@ -238,6 +282,16 @@ export default function App() {
       : `${activeCandidate.dossier.candidate.githubUsername || 'kandidat'}/${firstRepo}`;
     const url = `https://github.dev/${cleanRepo}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleClearCandidates = () => {
+    if (window.confirm('Hapus seluruh kandidat dari sesi demo ini?')) {
+      setCandidates([]);
+      setActiveCandidateId(null);
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {}
+    }
   };
 
   const handleMoveCandidateStage = (
@@ -261,6 +315,7 @@ export default function App() {
         onMoveStage={handleMoveCandidateStage}
         onOpenUploadModal={() => setIsAddModalOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
+        onClearCandidates={handleClearCandidates}
         googleStatus={googleStatus}
       />
 
@@ -274,6 +329,7 @@ export default function App() {
         onReaudit={handleReaudit}
         onSendMessage={handleSendMessage}
         onOpenWebIde={handleOpenWebIde}
+        onOpenUploadModal={() => setIsAddModalOpen(true)}
       />
 
       {/* Panel 3: Right Inspector Panel / Forensic Dossier */}

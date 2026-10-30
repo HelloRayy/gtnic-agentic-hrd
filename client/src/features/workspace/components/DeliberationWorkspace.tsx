@@ -2,11 +2,12 @@ import React from 'react';
 import { Terminal } from 'lucide-react';
 import { DeliberationTopbar } from './DeliberationTopbar.js';
 import { DeliberationChatView } from './DeliberationChatView.js';
+import { WorkspaceZeroState } from './WorkspaceZeroState.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { TraceEvent } from '@/types/audit.js';
 
 interface DeliberationWorkspaceProps {
-  candidate: WorkspaceCandidate;
+  candidate: WorkspaceCandidate | null;
   isLoading: boolean;
   isDeliberating: boolean;
   traceEvents: TraceEvent[];
@@ -14,6 +15,7 @@ interface DeliberationWorkspaceProps {
   onReaudit: () => void;
   onSendMessage: (message: string) => void;
   onOpenWebIde: () => void;
+  onOpenUploadModal: () => void;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -25,9 +27,28 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onReaudit,
   onSendMessage,
   onOpenWebIde,
+  onOpenUploadModal,
 }) => {
-  const { dossier } = candidate;
+  if (!candidate) {
+    return (
+      <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden">
+        <DeliberationTopbar
+          candidate={null}
+          isLoading={isLoading}
+          onReaudit={onReaudit}
+          onOpenWebIde={onOpenWebIde}
+        />
+        <WorkspaceZeroState
+          isLoading={isLoading}
+          elapsedSeconds={elapsedSeconds}
+          traceEvents={traceEvents}
+          onOpenUploadModal={onOpenUploadModal}
+        />
+      </main>
+    );
+  }
 
+  const { dossier } = candidate;
   return (
     <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden">
       {/* Topbar */}

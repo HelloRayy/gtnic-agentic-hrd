@@ -8,7 +8,7 @@ import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
 
 interface ContextInspectorPanelProps {
-  candidate: WorkspaceCandidate;
+  candidate: WorkspaceCandidate | null;
   googleStatus: GoogleAuthStatus | null;
 }
 
@@ -17,8 +17,6 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
   googleStatus,
 }) => {
   const [activeTab, setActiveTab] = useState<'matrix' | 'webide' | 'radar' | 'action'>('matrix');
-  const { dossier } = candidate;
-
   return (
     <aside className="result-pane select-none">
       {/* Authentic OpenDots Pane Header & Tabs */}
@@ -61,28 +59,44 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
 
       {/* Tab Panels Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activeTab === 'matrix' && (
-          <EvidenceMatrixView
-            evidenceMatrix={dossier.evidenceMatrix}
-            githubUsername={dossier.candidate.githubUsername}
-          />
-        )}
+        {!candidate ? (
+          <div className="p-6 text-center space-y-3 bg-white border border-[#e9e8e6] rounded-xl my-4">
+            <div className="w-10 h-10 mx-auto rounded-full bg-[#f4f3f0] flex items-center justify-center text-[#7285d5]">
+              <BookOpen size={18} />
+            </div>
+            <div className="text-xs font-semibold text-[#333641]">
+              Panel Forensik Siap
+            </div>
+            <p className="text-[11px] text-[#8c8d97] leading-relaxed">
+              Pilih atau tambahkan kandidat untuk menginspeksi matriks bukti kode, Web IDE github.dev, radar investigasi wawancara, dan penjadwalan Google Meet.
+            </p>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'matrix' && (
+              <EvidenceMatrixView
+                evidenceMatrix={candidate.dossier.evidenceMatrix}
+                githubUsername={candidate.dossier.candidate.githubUsername}
+              />
+            )}
 
-        {activeTab === 'webide' && (
-          <WebIdeInspectorView
-            auditedRepos={dossier.auditedRepos}
-            githubUsername={dossier.candidate.githubUsername}
-            evidenceMatrix={dossier.evidenceMatrix}
-            interviewKit={dossier.interviewKit}
-          />
-        )}
+            {activeTab === 'webide' && (
+              <WebIdeInspectorView
+                auditedRepos={candidate.dossier.auditedRepos}
+                githubUsername={candidate.dossier.candidate.githubUsername}
+                evidenceMatrix={candidate.dossier.evidenceMatrix}
+                interviewKit={candidate.dossier.interviewKit}
+              />
+            )}
 
-        {activeTab === 'radar' && (
-          <InvestigationRadarView interviewKit={dossier.interviewKit} />
-        )}
+            {activeTab === 'radar' && (
+              <InvestigationRadarView interviewKit={candidate.dossier.interviewKit} />
+            )}
 
-        {activeTab === 'action' && (
-          <InterviewActionView dossier={dossier} googleStatus={googleStatus} />
+            {activeTab === 'action' && (
+              <InterviewActionView dossier={candidate.dossier} googleStatus={googleStatus} />
+            )}
+          </>
         )}
       </div>
     </aside>

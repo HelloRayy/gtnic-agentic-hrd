@@ -6,7 +6,7 @@ import type { GoogleAuthStatus } from '@/types/audit.js';
 
 interface CandidateSidebarProps {
   candidates: WorkspaceCandidate[];
-  activeCandidateId: string;
+  activeCandidateId: string | null;
   onSelectCandidate: (id: string) => void;
   onMoveStage?: (
     candidateId: string,
@@ -14,6 +14,7 @@ interface CandidateSidebarProps {
   ) => void;
   onOpenUploadModal: () => void;
   onOpenIntegrations: () => void;
+  onClearCandidates?: () => void;
   googleStatus: GoogleAuthStatus | null;
 }
 
@@ -24,6 +25,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onMoveStage,
   onOpenUploadModal,
   onOpenIntegrations,
+  onClearCandidates,
   googleStatus,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -65,33 +67,72 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         </div>
       </div>
 
-      {/* Minimal OpenDots Ingestion Button */}
-      <button
-        type="button"
-        onClick={onOpenUploadModal}
-        className="btn-press"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          width: '100%',
-          padding: '9px 13px',
-          borderRadius: 8,
-          border: '1px solid #e9e8e6',
-          backgroundColor: '#ffffff',
-          color: '#242424',
-          fontSize: 13,
-          fontWeight: 500,
-          marginBottom: 14,
-          cursor: 'pointer',
-          boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
-          transition: 'all 0.15s ease',
-        }}
-      >
-        <Plus size={16} strokeWidth={2} style={{ color: '#7285d5' }} />
-        <span>Tambah Pelamar</span>
-      </button>
+      {/* Ingestion & Reset Controls */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+        <button
+          type="button"
+          onClick={onOpenUploadModal}
+          className="btn-press"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            flex: 1,
+            padding: '9px 13px',
+            borderRadius: 8,
+            border: '1px solid #e9e8e6',
+            backgroundColor: '#ffffff',
+            color: '#242424',
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: 'pointer',
+            boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <Plus size={16} strokeWidth={2} style={{ color: '#7285d5' }} />
+          <span>Tambah Pelamar</span>
+        </button>
 
+        {candidates.length > 0 && onClearCandidates && (
+          <button
+            type="button"
+            onClick={onClearCandidates}
+            title="Reset antrean demo"
+            style={{
+              padding: '0 10px',
+              borderRadius: 8,
+              border: '1px solid #e9e8e6',
+              backgroundColor: '#ffffff',
+              color: '#8c8d97',
+              fontSize: 11,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {candidates.length === 0 && (
+        <div
+          style={{
+            padding: '10px 12px',
+            borderRadius: 8,
+            backgroundColor: '#f6f5f1',
+            border: '1px dashed #dedcd8',
+            marginBottom: 12,
+            fontSize: 11,
+            color: '#707070',
+            lineHeight: 1.5,
+            textAlign: 'center',
+          }}
+        >
+          Antrean kosong. Klik <strong>+ Tambah Pelamar</strong> untuk mulai.
+        </div>
+      )}
       {/* Candidates Classified by 3 Stages with Hand Drag & Drop */}
       <div
         style={{
