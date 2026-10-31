@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, ExternalLink, Code2, CheckCircle2 } from 'lucide-react';
+import { Terminal, ExternalLink, Code2, CheckCircle2, ShieldAlert } from 'lucide-react';
 import type { EvidenceItem, InterviewQuestion } from '@/types/audit.js';
 
 interface WebIdeInspectorViewProps {
@@ -38,7 +38,18 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
     : `${githubUsername || 'kandidat'}/${primaryRepo}`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
+      {/* Role Notice Card for HRD */}
+      <div className="p-3 bg-[#f8f9fc] border border-[#e2e6f4] rounded-[9px] space-y-1">
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-[#41518c]">
+          <ShieldAlert size={14} className="text-[#6474b4] shrink-0" />
+          <span>Khusus User / Tech Lead</span>
+        </div>
+        <p className="text-[11px] text-[#6b7280] leading-relaxed">
+          Bagian ini disiapkan untuk diserahkan ke User atau Tech Lead saat sesi wawancara teknis. Tim HRD tidak perlu membaca atau mengaudit baris kode secara mandiri.
+        </p>
+      </div>
+
       {/* Authentic OpenDots Computer View Bar */}
       <div className="rounded-[9px] border border-[#e9e8e6] overflow-hidden bg-white shadow-[0_1px_3px_rgba(57,57,74,0.03)]">
         <div className="browser-bar">
@@ -49,7 +60,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
         </div>
         <div className="p-3 bg-[#fbfaf8] text-xs space-y-2">
           <div className="text-[10px] text-[#8c8d97]">
-            Web VS Code aktif. AST & file tree terbaca tanpa download lokal.
+            Web VS Code aktif. Pohon berkas dan kode sumber terbaca langsung tanpa download lokal.
           </div>
           <a
             href={`https://github.dev/${cleanPrimary}`}
@@ -58,7 +69,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
             className="w-full py-1.5 px-3 rounded-[7px] text-xs font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] inline-flex items-center justify-center gap-1.5 transition-all shadow-[0_1px_2px_rgba(118,137,211,0.25)]"
           >
             <Terminal size={13} />
-            <span>Buka Web VS Code (github.dev)</span>
+            <span>Buka Kode Sumber (Khusus Tech Lead)</span>
             <ExternalLink size={12} />
           </a>
         </div>
@@ -88,7 +99,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
                   </span>
                 </div>
                 <span className="text-[9.5px] font-medium text-[#2f5535] bg-[#edf3ec] border border-[#dae7da] px-1.5 py-0.5 rounded-[4px]">
-                  AST Siap
+                  Kode Sumber Terhubung
                 </span>
               </div>
 

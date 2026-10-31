@@ -34,9 +34,10 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             type="button"
             className={activeTab === 'webide' ? 'selected' : ''}
             onClick={() => setActiveTab('webide')}
+            title="Kode Sumber (Khusus User / Tech Lead saat interview)"
           >
             <Monitor size={13} />
-            <span>Web IDE</span>
+            <span>Kode (Tech Lead)</span>
           </button>
           <button
             type="button"

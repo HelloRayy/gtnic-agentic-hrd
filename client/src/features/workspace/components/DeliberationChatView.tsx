@@ -7,13 +7,11 @@ import {
   X,
   ArrowUp,
   Square,
-  ArrowUpRight,
   Terminal,
-  CheckCircle2,
-  MessageSquare,
 } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import { CandidateBriefingCard } from './CandidateBriefingCard.js';
+import { ChatSuggestions } from './ChatSuggestions.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
@@ -45,26 +43,6 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   const [sourceOpen, setSourceOpen] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
-  const suggestions = [
-    {
-      title: 'Uji Concurrency & Locking',
-      icon: <Terminal size={17} className="text-[#8492c6]" />,
-      prompt: `Analisis penanganan concurrency, race condition, dan database locking pada repositori ${candidateName}.`,
-      desc: 'Analisis race condition, database locking, dan state machine.',
-    },
-    {
-      title: 'Verifikasi Test & CI/CD',
-      icon: <CheckCircle2 size={17} className="text-[#8cac91]" />,
-      prompt: `Berapa coverage unit test dan bagaimana kematangan workflow CI/CD pada repositori ${candidateName}?`,
-      desc: 'Cakupan coverage dan kematangan workflow GitHub Actions.',
-    },
-    {
-      title: 'Draf Umpan Balik Sopan',
-      icon: <MessageSquare size={17} className="text-[#e2a36b]" />,
-      prompt: `Buatkan draf email umpan balik konstruktif dan sopan untuk ${candidateName} berdasarkan temuan audit.`,
-      desc: 'Buatkan draf email umpan balik konstruktif dan terarah.',
-    },
-  ];
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -149,23 +127,12 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
         {/* Super Complete Candidate Profile & Forensic Briefing Card */}
         <CandidateBriefingCard candidate={candidate} />
-        {/* Quick Action Suggestion Cards */}
-        <div className="suggestion-grid" style={{ marginBottom: 12 }}>
-          {suggestions.map((item, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => onSendMessage(item.prompt)}
-              disabled={isDeliberating}
-              className="suggestion"
-            >
-              {item.icon}
-              <strong>{item.title}</strong>
-              <p>{item.desc}</p>
-              <ArrowUpRight size={14} />
-            </button>
-          ))}
-        </div>
+        {/* Quick Action Suggestion Cards (HRD vs Tech Lead Modes) */}
+        <ChatSuggestions
+          candidateName={candidateName}
+          isDeliberating={isDeliberating}
+          onSendMessage={onSendMessage}
+        />
 
         {/* Dialogue Messages */}
         {messages.map((msg, index) => {

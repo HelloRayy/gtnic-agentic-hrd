@@ -37,10 +37,11 @@ export const DeliberationTopbar: React.FC<DeliberationTopbarProps> = ({
             <button
               type="button"
               onClick={onOpenWebIde}
+              title="Disiapkan untuk User / Tech Lead saat sesi interview teknis, bukan kewajiban HRD untuk membaca kode."
               className="text-button inline-flex items-center gap-1.5 cursor-pointer text-[#7f8290] hover:text-[#333641] transition-colors"
             >
               <ExternalLink size={13} className="text-[#8492c6]" />
-              <span>Web IDE (github.dev)</span>
+              <span>Buka Kode (Khusus Tech Lead)</span>
             </button>
 
             <button
