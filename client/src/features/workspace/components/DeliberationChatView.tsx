@@ -5,7 +5,6 @@ import {
   Phone,
   ArrowUp,
   Square,
-  Sparkles,
   Terminal,
 } from 'lucide-react';
 import { SkillsMenuPopover } from './SkillsMenuPopover.js';
@@ -41,7 +40,21 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   const [input, setInput] = useState('');
   const [skillsOpen, setSkillsOpen] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setSkillsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setSkillsOpen(false);
+    }, 200);
+  };
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -198,38 +211,44 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
       {/* Authentic OpenDots Chat Composer (Fixed at Bottom) */}
       <div className="chat-composer-wrapper relative">
-        <SkillsMenuPopover
-          candidateName={candidateName}
-          isOpen={skillsOpen}
-          onClose={() => setSkillsOpen(false)}
-          onSelectSkill={(prompt) => {
-            onSendMessage(prompt);
-            setInput('');
-          }}
-        />
-
         <form onSubmit={handleSubmit} className="chat-composer">
           <div className="chat-compose-row">
-            <button
-              type="button"
-              onClick={() => setSkillsOpen((prev) => !prev)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 ${
-                skillsOpen
-                  ? 'bg-[#7285d5] text-white shadow-xs'
-                  : 'bg-[#f0f2fa] hover:bg-[#e4e7f7] text-[#5269bb] border border-[#d8dcf7]'
-              }`}
-              aria-label="Buka menu skills Co-Pilot"
-              title="Buka menu pertanyaan pendalaman Co-Pilot (/skills)"
+            {/* Simple ? Button with Hover Popover */}
+            <div
+              className="relative flex items-center"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
-              <Sparkles size={13} className={skillsOpen ? 'text-white' : 'text-[#7285d5]'} />
-              <span>/skills</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setSkillsOpen((prev) => !prev)}
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold transition-all cursor-pointer shrink-0 ${
+                  skillsOpen
+                    ? 'bg-[#7285d5] text-white shadow-xs'
+                    : 'bg-[#f0eee9] hover:bg-[#e4e7f7] text-[#6b6e7b] hover:text-[#5269bb] border border-[#e2dfd7]'
+                }`}
+                aria-label="Tanya Cepat HRD (?)"
+                title="Tanya Cepat HRD (?)"
+              >
+                ?
+              </button>
+
+              <SkillsMenuPopover
+                candidateName={candidateName}
+                isOpen={skillsOpen}
+                onClose={() => setSkillsOpen(false)}
+                onSelectSkill={(prompt) => {
+                  onSendMessage(prompt);
+                  setInput('');
+                }}
+              />
+            </div>
 
             <textarea
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder={`Tanyakan tentang ${candidateName} atau klik /skills…`}
+              placeholder={`Tanyakan tentang ${candidateName} atau klik ?…`}
               rows={1}
               disabled={isDeliberating}
             />

@@ -6,7 +6,6 @@ import {
   HelpCircle,
   CheckCircle2,
   X,
-  Sparkles,
 } from 'lucide-react';
 
 interface SkillItem {
@@ -28,46 +27,46 @@ interface SkillsMenuPopoverProps {
 const SKILLS: SkillItem[] = [
   {
     id: 'integritas',
-    title: 'Uji Integritas & Keaslian Kode',
-    desc: 'Deteksi apakah klaim jabatan di CV sesuai dengan kode nyata atau cuma copas template.',
+    title: 'Cek Integritas CV',
+    desc: 'Klaim jabatan vs keaslian kode nyata',
     tag: 'Integritas',
-    icon: <ShieldCheck size={16} className="text-[#3b82f6]" />,
+    icon: <ShieldCheck size={15} className="text-[#3b82f6]" />,
     getPrompt: (name) =>
       `Analisis integritas klaim di CV ${name} terhadap bukti proyek nyata di repositorinya. Apakah ada klaim yang melebih-lebihkan fakta atau indikasi numpang nama? Jelaskan dalam bahasa manusia yang mudah dipahami HRD tanpa istilah teknis rumit.`,
   },
   {
     id: 'senioritas',
-    title: 'Validasi Senioritas & Kelayakan Gaji',
-    desc: 'Evaluasi kesesuaian kapasitas teknis riil terhadap level gaji dan ekspektasi senioritas.',
+    title: 'Validasi Senioritas',
+    desc: 'Kematangan arsitektur & kelayakan gaji',
     tag: 'Senioritas',
-    icon: <Award size={16} className="text-[#8b5cf6]" />,
+    icon: <Award size={15} className="text-[#8b5cf6]" />,
     getPrompt: (name) =>
       `Berdasarkan arsitektur, kompleksitas kode, dan kematangan testing pada repositori ${name}, apakah kapasitas aslinya sepadan untuk level Senior? Apakah ekspektasi gaji tinggi masuk akal? Berikan evaluasi objektifnya.`,
   },
   {
     id: 'adaptasi',
-    title: 'Risiko Adaptasi ke Stack Tim Kantor',
-    desc: 'Analisis kecepatan belajar dan potensi hambatan adaptasi jika menggunakan teknologi baru.',
+    title: 'Risiko Adaptasi Tim',
+    desc: 'Kemudahan adaptasi ke stack kantor',
     tag: 'Adaptasi',
-    icon: <Compass size={16} className="text-[#10b981]" />,
+    icon: <Compass size={15} className="text-[#10b981]" />,
     getPrompt: (name) =>
       `Jika tim kami menempatkan ${name} pada stack teknologi yang berbeda dari portofolio publiknya, apa saja risiko dan kendala adaptasi terbesarnya? Berapa lama perkiraan waktu onboarding-nya?`,
   },
   {
     id: 'interview',
-    title: 'Kisi-Kisi 3 Pertanyaan Kasus Interview',
-    desc: '3 pertanyaan investigasi nyata lengkap dengan kunci contekan pewawancara.',
-    tag: 'Interview',
-    icon: <HelpCircle size={16} className="text-[#f59e0b]" />,
+    title: 'Kisi-Kisi Wawancara',
+    desc: '3 pertanyaan investigasi kasus nyata',
+    tag: 'Wawancara',
+    icon: <HelpCircle size={15} className="text-[#f59e0b]" />,
     getPrompt: (name) =>
       `Buatkan 3 pertanyaan investigasi studi kasus nyata berdasarkan kode ${name} untuk sesi interview teknis. Sertakan kunci contekan: apa sinyal kandidat kompeten vs sinyal bualan yang harus diperhatikan pewawancara.`,
   },
   {
     id: 'keputusan',
-    title: 'Rekomendasi Keputusan Akhir (Pro vs Kontra)',
-    desc: 'Rangkuman 3 alasan lolos, 3 risiko, dan rekomendasi final screening HRD.',
+    title: 'Rekomendasi Keputusan',
+    desc: 'Pro, kontra & panduan lolos/tolak',
     tag: 'Keputusan',
-    icon: <CheckCircle2 size={16} className="text-[#2b8a3e]" />,
+    icon: <CheckCircle2 size={15} className="text-[#2b8a3e]" />,
     getPrompt: (name) =>
       `Rangkum keputusan screening akhir untuk ${name}: apa 3 alasan terkuat untuk meloloskan, apa 3 risiko terbesarnya, dan apa rekomendasi final untuk HRD (Lolos ke Interview / Perlu Uji Khusus / Tolak)?`,
   },
@@ -109,28 +108,25 @@ export const SkillsMenuPopover: React.FC<SkillsMenuPopoverProps> = ({
   return (
     <div
       ref={popoverRef}
-      className="absolute bottom-full mb-2.5 left-0 w-full max-w-[520px] bg-white border border-[#dedee6] rounded-2xl shadow-[0_12px_36px_rgba(57,57,74,0.14)] p-3 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150"
+      className="absolute bottom-full mb-2.5 left-0 w-[420px] max-w-[85vw] bg-white border border-[#dedee6] rounded-2xl shadow-[0_12px_36px_rgba(57,57,74,0.14)] p-3 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150"
     >
       {/* Popover Header */}
       <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-[#f0eee9]">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-md bg-[#eeeffa] text-[#5269bb] flex items-center justify-center">
-            <Sparkles size={12} />
-          </div>
-          <span className="text-xs font-semibold text-[#333641]">
-            Menu /skills · Jurus Pendalaman HRD
+        <div className="flex items-center gap-1.5">
+          <span className="w-4 h-4 rounded-full bg-[#eeeffa] text-[#5269bb] text-[11px] font-bold flex items-center justify-center">
+            ?
           </span>
-          <span className="text-[10.5px] text-[#8c8d97] font-medium">
-            (1-Klik Eksekusi)
+          <span className="text-xs font-semibold text-[#333641]">
+            Tanya Cepat HRD
           </span>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="text-[#8c8d97] hover:text-[#333641] p-1 rounded-md hover:bg-[#f2f1ee] transition-colors cursor-pointer"
-          aria-label="Tutup menu skills"
+          className="text-[#8c8d97] hover:text-[#333641] p-0.5 rounded hover:bg-[#f2f1ee] transition-colors cursor-pointer"
+          aria-label="Tutup menu"
         >
-          <X size={14} />
+          <X size={13} />
         </button>
       </div>
 
