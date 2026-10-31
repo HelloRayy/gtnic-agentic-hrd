@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, ShieldCheck, Terminal, Sparkles, BookOpen, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, ShieldCheck, Terminal, Sparkles, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 import { OpenDotsMascot, OpenDotsQuadHero } from './OpenDotsMascot.js';
 import type { TraceEvent } from '@/types/audit.js';
 

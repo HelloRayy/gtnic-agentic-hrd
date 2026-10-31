@@ -3,12 +3,12 @@ import {
   FilePlus,
   Clock3,
   Phone,
-  Link2,
-  X,
   ArrowUp,
   Square,
+  Sparkles,
   Terminal,
 } from 'lucide-react';
+import { SkillsMenuPopover } from './SkillsMenuPopover.js';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import { CandidateBriefingCard } from './CandidateBriefingCard.js';
 import { ChatSuggestions } from './ChatSuggestions.js';
@@ -39,8 +39,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   onSaveDossier,
 }) => {
   const [input, setInput] = useState('');
-  const [source, setSource] = useState('');
-  const [sourceOpen, setSourceOpen] = useState(false);
+  const [skillsOpen, setSkillsOpen] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
 
@@ -51,13 +50,18 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isDeliberating) return;
-    const finalMessage = source ? `[Referensi Sumber: ${source}]\n\n${input.trim()}` : input.trim();
-    onSendMessage(finalMessage);
+    onSendMessage(input.trim());
     setInput('');
-    setSource('');
-    setSourceOpen(false);
+    setSkillsOpen(false);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setInput(val);
+    if (val.startsWith('/')) {
+      setSkillsOpen(true);
+    }
+  };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -193,47 +197,39 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
       </div>
 
       {/* Authentic OpenDots Chat Composer (Fixed at Bottom) */}
-      <div className="chat-composer-wrapper">
-        <form onSubmit={handleSubmit} className="chat-composer">
-          {sourceOpen && (
-            <div className="source-input">
-              <Link2 size={14} />
-              <input
-                type="text"
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
-                placeholder="Sematkan URL repositori atau berkas: https://github.com/..."
-              />
-              <button
-                type="button"
-                className="icon-button"
-                style={{ width: 22, height: 22, border: 'none', background: 'transparent' }}
-                onClick={() => {
-                  setSourceOpen(false);
-                  setSource('');
-                }}
-              >
-                <X size={14} />
-              </button>
-            </div>
-          )}
+      <div className="chat-composer-wrapper relative">
+        <SkillsMenuPopover
+          candidateName={candidateName}
+          isOpen={skillsOpen}
+          onClose={() => setSkillsOpen(false)}
+          onSelectSkill={(prompt) => {
+            onSendMessage(prompt);
+            setInput('');
+          }}
+        />
 
+        <form onSubmit={handleSubmit} className="chat-composer">
           <div className="chat-compose-row">
             <button
               type="button"
-              className={`icon-button ${sourceOpen ? 'active' : ''}`}
-              aria-label="Sematkan sumber tautan kode"
-              title="Sematkan tautan repositori spesifik"
-              onClick={() => setSourceOpen(!sourceOpen)}
+              onClick={() => setSkillsOpen((prev) => !prev)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 ${
+                skillsOpen
+                  ? 'bg-[#7285d5] text-white shadow-xs'
+                  : 'bg-[#f0f2fa] hover:bg-[#e4e7f7] text-[#5269bb] border border-[#d8dcf7]'
+              }`}
+              aria-label="Buka menu skills Co-Pilot"
+              title="Buka menu pertanyaan pendalaman Co-Pilot (/skills)"
             >
-              <Link2 size={16} />
+              <Sparkles size={13} className={skillsOpen ? 'text-white' : 'text-[#7285d5]'} />
+              <span>/skills</span>
             </button>
 
             <textarea
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder={`Tanyakan apa saja seputar audit kandidat ${candidateName}…`}
+              placeholder={`Tanyakan tentang ${candidateName} atau klik /skills…`}
               rows={1}
               disabled={isDeliberating}
             />
