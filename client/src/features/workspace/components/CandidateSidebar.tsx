@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, GripVertical } from 'lucide-react';
+import { Plus, Calendar, GripVertical, ExternalLink } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
@@ -16,6 +16,7 @@ interface CandidateSidebarProps {
   onOpenIntegrations: () => void;
   onClearCandidates?: () => void;
   googleStatus: GoogleAuthStatus | null;
+  onSwitchToApply?: () => void;
 }
 
 export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
@@ -27,6 +28,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onOpenIntegrations,
   onClearCandidates,
   googleStatus,
+  onSwitchToApply,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -116,6 +118,33 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         )}
       </div>
 
+      {onSwitchToApply && (
+        <button
+          type="button"
+          onClick={onSwitchToApply}
+          className="btn-press"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 7,
+            width: '100%',
+            padding: '7px 11px',
+            marginBottom: 12,
+            borderRadius: 8,
+            border: '1px dashed #d1c4e9',
+            backgroundColor: '#fbf9fe',
+            color: '#673ab7',
+            fontSize: 12,
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <ExternalLink size={13} />
+          <span>Buka Form Pelamar (/apply)</span>
+        </button>
+      )}
       {candidates.length === 0 && (
         <div
           style={{

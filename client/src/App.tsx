@@ -4,6 +4,7 @@ import { DeliberationWorkspace } from '@/features/workspace/components/Deliberat
 import { ContextInspectorPanel } from '@/features/workspace/components/ContextInspectorPanel.js';
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
+import { CandidateApplyPage } from '@/features/workspace/components/CandidateApplyPage.js';
 import type { WorkspaceCandidate } from '@/features/workspace/types.js';
 import type { TraceEvent, GoogleAuthStatus, TechnicalDossier } from '@/types/audit.js';
 import {
@@ -33,6 +34,29 @@ export default function App() {
     }
   });
 
+  const [viewMode, setViewMode] = useState<'workspace' | 'apply'>(() => {
+    try {
+      if (
+        window.location.pathname === '/apply' ||
+        window.location.hash === '#/apply'
+      ) {
+        return 'apply';
+      }
+    } catch {}
+    return 'workspace';
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#/apply') {
+        setViewMode('apply');
+      } else if (window.location.hash === '#/workspace' || !window.location.hash) {
+        setViewMode('workspace');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeliberating, setIsDeliberating] = useState(false);
   const [traceEvents, setTraceEvents] = useState<TraceEvent[]>([]);
@@ -315,6 +339,26 @@ export default function App() {
     );
   };
 
+  const switchToApply = () => {
+    window.location.hash = '#/apply';
+    setViewMode('apply');
+  };
+
+  const switchToWorkspace = () => {
+    window.location.hash = '#/workspace';
+    setViewMode('workspace');
+  };
+
+  if (viewMode === 'apply') {
+    return (
+      <CandidateApplyPage
+        onSubmit={handleRunAudit}
+        onSwitchToWorkspace={switchToWorkspace}
+        isLoading={isLoading}
+      />
+    );
+  }
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#f8f7f4]">
       {/* Panel 1: Candidate Sidebar & Ingestion Queue */}
@@ -326,6 +370,7 @@ export default function App() {
         onOpenUploadModal={() => setIsAddModalOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
         onClearCandidates={handleClearCandidates}
+        onSwitchToApply={switchToApply}
         googleStatus={googleStatus}
       />
 
