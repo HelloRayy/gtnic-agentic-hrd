@@ -3,20 +3,28 @@ import { ApplyHeaderCard } from './ApplyHeaderCard.js';
 import { ApplyPersonalInfoSection } from './ApplyPersonalInfoSection.js';
 import { ApplyPortfolioSection } from './ApplyPortfolioSection.js';
 import { ApplySuccessReceipt } from './ApplySuccessReceipt.js';
-import { RECRUITMENT_PRESETS, DEMO_PRESET_SNIPPETS } from '../demoPresets.js';
+import {
+  RECRUITMENT_PRESETS,
+  DEMO_PRESET_SNIPPETS,
+  getStoredJobs,
+  type RecruitmentPreset,
+} from '../demoPresets.js';
 
 interface CandidateApplyPageProps {
   onSubmit: (formData: FormData) => Promise<void>;
   onSwitchToWorkspace: () => void;
   isLoading?: boolean;
+  jobs?: RecruitmentPreset[];
 }
 
 export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
   onSubmit,
   onSwitchToWorkspace,
   isLoading = false,
+  jobs,
 }) => {
-  const defaultPreset = RECRUITMENT_PRESETS[0];
+  const availableJobs = jobs && jobs.length > 0 ? jobs : getStoredJobs();
+  const defaultPreset = availableJobs[0] || RECRUITMENT_PRESETS[0];
 
   const [candidateName, setCandidateName] = useState('');
   const [email, setEmail] = useState('');
@@ -32,7 +40,7 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const selectedPreset =
-    RECRUITMENT_PRESETS.find((p) => p.id === selectedPresetId) || defaultPreset;
+    availableJobs.find((p) => p.id === selectedPresetId) || defaultPreset;
 
   const handleApplyPresetSnippet = (snippetKey: 'rayhan' | 'johnDoe') => {
     const snippet = DEMO_PRESET_SNIPPETS[snippetKey];
@@ -140,6 +148,7 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
           setPhoneNumber={setPhoneNumber}
           selectedPresetId={selectedPresetId}
           setSelectedPresetId={setSelectedPresetId}
+          jobs={availableJobs}
         />
 
         <ApplyPortfolioSection

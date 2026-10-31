@@ -11,6 +11,7 @@ interface ApplyPersonalInfoSectionProps {
   setPhoneNumber: (v: string) => void;
   selectedPresetId: string;
   setSelectedPresetId: (v: string) => void;
+  jobs?: RecruitmentPreset[];
 }
 
 export const ApplyPersonalInfoSection: React.FC<ApplyPersonalInfoSectionProps> = ({
@@ -22,7 +23,9 @@ export const ApplyPersonalInfoSection: React.FC<ApplyPersonalInfoSectionProps> =
   setPhoneNumber,
   selectedPresetId,
   setSelectedPresetId,
+  jobs,
 }) => {
+  const activeJobs = jobs && jobs.length > 0 ? jobs : RECRUITMENT_PRESETS;
   return (
     <>
       {/* Section 1: Data Diri Pelamar (Fully Linear) */}
@@ -82,7 +85,7 @@ export const ApplyPersonalInfoSection: React.FC<ApplyPersonalInfoSectionProps> =
         </div>
 
         <div className="space-y-2.5 w-full">
-          {RECRUITMENT_PRESETS.map((preset: RecruitmentPreset) => {
+          {activeJobs.map((preset: RecruitmentPreset) => {
             const isSelected = selectedPresetId === preset.id;
             return (
               <label

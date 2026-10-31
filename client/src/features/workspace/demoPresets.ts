@@ -37,6 +37,25 @@ export const RECRUITMENT_PRESETS: RecruitmentPreset[] = [
   },
 ];
 
+export const JOBS_STORAGE_KEY = 'talenttrace_jobs_v1';
+
+export function getStoredJobs(): RecruitmentPreset[] {
+  try {
+    const raw = localStorage.getItem(JOBS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return RECRUITMENT_PRESETS;
+}
+
+export function saveStoredJobs(jobs: RecruitmentPreset[]): void {
+  try {
+    localStorage.setItem(JOBS_STORAGE_KEY, JSON.stringify(jobs));
+  } catch {}
+}
+
 export const DEMO_PRESET_SNIPPETS: Record<'rayhan' | 'johnDoe', CandidateSnippet> = {
   rayhan: {
     name: 'Rayhan Pratama',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, GripVertical, ExternalLink } from 'lucide-react';
+import { Plus, Calendar, GripVertical, ExternalLink, Briefcase } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
@@ -17,6 +17,8 @@ interface CandidateSidebarProps {
   onClearCandidates?: () => void;
   googleStatus: GoogleAuthStatus | null;
   onSwitchToApply?: () => void;
+  onOpenManageJobs?: () => void;
+  jobsCount?: number;
 }
 
 export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
@@ -29,6 +31,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onClearCandidates,
   googleStatus,
   onSwitchToApply,
+  onOpenManageJobs,
+  jobsCount = 3,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -143,6 +147,34 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         >
           <ExternalLink size={13} style={{ color: '#7285d5' }} />
           <span>Buka Form Pelamar (/apply)</span>
+        </button>
+      )}
+
+      {onOpenManageJobs && (
+        <button
+          type="button"
+          onClick={onOpenManageJobs}
+          className="btn-press"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 7,
+            width: '100%',
+            padding: '7px 11px',
+            marginBottom: 12,
+            borderRadius: 8,
+            border: '1px solid #e9e8e6',
+            backgroundColor: '#ffffff',
+            color: '#555660',
+            fontSize: 12,
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <Briefcase size={13} style={{ color: '#7285d5' }} />
+          <span>Kelola Lowongan ({jobsCount})</span>
         </button>
       )}
       {candidates.length === 0 && (

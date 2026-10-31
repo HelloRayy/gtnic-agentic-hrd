@@ -5,6 +5,8 @@ import { ContextInspectorPanel } from '@/features/workspace/components/ContextIn
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
 import { CandidateApplyPage } from '@/features/workspace/components/CandidateApplyPage.js';
+import { ManageJobsModal } from '@/features/workspace/components/ManageJobsModal.js';
+import { getStoredJobs, type RecruitmentPreset } from '@/features/workspace/demoPresets.js';
 import type { WorkspaceCandidate } from '@/features/workspace/types.js';
 import type { TraceEvent, GoogleAuthStatus, TechnicalDossier } from '@/types/audit.js';
 import {
@@ -45,6 +47,9 @@ export default function App() {
     } catch {}
     return 'workspace';
   });
+
+  const [jobs, setJobs] = useState<RecruitmentPreset[]>(() => getStoredJobs());
+  const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -355,6 +360,7 @@ export default function App() {
         onSubmit={handleRunAudit}
         onSwitchToWorkspace={switchToWorkspace}
         isLoading={isLoading}
+        jobs={jobs}
       />
     );
   }
@@ -371,6 +377,8 @@ export default function App() {
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
         onClearCandidates={handleClearCandidates}
         onSwitchToApply={switchToApply}
+        onOpenManageJobs={() => setIsManageJobsOpen(true)}
+        jobsCount={jobs.length}
         googleStatus={googleStatus}
       />
 
@@ -405,6 +413,13 @@ export default function App() {
         isOpen={isIntegrationsOpen}
         onClose={() => setIsIntegrationsOpen(false)}
         onStatusChange={setGoogleStatus}
+      />
+
+      <ManageJobsModal
+        isOpen={isManageJobsOpen}
+        onClose={() => setIsManageJobsOpen(false)}
+        jobs={jobs}
+        onUpdateJobs={setJobs}
       />
     </div>
   );
