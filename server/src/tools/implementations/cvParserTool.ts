@@ -78,7 +78,8 @@ export class CvParserTool implements BaseTool<CvParserParams, CvParserResult> {
     for (const line of lines.slice(0, 8)) {
       const lower = line.toLowerCase();
       const isJunk = junkHeaders.some(j => lower === j || lower.startsWith(j + ' '));
-      if (!isJunk && line.length > 2 && line.length < 50 && !line.includes('@') && !line.includes('http')) {
+      const isSentence = /[!,?.]/.test(line) || /\b(aku|saya|bisa|ingin|percaya|halo|hello|dear)\b/i.test(line);
+      if (!isJunk && !isSentence && line.length > 2 && line.length < 50 && !line.includes('@') && !line.includes('http')) {
         candidateName = line.replace(/^[#*\-•\s]+/, '');
         break;
       }

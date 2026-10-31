@@ -41,7 +41,12 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                 {candidate.statusLabel}
               </span>
             </div>
-            <p className="text-base text-[#686f7c] m-0 mt-1">{candidate.role}</p>
+            <p className="text-base text-[#686f7c] m-0 mt-1.5 flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#798099] bg-[#f0eee9] px-2 py-0.5 rounded-[5px]">
+                Posisi
+              </span>
+              <span className="font-medium text-[#3b3e4d]">{candidate.role}</span>
+            </p>
           </div>
         </div>
 

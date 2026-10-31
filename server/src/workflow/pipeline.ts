@@ -26,7 +26,9 @@ export class AuditPipeline {
       text: input.cvText,
     });
     const candidate: CandidateProfile = cvResult.profile;
-
+    if (input.candidateName && input.candidateName.trim()) {
+      candidate.name = input.candidateName.trim();
+    }
     if (input.manualGithubUrl) {
       candidate.githubUrl = input.manualGithubUrl;
       const match = input.manualGithubUrl.match(/github\.com\/([a-zA-Z0-9_-]+)/i);

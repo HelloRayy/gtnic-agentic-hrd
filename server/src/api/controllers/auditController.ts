@@ -20,7 +20,7 @@ function parseSelectedRepos(raw: unknown): string[] | undefined {
 export async function handleAuditRequest(req: Request, res: Response): Promise<void> {
   try {
     const cvBuffer = req.file?.buffer;
-    const { jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body;
+    const { candidateName, jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body;
     const effectiveGithubUrl = manualGithubUrl || req.body?.githubUrl;
     if (!cvBuffer && !cvText) {
       res.status(400).json({
@@ -33,6 +33,7 @@ export async function handleAuditRequest(req: Request, res: Response): Promise<v
     const dossier = await auditPipeline.execute({
       cvBuffer,
       cvText,
+      candidateName: typeof candidateName === 'string' && candidateName.trim() ? candidateName.trim() : undefined,
       jobTitle: jobTitle || 'Fullstack Engineer',
       jobDesc: jobDesc || 'Building enterprise SaaS with React, TypeScript, and Node.js.',
       manualGithubUrl: effectiveGithubUrl,
@@ -93,7 +94,7 @@ export async function handleStreamAudit(req: Request, res: Response): Promise<vo
 
   const isSample = req.path.includes('/sample') || req.query.sample === 'true';
   const cvBuffer = req.file?.buffer;
-  const { jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body || {};
+  const { candidateName, jobTitle, jobDesc, manualGithubUrl, cvText, selectedRepos: rawRepos } = req.body || {};
   const effectiveGithubUrl = manualGithubUrl || req.body?.githubUrl;
 
   let input;
@@ -116,6 +117,7 @@ Implemented automated testing pipelines and containerized deployments.
     input = {
       cvBuffer,
       cvText,
+      candidateName: typeof candidateName === 'string' && candidateName.trim() ? candidateName.trim() : undefined,
       jobTitle: jobTitle || 'Fullstack Engineer',
       jobDesc: jobDesc || 'Building enterprise SaaS with React, TypeScript, and Node.js.',
       manualGithubUrl: effectiveGithubUrl,

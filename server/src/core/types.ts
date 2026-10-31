@@ -77,12 +77,12 @@ export interface TechnicalDossier {
 export interface AuditInput {
   cvBuffer?: Buffer;
   cvText?: string;
+  candidateName?: string;
   jobTitle?: string;
   jobDesc?: string;
   manualGithubUrl?: string;
   selectedRepos?: string[];
 }
-
 export interface DiscoveredRepo {
   name: string;
   description: string;

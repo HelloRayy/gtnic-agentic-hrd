@@ -121,10 +121,10 @@ export default function App() {
     setTraceEvents([]);
     setElapsedSeconds(0);
 
-    const tempCandidateName =
-      (formData.get('candidateName') as string) || 'Kandidat Baru';
-    const tempJobTitle =
-      (formData.get('jobTitle') as string) || 'Senior Software Engineer';
+    const explicitName = (formData.get('candidateName') as string)?.trim();
+    const explicitJobTitle = (formData.get('jobTitle') as string)?.trim();
+    const tempCandidateName = explicitName || 'Kandidat Baru';
+    const tempJobTitle = explicitJobTitle || 'Senior Software Engineer';
     const tempGithub = (formData.get('githubUrl') as string) || '';
 
     try {
@@ -145,15 +145,18 @@ export default function App() {
             candidateStatusLabel = 'SEBAGIAN';
           }
 
+          const resolvedName = explicitName || dossierResult.candidate.name || tempCandidateName;
+          const resolvedRole = explicitJobTitle || dossierResult.jobTitle || tempJobTitle;
+
           const newCandidate: WorkspaceCandidate = {
             id: `cand-${Date.now()}`,
-            name: dossierResult.candidate.name || tempCandidateName,
-            role: dossierResult.jobTitle || tempJobTitle,
+            name: resolvedName,
+            role: resolvedRole,
             status: candidateStatus,
             statusLabel: candidateStatusLabel,
             stage: 'screening',
             matchScore: score,
-            avatarSeed: (dossierResult.candidate.name || tempCandidateName)
+            avatarSeed: resolvedName
               .split(' ')
               .map((w) => w[0])
               .join('')
