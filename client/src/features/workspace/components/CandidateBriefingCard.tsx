@@ -2,6 +2,7 @@ import React from 'react';
 import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
+import { ExecutiveSummaryCard } from './ExecutiveSummaryCard.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface CandidateBriefingCardProps {
@@ -51,13 +52,11 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </div>
       </div>
 
-      {/* 2. Ringkasan Eksekutif & Deskripsi Portofolio */}
-      <div className="bg-[#fcfbf9] border-l-4 border-[#7285d5] rounded-r-[10px] p-4 text-[13.5px] text-[#333641] leading-[1.8]">
-        <strong className="block text-xs uppercase tracking-wider text-[#7988c5] font-semibold mb-1.5">
-          Ringkasan Eksekutif Hasil Audit Faktual:
-        </strong>
-        <p className="m-0 whitespace-pre-line text-[#333641] leading-[1.8]">{dossier.overallAssessment}</p>
-      </div>
+      {/* 2. Ringkasan Eksekutif Hasil Audit Faktual (Khusus HRD & Highlighting) */}
+      <ExecutiveSummaryCard
+        assessment={dossier.overallAssessment}
+        candidateName={candidate.name}
+      />
 
       {/* 3. Klaim Keahlian (Badges) */}
       <div>
