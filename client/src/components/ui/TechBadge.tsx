@@ -31,8 +31,12 @@ export const TechBadge: React.FC<TechBadgeProps> = ({
       {...props}
     >
       {/* If asset icon exists, display it; otherwise fallback directly to clean text label */}
-      {asset && <span className="inline-flex items-center shrink-0">{asset.icon}</span>}
-      <span className="truncate">{name}</span>
+      {asset && (
+        <span className="w-3.5 h-3.5 inline-flex items-center justify-center shrink-0">
+          {asset.icon}
+        </span>
+      )}
+      <span className="truncate leading-none">{name}</span>
     </span>
   );
 };
