@@ -21,10 +21,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-[#eeeff7] flex items-center justify-center animate-pulse">
-            <OpenDotsMascot color="blue" size="md" />
-          </div>
+        <div className="relative flex items-center justify-center">
+          <OpenDotsMascot color="blue" size="lg" state="working" />
         </div>
 
         <div className="space-y-1.5 max-w-md">
@@ -94,8 +92,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
       <div className="max-w-xl w-full text-center space-y-6">
-        <div className="mx-auto w-16 h-16 rounded-2xl bg-white border border-[#e9e8e6] shadow-[0_2px_8px_rgba(57,57,74,0.04)] flex items-center justify-center">
-          <OpenDotsMascot color="blue" size="md" />
+        <div className="mx-auto flex items-center justify-center">
+          <OpenDotsMascot color="blue" size="lg" state="idle" />
         </div>
 
         <div className="space-y-2">

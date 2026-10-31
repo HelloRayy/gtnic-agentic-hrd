@@ -1,97 +1,81 @@
 import React from 'react';
 
-interface OpenDotsMascotProps {
-  color?: 'blue' | 'mint' | 'orange' | 'purple';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
+export type DotCharacter = 'blue' | 'mint' | 'orange' | 'purple';
+export type DotState = 'idle' | 'working' | 'complete' | 'paused' | 'needs-input';
+export type DotSize = 'sm' | 'md' | 'lg' | 'xl';
+
+export interface OpenDotsMascotProps {
+  color?: DotCharacter;
+  identity?: string;
+  size?: DotSize;
+  state?: DotState;
   isWorking?: boolean;
+  name?: string;
+  decorative?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+const characters: readonly DotCharacter[] = ['blue', 'mint', 'orange', 'purple'] as const;
+
+/**
+ * Stable hash identity matching OpenDots algorithm to keep each personality recognizable.
+ */
+export function characterFor(identity?: string): DotCharacter {
+  if (!identity) return 'blue';
+  let hash = 0;
+  for (let i = 0; i < identity.length; i++) {
+    hash = (hash * 31 + identity.charCodeAt(i)) >>> 0;
+  }
+  return characters[hash % characters.length];
 }
 
 export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
-  color = 'blue',
+  color,
+  identity,
   size = 'md',
-  className = '',
+  state = 'idle',
   isWorking = false,
+  name = 'Forensic Dot',
+  decorative = false,
+  className = '',
+  style,
 }) => {
-  const colorSchemes = {
-    blue: {
-      body: '#8898dc',
-      dark: '#7485cb',
-      blush: '#ffa6be',
-    },
-    mint: {
-      body: '#8cac91',
-      dark: '#769c7b',
-      blush: '#ffd4b2',
-    },
-    orange: {
-      body: '#e2a36b',
-      dark: '#cf8e54',
-      blush: '#ffc1a6',
-    },
-    purple: {
-      body: '#a392ce',
-      dark: '#8b78b9',
-      blush: '#ffa6e2',
-    },
+  const chosenColor = color || characterFor(identity);
+  const activeState = isWorking ? 'working' : state;
+
+  const sizeDimensions: Record<DotSize, { width: number; height: number }> = {
+    sm: { width: 30, height: 30 },
+    md: { width: 48, height: 48 },
+    lg: { width: 96, height: 96 },
+    xl: { width: 140, height: 140 },
   };
 
-  const current = colorSchemes[color] || colorSchemes.blue;
-
-  const sizeDimensions = {
-    sm: { width: 32, height: 32 },
-    md: { width: 44, height: 44 },
-    lg: { width: 130, height: 130 },
-  };
-
-  const { width, height } = sizeDimensions[size];
+  const dim = sizeDimensions[size] || sizeDimensions.md;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const imgSrc = `${cleanBase}dots/${chosenColor}.png`;
 
   return (
-    <div
-      className={`inline-flex items-center justify-center shrink-0 ${
-        isWorking ? 'animate-bounce duration-1000' : ''
-      } ${className}`}
-      style={{ width, height }}
+    <span
+      className={`mascot ${activeState} mascot-${size} inline-flex items-center justify-center shrink-0 overflow-visible select-none ${className}`}
+      style={{
+        width: dim.width,
+        height: dim.height,
+        ...style,
+      }}
+      aria-hidden={decorative ? 'true' : undefined}
     >
-      <svg
-        viewBox="0 0 100 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_4px_12px_rgba(57,57,74,0.06)]"
-      >
-        {/* Squircle Body */}
-        <rect
-          x="6"
-          y="6"
-          width="88"
-          height="88"
-          rx="32"
-          fill={current.body}
-          stroke={current.dark}
-          strokeWidth="3.5"
-        />
-
-        {/* Cheek Blushes */}
-        <circle cx="26" cy="58" r="4.5" fill={current.blush} opacity="0.65" />
-        <circle cx="74" cy="58" r="4.5" fill={current.blush} opacity="0.65" />
-
-        {/* Left Eye */}
-        <ellipse cx="36" cy="46" rx="4.5" ry="6.5" fill="#333641" />
-        <circle cx="37.5" cy="44" r="1.8" fill="#ffffff" />
-
-        {/* Right Eye */}
-        <ellipse cx="64" cy="46" rx="4.5" ry="6.5" fill="#333641" />
-        <circle cx="65.5" cy="44" r="1.8" fill="#ffffff" />
-
-        {/* Subtle Happy Mouth */}
-        <path
-          d="M 46 54 Q 50 57 54 54"
-          stroke="#333641"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          fill="none"
-        />
-      </svg>
-    </div>
+      <img
+        className="dot-body w-full h-full object-contain pointer-events-none"
+        src={imgSrc}
+        alt={decorative ? '' : `${name} (${chosenColor}) is ${activeState}`}
+        width={512}
+        height={512}
+        draggable={false}
+      />
+    </span>
   );
 };
+
+export default OpenDotsMascot;

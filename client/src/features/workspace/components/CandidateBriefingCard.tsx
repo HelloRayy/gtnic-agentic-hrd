@@ -18,7 +18,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
       {/* 1. Header Profil Kandidat */}
       <div className="flex items-start justify-between flex-wrap gap-4 pb-4 border-b border-[#f0eee9]">
         <div className="flex items-center gap-4">
-          <OpenDotsMascot color="blue" size="md" />
+          <OpenDotsMascot identity={candidate.id} size="md" />
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
               <h2 className="text-xl font-semibold text-[#272a33] m-0 tracking-tight">{candidate.name}</h2>
