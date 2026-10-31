@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { CheckCircle2, UploadCloud, FileText, ArrowRight, Sparkles, RefreshCw } from 'lucide-react';
-import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { UploadCloud, Check } from 'lucide-react';
+import { ApplyHeaderCard } from './ApplyHeaderCard.js';
+import { ApplySuccessReceipt } from './ApplySuccessReceipt.js';
 import {
   RECRUITMENT_PRESETS,
   DEMO_PRESET_SNIPPETS,
-  type RecruitmentPreset,
 } from '../demoPresets.js';
 
 interface CandidateApplyPageProps {
@@ -24,7 +24,7 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
   const [email, setEmail] = useState('');
   const [selectedPresetId, setSelectedPresetId] = useState<string>(defaultPreset.id);
   const [githubUrl, setGithubUrl] = useState('');
-  const [inputMode, setInputMode] = useState<'text' | 'file'>('file');
+  const [inputMode, setInputMode] = useState<'file' | 'text'>('file');
   const [cvText, setCvText] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -94,199 +94,128 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
       await onSubmit(formData);
       setIsSubmitted(true);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal mengirim formulir.';
+      const msg = err instanceof Error ? err.message : 'Gagal mengirim berkas audit.';
       setError(msg);
     }
   };
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-[#f0ebf8] py-10 px-4 flex flex-col items-center">
-        <div className="w-full max-w-xl space-y-4">
-          <div className="bg-white rounded-xl border border-[#dadce0] shadow-sm overflow-hidden">
-            <div className="h-2.5 bg-[#673ab7]" />
-            <div className="p-7 space-y-4 text-center">
-              <div className="flex justify-center">
-                <OpenDotsMascot color="blue" size="lg" state="working" />
-              </div>
-              <div className="space-y-1">
-                <h1 className="text-2xl font-normal text-[#202124]">Tanggapan Anda telah direkam.</h1>
-                <p className="text-xs text-[#5f6368]">
-                  AI Agent sedang menganalisis commit dan AST repositori GitHub Anda.
-                </p>
-              </div>
-
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={onSwitchToWorkspace}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#673ab7] hover:bg-[#5e35b1] text-white text-xs font-medium cursor-pointer shadow-sm transition-all"
-                >
-                  <span>Lihat di Workspace Tech Lead</span>
-                  <ArrowRight size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleClear();
-                    setIsSubmitted(false);
-                  }}
-                  className="text-xs text-[#673ab7] hover:underline font-medium py-2 px-3"
-                >
-                  Kirim tanggapan lain
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ApplySuccessReceipt
+        onSwitchToWorkspace={onSwitchToWorkspace}
+        onReset={() => {
+          handleClear();
+          setIsSubmitted(false);
+        }}
+      />
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f0ebf8] py-8 px-4 flex flex-col items-center text-[#202124]">
-      {/* Top Bar Switcher to Tech Lead Workspace */}
-      <div className="w-full max-w-2xl flex items-center justify-between pb-3 text-xs text-[#5f6368]">
-        <div className="flex items-center gap-2">
-          <OpenDotsMascot color="blue" size="sm" decorative />
-          <span className="font-medium text-[#202124]">TalentTrace Ingestion Portal</span>
-        </div>
-        <button
-          type="button"
-          onClick={onSwitchToWorkspace}
-          className="inline-flex items-center gap-1.5 font-medium text-[#673ab7] hover:underline cursor-pointer"
-        >
-          <span>Buka Workspace Tech Lead</span>
-          <ArrowRight size={13} />
-        </button>
-      </div>
+    <div className="min-h-screen bg-[#f8f7f4] py-10 px-4 flex flex-col items-center text-[#242730]">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4">
+        <ApplyHeaderCard
+          onApplyPreset={handleApplyPresetSnippet}
+          onSwitchToWorkspace={onSwitchToWorkspace}
+        />
 
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-3.5">
-        {/* Header Card (Google Form Style) */}
-        <div className="bg-white rounded-xl border border-[#dadce0] shadow-sm overflow-hidden">
-          <div className="h-2.5 bg-[#673ab7]" />
-          <div className="p-6 space-y-3">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-normal text-[#202124] tracking-tight">
-                  Formulir Rekrutmen Engineering
-                </h1>
-                <p className="text-xs text-[#5f6368] mt-1.5 leading-relaxed">
-                  Screening teknis berbasis bukti repositori nyata. Tanpa tes koding buang waktu.
-                </p>
-              </div>
-              <OpenDotsMascot color="purple" size="md" decorative />
-            </div>
-
-            {/* Quick Preset Buttons for Demo */}
-            <div className="pt-2 border-t border-[#f1f3f4] flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] text-[#5f6368] font-medium flex items-center gap-1">
-                <Sparkles size={12} className="text-[#673ab7]" />
-                Demo Cepat:
-              </span>
-              <button
-                type="button"
-                onClick={() => handleApplyPresetSnippet('rayhan')}
-                className="text-[11px] px-2.5 py-1 rounded-md bg-[#ede7f6] hover:bg-[#d1c4e9] text-[#512da8] font-medium transition-colors cursor-pointer"
-              >
-                Rayhan (Frontend Lead)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleApplyPresetSnippet('johnDoe')}
-                className="text-[11px] px-2.5 py-1 rounded-md bg-[#ede7f6] hover:bg-[#d1c4e9] text-[#512da8] font-medium transition-colors cursor-pointer"
-              >
-                John Doe (Distributed Systems)
-              </button>
-            </div>
-
-            <div className="text-[11px] text-[#d93025] font-medium pt-1">
-              * Menunjukkan pertanyaan yang wajib diisi
-            </div>
-          </div>
-        </div>
-
-        {/* Card 1: Nama Lengkap */}
-        <div className="bg-white rounded-xl border border-[#dadce0] p-6 shadow-sm space-y-3 focus-within:border-l-4 focus-within:border-l-[#673ab7]">
-          <label className="block text-sm font-medium text-[#202124]">
-            Nama Lengkap <span className="text-[#d93025]">*</span>
-          </label>
-          <input
-            type="text"
-            required
-            placeholder="Jawaban Anda"
-            value={candidateName}
-            onChange={(e) => setCandidateName(e.target.value)}
-            className="w-full text-sm py-1.5 border-b border-[#dadce0] focus:border-[#673ab7] outline-none transition-colors"
-          />
-        </div>
-
-        {/* Card 2: Email Aktif */}
-        <div className="bg-white rounded-xl border border-[#dadce0] p-6 shadow-sm space-y-3 focus-within:border-l-4 focus-within:border-l-[#673ab7]">
-          <label className="block text-sm font-medium text-[#202124]">Email Aktif</label>
-          <input
-            type="email"
-            placeholder="Jawaban Anda"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full text-sm py-1.5 border-b border-[#dadce0] focus:border-[#673ab7] outline-none transition-colors"
-          />
-        </div>
-
-        {/* Card 3: Posisi yang Dilamar */}
-        <div className="bg-white rounded-xl border border-[#dadce0] p-6 shadow-sm space-y-3 focus-within:border-l-4 focus-within:border-l-[#673ab7]">
-          <label className="block text-sm font-medium text-[#202124]">
-            Posisi yang Dilamar <span className="text-[#d93025]">*</span>
-          </label>
-          <div className="space-y-2.5 pt-1">
-            {RECRUITMENT_PRESETS.map((preset) => (
-              <label
-                key={preset.id}
-                className="flex items-center gap-3 cursor-pointer text-sm text-[#202124]"
-              >
-                <input
-                  type="radio"
-                  name="jobRole"
-                  value={preset.id}
-                  checked={selectedPresetId === preset.id}
-                  onChange={() => setSelectedPresetId(preset.id)}
-                  className="w-4 h-4 accent-[#673ab7]"
-                />
-                <span>{preset.title}</span>
+        {/* Card 1: Identitas Pelamar */}
+        <div className="bg-white rounded-2xl border border-[#e9e8e6] p-6 shadow-[0_2px_8px_rgba(57,57,74,0.02)] space-y-4">
+          <h2 className="text-sm font-semibold text-[#242730]">Identitas Pelamar</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-[#555660]">
+                Nama Lengkap <span className="text-[#d9756c]">*</span>
               </label>
-            ))}
+              <input
+                type="text"
+                required
+                placeholder="cth. Rayhan Pratama"
+                value={candidateName}
+                onChange={(e) => setCandidateName(e.target.value)}
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#fafafa] border border-[#e3e3e8] focus:bg-white focus:border-[#7285d5] outline-none transition-all"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-[#555660]">Email</label>
+              <input
+                type="email"
+                placeholder="cth. candidate@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#fafafa] border border-[#e3e3e8] focus:bg-white focus:border-[#7285d5] outline-none transition-all"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Card 4: Tautan GitHub */}
-        <div className="bg-white rounded-xl border border-[#dadce0] p-6 shadow-sm space-y-3 focus-within:border-l-4 focus-within:border-l-[#673ab7]">
-          <label className="block text-sm font-medium text-[#202124]">
-            Tautan Profil / Repositori GitHub <span className="text-[#d93025]">*</span>
-          </label>
-          <input
-            type="url"
-            required
-            placeholder="https://github.com/username"
-            value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
-            className="w-full text-sm py-1.5 border-b border-[#dadce0] focus:border-[#673ab7] outline-none transition-colors font-mono"
-          />
+        {/* Card 2: Posisi yang Dilamar */}
+        <div className="bg-white rounded-2xl border border-[#e9e8e6] p-6 shadow-[0_2px_8px_rgba(57,57,74,0.02)] space-y-3">
+          <h2 className="text-sm font-semibold text-[#242730]">
+            Posisi yang Dilamar <span className="text-[#d9756c]">*</span>
+          </h2>
+          <div className="space-y-2 pt-1">
+            {RECRUITMENT_PRESETS.map((preset) => {
+              const isSelected = selectedPresetId === preset.id;
+              return (
+                <label
+                  key={preset.id}
+                  onClick={() => setSelectedPresetId(preset.id)}
+                  className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    isSelected
+                      ? 'border-[#7285d5] bg-[#f6f7fc]'
+                      : 'border-[#e3e3e8] bg-white hover:border-[#cfcfd8]'
+                  }`}
+                >
+                  <div className="space-y-0.5">
+                    <span className="text-xs font-semibold text-[#242730]">{preset.title}</span>
+                    <p className="text-[11px] text-[#707070] line-clamp-1">{preset.jobDesc}</p>
+                  </div>
+                  <div
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-3 ${
+                      isSelected ? 'border-[#7285d5] bg-[#7285d5]' : 'border-[#cfcfd8] bg-white'
+                    }`}
+                  >
+                    {isSelected && <Check size={10} className="text-white" strokeWidth={3} />}
+                  </div>
+                </label>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Card 5: CV / Portofolio */}
-        <div className="bg-white rounded-xl border border-[#dadce0] p-6 shadow-sm space-y-3 focus-within:border-l-4 focus-within:border-l-[#673ab7]">
+        {/* Card 3: Profil / Repositori GitHub */}
+        <div className="bg-white rounded-2xl border border-[#e9e8e6] p-6 shadow-[0_2px_8px_rgba(57,57,74,0.02)] space-y-2.5">
+          <h2 className="text-sm font-semibold text-[#242730]">
+            Tautan Profil / Repositori GitHub <span className="text-[#d9756c]">*</span>
+          </h2>
+          <p className="text-[11px] text-[#707070]">
+            Agent akan mengaudit kode sumber, riwayat commit, dan keaslian AST repositori Anda.
+          </p>
+          <div className="relative">
+            <input
+              type="url"
+              required
+              placeholder="https://github.com/username"
+              value={githubUrl}
+              onChange={(e) => setGithubUrl(e.target.value)}
+              className="w-full text-xs pl-3.5 pr-3 py-2.5 rounded-xl bg-[#fafafa] border border-[#e3e3e8] focus:bg-white focus:border-[#7285d5] outline-none transition-all font-mono"
+            />
+          </div>
+        </div>
+
+        {/* Card 4: Berkas CV / Portofolio */}
+        <div className="bg-white rounded-2xl border border-[#e9e8e6] p-6 shadow-[0_2px_8px_rgba(57,57,74,0.02)] space-y-3">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-[#202124]">
-              Curriculum Vitae (CV) <span className="text-[#d93025]">*</span>
-            </label>
-            <div className="flex gap-2">
+            <h2 className="text-sm font-semibold text-[#242730]">
+              Berkas CV / Ringkasan <span className="text-[#d9756c]">*</span>
+            </h2>
+            <div className="flex gap-1.5 p-0.5 rounded-lg bg-[#f0eee9]">
               <button
                 type="button"
                 onClick={() => setInputMode('file')}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded cursor-pointer ${
-                  inputMode === 'file'
-                    ? 'bg-[#673ab7] text-white'
-                    : 'bg-[#f1f3f4] text-[#5f6368]'
+                className={`text-[11px] font-medium px-2.5 py-1 rounded-md cursor-pointer transition-all ${
+                  inputMode === 'file' ? 'bg-white text-[#242730] shadow-sm' : 'text-[#707070]'
                 }`}
               >
                 Upload File
@@ -294,10 +223,8 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
               <button
                 type="button"
                 onClick={() => setInputMode('text')}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded cursor-pointer ${
-                  inputMode === 'text'
-                    ? 'bg-[#673ab7] text-white'
-                    : 'bg-[#f1f3f4] text-[#5f6368]'
+                className={`text-[11px] font-medium px-2.5 py-1 rounded-md cursor-pointer transition-all ${
+                  inputMode === 'text' ? 'bg-white text-[#242730] shadow-sm' : 'text-[#707070]'
                 }`}
               >
                 Tempel Teks
@@ -306,12 +233,12 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
           </div>
 
           {inputMode === 'file' ? (
-            <label className="border-2 border-dashed border-[#dadce0] hover:border-[#673ab7] rounded-lg p-5 flex flex-col items-center justify-center cursor-pointer bg-[#fafafa] transition-colors">
-              <UploadCloud size={24} className="text-[#5f6368] mb-1.5" />
-              <span className="text-xs text-[#202124] font-medium">
-                {selectedFile ? selectedFile.name : 'Pilih file PDF CV atau seret ke sini'}
+            <label className="border-2 border-dashed border-[#e3e3e8] hover:border-[#7285d5] rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer bg-[#fafafa] transition-colors">
+              <UploadCloud size={24} className="text-[#8c8d97] mb-1.5" />
+              <span className="text-xs text-[#242730] font-medium">
+                {selectedFile ? selectedFile.name : 'Pilih berkas PDF CV atau seret ke sini'}
               </span>
-              <span className="text-[10px] text-[#5f6368] mt-0.5">Format PDF maksimal 10MB</span>
+              <span className="text-[10px] text-[#8c8d97] mt-0.5">Format PDF (maksimal 10MB)</span>
               <input
                 type="file"
                 accept=".pdf"
@@ -325,16 +252,16 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
           ) : (
             <textarea
               rows={4}
-              placeholder="Tempel teks ringkasan CV atau keahlian Anda di sini..."
+              placeholder="Tempel teks ringkasan CV atau keahlian teknis Anda di sini..."
               value={cvText}
               onChange={(e) => setCvText(e.target.value)}
-              className="w-full text-xs p-3 border border-[#dadce0] rounded-lg focus:border-[#673ab7] outline-none font-mono resize-y"
+              className="w-full text-xs p-3.5 rounded-xl bg-[#fafafa] border border-[#e3e3e8] focus:bg-white focus:border-[#7285d5] outline-none font-mono resize-y"
             />
           )}
         </div>
 
         {error && (
-          <div className="p-3 bg-[#fce8e6] text-[#c5221f] text-xs rounded-lg font-medium">
+          <div className="p-3 bg-[#fdf2f1] border border-[#fbd3cf] text-[#d9756c] text-xs rounded-xl font-medium">
             {error}
           </div>
         )}
@@ -344,19 +271,21 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 rounded-md bg-[#673ab7] hover:bg-[#5e35b1] text-white text-xs font-medium cursor-pointer shadow-sm transition-all disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-[#7285d5] hover:bg-[#5f74cb] text-white text-xs font-medium cursor-pointer shadow-[0_2px_8px_rgba(114,133,213,0.25)] transition-all disabled:opacity-50"
           >
-            {isLoading ? 'Mengirim & Menganalisis...' : 'Kirim'}
+            {isLoading ? 'Sedang Memproses...' : 'Kirim Lamaran'}
           </button>
           <button
             type="button"
             onClick={handleClear}
-            className="text-xs text-[#673ab7] hover:underline font-medium cursor-pointer"
+            className="text-xs text-[#8c8d97] hover:text-[#242730] font-medium cursor-pointer transition-colors"
           >
-            Kosongkan formulir
+            Reset Formulir
           </button>
         </div>
       </form>
     </div>
   );
 };
+
+export default CandidateApplyPage;

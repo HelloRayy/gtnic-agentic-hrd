@@ -132,16 +132,16 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
             padding: '7px 11px',
             marginBottom: 12,
             borderRadius: 8,
-            border: '1px dashed #d1c4e9',
-            backgroundColor: '#fbf9fe',
-            color: '#673ab7',
+            border: '1px solid #e9e8e6',
+            backgroundColor: '#ffffff',
+            color: '#555660',
             fontSize: 12,
             fontWeight: 500,
             cursor: 'pointer',
             transition: 'all 0.15s ease',
           }}
         >
-          <ExternalLink size={13} />
+          <ExternalLink size={13} style={{ color: '#7285d5' }} />
           <span>Buka Form Pelamar (/apply)</span>
         </button>
       )}
