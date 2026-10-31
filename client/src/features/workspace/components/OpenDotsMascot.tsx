@@ -54,7 +54,7 @@ export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
   const dim = sizeDimensions[size] || sizeDimensions.md;
   const baseUrl = import.meta.env.BASE_URL || '/';
   const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const imgSrc = `${cleanBase}dots/${chosenColor}.png`;
+  const imgSrc = `${cleanBase}opendots/dot-${chosenColor}.png`;
 
   return (
     <span
@@ -75,6 +75,55 @@ export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
         draggable={false}
       />
     </span>
+  );
+};
+export interface OpenDotsQuadHeroProps {
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export const OpenDotsQuadHero: React.FC<OpenDotsQuadHeroProps> = ({
+  className = '',
+  size = 'md',
+}) => {
+  const dots: Array<{ color: DotCharacter; delay: string }> = [
+    { color: 'blue', delay: '0ms' },
+    { color: 'mint', delay: '-800ms' },
+    { color: 'orange', delay: '-1600ms' },
+    { color: 'purple', delay: '-2400ms' },
+  ];
+
+  const sizeClass =
+    size === 'sm' ? 'w-12 h-12' : size === 'lg' ? 'w-24 h-24' : 'w-16 h-16 sm:w-20 sm:h-20';
+
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+
+  return (
+    <div
+      aria-hidden="true"
+      className={`hero-enter mx-auto flex items-end justify-center gap-1.5 sm:gap-3 select-none ${className}`}
+      style={{ '--hero-delay': '0ms' } as React.CSSProperties}
+    >
+      {dots.map(({ color, delay }) => (
+        <span
+          key={color}
+          className="dot-bob"
+          style={{ '--bob-delay': delay } as React.CSSProperties}
+        >
+          <img
+            alt=""
+            draggable={false}
+            loading="lazy"
+            width={96}
+            height={96}
+            decoding="async"
+            className={`shrink-0 select-none ${sizeClass} drop-shadow-[0_4px_12px_rgba(57,57,74,0.06)]`}
+            src={`${cleanBase}opendots/dot-${color}.png`}
+          />
+        </span>
+      ))}
+    </div>
   );
 };
 

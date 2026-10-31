@@ -382,9 +382,23 @@ body {
     transform: translateY(-5px);
   }
 }
+@keyframes opendots-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.dot-bob {
+  display: inline-flex;
+  animation: opendots-bob 3.2s ease-in-out var(--bob-delay, 0s) infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .mascot.working .dot-body {
+  .mascot.working .dot-body,
+  .dot-bob {
     animation: none;
   }
 }
