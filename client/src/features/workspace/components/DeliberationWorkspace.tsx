@@ -16,6 +16,8 @@ interface DeliberationWorkspaceProps {
   onSendMessage: (message: string) => void;
   onOpenWebIde: () => void;
   onOpenUploadModal: () => void;
+  onViewCv?: () => void;
+  onInspectCode?: () => void;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -28,6 +30,8 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onSendMessage,
   onOpenWebIde,
   onOpenUploadModal,
+  onViewCv,
+  onInspectCode,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -132,6 +136,8 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
           isDeliberating={isDeliberating}
           onSendMessage={onSendMessage}
           onSchedule={onOpenWebIde}
+          onViewCv={onViewCv}
+          onInspectCode={onInspectCode}
         />
       </div>
     </main>

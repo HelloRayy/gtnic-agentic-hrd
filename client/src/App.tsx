@@ -50,7 +50,7 @@ export default function App() {
 
   const [jobs, setJobs] = useState<RecruitmentPreset[]>(() => getStoredJobs());
   const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
-
+  const [inspectorTab, setInspectorTab] = useState<'ide' | 'cv' | 'matrix' | 'radar' | 'action'>('ide');
   useEffect(() => {
     const handleHashChange = () => {
       if (window.location.hash === '#/apply') {
@@ -396,14 +396,16 @@ export default function App() {
         onSendMessage={handleSendMessage}
         onOpenWebIde={handleOpenWebIde}
         onOpenUploadModal={() => setIsAddModalOpen(true)}
+        onViewCv={() => setInspectorTab('cv')}
+        onInspectCode={() => setInspectorTab('ide')}
       />
 
       {/* Panel 3: Right Inspector Panel / Forensic Dossier */}
       <ContextInspectorPanel
         candidate={activeCandidate}
         googleStatus={googleStatus}
+        targetTab={inspectorTab}
       />
-
       {/* Dialog Modals */}
       <AddCandidateModal
         isOpen={isAddModalOpen}

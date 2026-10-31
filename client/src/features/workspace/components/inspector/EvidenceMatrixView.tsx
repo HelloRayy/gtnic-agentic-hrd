@@ -1,16 +1,18 @@
 import React from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Code2 } from 'lucide-react';
 import { PillBadge } from '@/components/ui/PillBadge.js';
 import type { EvidenceItem } from '@/types/audit.js';
 
 interface EvidenceMatrixViewProps {
   evidenceMatrix: EvidenceItem[];
   githubUsername?: string;
+  onInspectCode?: (fileAnchor?: string) => void;
 }
 
 export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
   evidenceMatrix,
   githubUsername,
+  onInspectCode,
 }) => {
   if (!evidenceMatrix || evidenceMatrix.length === 0) {
     return (
@@ -76,17 +78,30 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
               <span className="text-[#7285d5] font-medium truncate max-w-[220px]">
                 {item.fileAnchor}
               </span>
-              {item.repoAnchor && (
-                <a
-                  href={`https://github.com/${githubUsername || 'repo'}/${item.repoAnchor}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-0.5 text-[#7285d5] hover:underline"
-                >
-                  <span>Lihat Git</span>
-                  <ExternalLink className="w-2.5 h-2.5" />
-                </a>
-              )}
+              <div className="flex items-center gap-2">
+                {onInspectCode && (
+                  <button
+                    type="button"
+                    onClick={() => onInspectCode(item.fileAnchor || undefined)}
+                    className="inline-flex items-center gap-1 text-[#5269bb] hover:underline font-semibold text-[11px] cursor-pointer"
+                    title="Buka dan inspeksi di Mini Forensic IDE"
+                  >
+                    <Code2 size={12} />
+                    <span>Inspeksi IDE</span>
+                  </button>
+                )}
+                {item.repoAnchor && (
+                  <a
+                    href={`https://github.com/${githubUsername || 'repo'}/${item.repoAnchor}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 text-[#7285d5] hover:underline text-[11px]"
+                  >
+                    <span>Lihat Git</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                )}
+              </div>
             </div>
           )}
         </div>

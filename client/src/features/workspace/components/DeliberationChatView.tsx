@@ -24,6 +24,8 @@ interface DeliberationChatViewProps {
   onSendMessage: (message: string) => void;
   onSchedule?: () => void;
   onSaveDossier?: () => void;
+  onViewCv?: () => void;
+  onInspectCode?: () => void;
 }
 
 export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
@@ -36,6 +38,8 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   onSendMessage,
   onSchedule,
   onSaveDossier,
+  onViewCv,
+  onInspectCode,
 }) => {
   const [input, setInput] = useState('');
   const [skillsOpen, setSkillsOpen] = useState(false);
@@ -143,7 +147,11 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
         </div>
 
         {/* Super Complete Candidate Profile & Forensic Briefing Card */}
-        <CandidateBriefingCard candidate={candidate} />
+        <CandidateBriefingCard
+          candidate={candidate}
+          onViewCv={onViewCv}
+          onInspectCode={onInspectCode}
+        />
         {/* Quick Action Suggestion Cards (HRD vs Tech Lead Modes) */}
         <ChatSuggestions
           candidateName={candidateName}

@@ -14,3 +14,20 @@ export interface WorkspaceCandidate {
   dossier: TechnicalDossier;
   chatHistory: DeliberationMessage[];
 }
+
+export interface ForensicCallout {
+  startLine: number;
+  endLine: number;
+  type: 'VERIFIED' | 'PARTIAL' | 'WARNING';
+  claimTitle: string;
+  astEvidenceSummary: string;
+}
+
+export interface IdeFileSnippet {
+  id: string;
+  fileName: string;
+  filePath: string;
+  language: 'typescript' | 'javascript' | 'json' | 'go' | 'python' | 'yaml' | 'sql';
+  code: string;
+  callouts: ForensicCallout[];
+}

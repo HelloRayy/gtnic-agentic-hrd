@@ -1,14 +1,16 @@
 import React from 'react';
-import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers } from 'lucide-react';
+import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers, FileText, Code2 } from 'lucide-react';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface CandidateBriefingCardProps {
   candidate: WorkspaceCandidate;
+  onViewCv?: () => void;
+  onInspectCode?: () => void;
 }
 
-export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ candidate }) => {
+export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ candidate, onViewCv, onInspectCode }) => {
   const { dossier } = candidate;
   const verifiedCount = dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
   const transferableCount = dossier.evidenceMatrix.filter((e) => e.status === 'TRANSFERABLE').length;
@@ -50,15 +52,36 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
           </div>
         </div>
 
-        {/* Metrik Faktual Bukti */}
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-sm font-semibold text-[#2b8a3e]">
-            <CheckCircle2 size={16} className="text-[#2b8a3e]" />
-            <span>{verifiedCount}/{dossier.evidenceMatrix.length} Klaim Terverifikasi</span>
+        {/* Metrik & Aksi Cepat Forensik */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {onViewCv && (
+            <button
+              type="button"
+              onClick={onViewCv}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#f2f4fc] hover:bg-[#e4e9f9] text-[#5269bb] border border-[#d8dcf7] text-xs font-semibold transition-all cursor-pointer shadow-xs"
+              title="Buka dokumen CV pelamar di panel kanan"
+            >
+              <FileText size={14} />
+              <span>Lihat CV</span>
+            </button>
+          )}
+
+          {onInspectCode && (
+            <button
+              type="button"
+              onClick={onInspectCode}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#22242c] hover:bg-[#2d303a] text-[#f0f2fb] border border-[#373a48] text-xs font-semibold transition-all cursor-pointer shadow-xs"
+              title="Buka Mini Forensic IDE di panel kanan"
+            >
+              <Code2 size={14} />
+              <span>Inspeksi IDE</span>
+            </button>
+          )}
+
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-xs font-semibold text-[#2b8a3e]">
+            <CheckCircle2 size={15} className="text-[#2b8a3e]" />
+            <span>{verifiedCount}/{dossier.evidenceMatrix.length} Bukti Terverifikasi</span>
           </div>
-          <span className="text-sm font-medium tabular-nums text-[#8c8d97] bg-[#fdfcfb] px-3 py-2 rounded-[8px] border border-[#eeedea]">
-            {(dossier.executionTimeMs / 1000).toFixed(1)}s audit
-          </span>
         </div>
       </div>
 
