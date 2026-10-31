@@ -27,48 +27,48 @@ interface SkillsMenuPopoverProps {
 const SKILLS: SkillItem[] = [
   {
     id: 'integritas',
-    title: 'Cek Integritas CV',
-    desc: 'Klaim jabatan vs keaslian kode nyata',
-    tag: 'Integritas',
+    title: 'Keaslian Portofolio & CV',
+    desc: 'Cek apakah proyek dibuat sendiri atau hasil salinan',
+    tag: 'Keaslian',
     icon: <ShieldCheck size={15} className="text-[#3b82f6]" />,
     getPrompt: (name) =>
-      `Analisis integritas klaim di CV ${name} terhadap bukti proyek nyata di repositorinya. Apakah ada klaim yang melebih-lebihkan fakta atau indikasi numpang nama? Jelaskan dalam bahasa manusia yang mudah dipahami HRD tanpa istilah teknis rumit.`,
+      `Analisis keaslian berkas dan proyek yang dilampirkan oleh ${name}, apakah murni hasil karyanya sendiri atau ada indikasi menyalin template orang lain. Jelaskan secara objektif dan mudah dipahami tim HRD.`,
   },
   {
     id: 'senioritas',
-    title: 'Validasi Senioritas',
-    desc: 'Kematangan arsitektur & kelayakan gaji',
-    tag: 'Senioritas',
+    title: 'Kesesuaian Level & Kompensasi',
+    desc: 'Evaluasi apakah keahlian nyata setara level Senior',
+    tag: 'Level Skill',
     icon: <Award size={15} className="text-[#8b5cf6]" />,
     getPrompt: (name) =>
-      `Berdasarkan arsitektur, kompleksitas kode, dan kematangan testing pada repositori ${name}, apakah kapasitas aslinya sepadan untuk level Senior? Apakah ekspektasi gaji tinggi masuk akal? Berikan evaluasi objektifnya.`,
+      `Berdasarkan bukti kode riil pada repositori ${name}, apakah kapasitas keahlian dan kematangannya sepadan dengan level Senior serta ekspektasi kompensasi yang diminta? Berikan evaluasi komprehensif.`,
   },
   {
     id: 'adaptasi',
-    title: 'Risiko Adaptasi Tim',
-    desc: 'Kemudahan adaptasi ke stack kantor',
+    title: 'Kemampuan Beradaptasi',
+    desc: 'Tinjau kecepatan belajar teknologi baru di kantor',
     tag: 'Adaptasi',
     icon: <Compass size={15} className="text-[#10b981]" />,
     getPrompt: (name) =>
-      `Jika tim kami menempatkan ${name} pada stack teknologi yang berbeda dari portofolio publiknya, apa saja risiko dan kendala adaptasi terbesarnya? Berapa lama perkiraan waktu onboarding-nya?`,
+      `Jika perusahaan menempatkan ${name} pada sistem kerja atau teknologi yang berbeda dari portofolionya, bagaimana proyeksi kemampuan beradaptasi dan perkiraan durasi onboarding yang dibutuhkannya?`,
   },
   {
     id: 'interview',
-    title: 'Kisi-Kisi Wawancara',
-    desc: '3 pertanyaan investigasi kasus nyata',
+    title: 'Panduan Pertanyaan Wawancara',
+    desc: '3 pertanyaan kunci untuk menguji kemampuan pelamar',
     tag: 'Wawancara',
     icon: <HelpCircle size={15} className="text-[#f59e0b]" />,
     getPrompt: (name) =>
-      `Buatkan 3 pertanyaan investigasi studi kasus nyata berdasarkan kode ${name} untuk sesi interview teknis. Sertakan kunci contekan: apa sinyal kandidat kompeten vs sinyal bualan yang harus diperhatikan pewawancara.`,
+      `Susun 3 pertanyaan wawancara penting berdasarkan proyek riil ${name} untuk menguji pemahaman konseptual dan praktisnya, lengkap dengan panduan indikator jawaban yang kompeten.`,
   },
   {
     id: 'keputusan',
-    title: 'Rekomendasi Keputusan',
-    desc: 'Pro, kontra & panduan lolos/tolak',
+    title: 'Rekomendasi Keputusan Rekrutmen',
+    desc: 'Analisis kelayakan: lanjut wawancara atau tolak',
     tag: 'Keputusan',
     icon: <CheckCircle2 size={15} className="text-[#2b8a3e]" />,
     getPrompt: (name) =>
-      `Rangkum keputusan screening akhir untuk ${name}: apa 3 alasan terkuat untuk meloloskan, apa 3 risiko terbesarnya, dan apa rekomendasi final untuk HRD (Lolos ke Interview / Perlu Uji Khusus / Tolak)?`,
+      `Berikan rekomendasi keputusan rekrutmen tahap awal untuk ${name}: apakah kandidat layak dipanggil ke tahap wawancara teknis atau sebaiknya tidak dilanjutkan? Rangkum kelebihan utama serta risiko pertimbangannya.`,
   },
 ];
 
@@ -117,7 +117,7 @@ export const SkillsMenuPopover: React.FC<SkillsMenuPopoverProps> = ({
             ?
           </span>
           <span className="text-xs font-semibold text-[#333641]">
-            Tanya Cepat HRD
+            Panduan Evaluasi Kandidat
           </span>
         </div>
         <button

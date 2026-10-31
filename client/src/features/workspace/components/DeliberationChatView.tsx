@@ -227,8 +227,8 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
                     ? 'bg-[#7285d5] text-white shadow-xs'
                     : 'bg-[#f0eee9] hover:bg-[#e4e7f7] text-[#6b6e7b] hover:text-[#5269bb] border border-[#e2dfd7]'
                 }`}
-                aria-label="Tanya Cepat HRD (?)"
-                title="Tanya Cepat HRD (?)"
+                aria-label="Panduan Evaluasi Kandidat (?)"
+                title="Panduan Evaluasi Kandidat (?)"
               >
                 ?
               </button>
@@ -248,7 +248,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder={`Tanyakan tentang ${candidateName} atau klik ?…`}
+              placeholder={`Tanyakan tentang ${candidateName} atau klik (?) untuk panduan evaluasi…`}
               rows={1}
               disabled={isDeliberating}
             />
