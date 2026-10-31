@@ -193,64 +193,66 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
       </div>
 
       {/* Authentic OpenDots Chat Composer (Fixed at Bottom) */}
-      <form onSubmit={handleSubmit} className="chat-composer">
-        {sourceOpen && (
-          <div className="source-input">
-            <Link2 size={14} />
-            <input
-              type="text"
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
-              placeholder="Sematkan URL repositori atau berkas: https://github.com/..."
-            />
+      <div className="chat-composer-wrapper">
+        <form onSubmit={handleSubmit} className="chat-composer">
+          {sourceOpen && (
+            <div className="source-input">
+              <Link2 size={14} />
+              <input
+                type="text"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                placeholder="Sematkan URL repositori atau berkas: https://github.com/..."
+              />
+              <button
+                type="button"
+                className="icon-button"
+                style={{ width: 22, height: 22, border: 'none', background: 'transparent' }}
+                onClick={() => {
+                  setSourceOpen(false);
+                  setSource('');
+                }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+
+          <div className="chat-compose-row">
             <button
               type="button"
-              className="icon-button"
-              style={{ width: 22, height: 22, border: 'none', background: 'transparent' }}
-              onClick={() => {
-                setSourceOpen(false);
-                setSource('');
-              }}
+              className={`icon-button ${sourceOpen ? 'active' : ''}`}
+              aria-label="Sematkan sumber tautan kode"
+              title="Sematkan tautan repositori spesifik"
+              onClick={() => setSourceOpen(!sourceOpen)}
             >
-              <X size={14} />
+              <Link2 size={16} />
+            </button>
+
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={`Tanyakan apa saja seputar audit kandidat ${candidateName}…`}
+              rows={1}
+              disabled={isDeliberating}
+            />
+
+            <button
+              type="submit"
+              disabled={!input.trim() || isDeliberating}
+              className="send-button"
+              aria-label="Kirim pesan"
+            >
+              {isDeliberating ? <Square size={14} /> : <ArrowUp size={16} />}
             </button>
           </div>
-        )}
-
-        <div className="chat-compose-row">
-          <button
-            type="button"
-            className={`icon-button ${sourceOpen ? 'active' : ''}`}
-            aria-label="Sematkan sumber tautan kode"
-            title="Sematkan tautan repositori spesifik"
-            onClick={() => setSourceOpen(!sourceOpen)}
-          >
-            <Link2 size={16} />
-          </button>
-
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={`Message your Co-Pilot about ${candidateName}…`}
-            rows={1}
-            disabled={isDeliberating}
-          />
-
-          <button
-            type="submit"
-            disabled={!input.trim() || isDeliberating}
-            className="send-button"
-            aria-label="Kirim pesan"
-          >
-            {isDeliberating ? <Square size={14} /> : <ArrowUp size={16} />}
-          </button>
-        </div>
+        </form>
 
         <div className="chat-compose-note">
           Jawaban asisten terverifikasi langsung berdasarkan bukti riil riwayat commit dan repositori kandidat.
         </div>
-      </form>
+      </div>
     </div>
   );
 };
