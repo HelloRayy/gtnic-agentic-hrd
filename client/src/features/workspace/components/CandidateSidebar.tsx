@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Calendar, GripVertical, ExternalLink, Briefcase } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { CandidateAvatar } from './CandidateAvatar.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
 
@@ -122,61 +123,6 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         )}
       </div>
 
-      {onSwitchToApply && (
-        <button
-          type="button"
-          onClick={onSwitchToApply}
-          className="btn-press"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 7,
-            width: '100%',
-            padding: '7px 11px',
-            marginBottom: 12,
-            borderRadius: 8,
-            border: '1px solid #e9e8e6',
-            backgroundColor: '#ffffff',
-            color: '#555660',
-            fontSize: 12,
-            fontWeight: 500,
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
-          }}
-        >
-          <ExternalLink size={13} style={{ color: '#7285d5' }} />
-          <span>Buka Form Pelamar (/apply)</span>
-        </button>
-      )}
-
-      {onOpenManageJobs && (
-        <button
-          type="button"
-          onClick={onOpenManageJobs}
-          className="btn-press"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 7,
-            width: '100%',
-            padding: '7px 11px',
-            marginBottom: 12,
-            borderRadius: 8,
-            border: '1px solid #e9e8e6',
-            backgroundColor: '#ffffff',
-            color: '#555660',
-            fontSize: 12,
-            fontWeight: 500,
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
-          }}
-        >
-          <Briefcase size={13} style={{ color: '#7285d5' }} />
-          <span>Kelola Lowongan ({jobsCount})</span>
-        </button>
-      )}
       {candidates.length === 0 && (
         <div
           style={{
@@ -354,7 +300,13 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                               overflow: 'hidden',
                             }}
                           >
-                            <OpenDotsMascot identity={cand.id} size="sm" decorative />
+                            <CandidateAvatar
+                              name={cand.name}
+                              githubUrl={cand.githubUrl}
+                              githubUsername={cand.dossier?.candidate?.githubUsername}
+                              identity={cand.id}
+                              size="sm"
+                            />
                           </div>
 
                           <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
@@ -420,6 +372,77 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
             </div>
           );
         })}
+        {/* Pengaturan & Portal Rekrutmen (Di Paling Bawah - Perlu Scroll) */}
+        <div style={{ marginTop: 20, paddingTop: 14, borderTop: '1px solid #eeedea', paddingBottom: 10 }}>
+          <div
+            style={{
+              fontSize: 10.5,
+              fontWeight: 700,
+              color: '#8c8d97',
+              textTransform: 'uppercase',
+              letterSpacing: '0.6px',
+              marginBottom: 8,
+              paddingLeft: 4,
+            }}
+          >
+            Pengaturan & Portal
+          </div>
+
+          {onOpenManageJobs && (
+            <button
+              type="button"
+              onClick={onOpenManageJobs}
+              className="btn-press"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 7,
+                width: '100%',
+                padding: '7px 11px',
+                marginBottom: 6,
+                borderRadius: 8,
+                border: '1px solid #e9e8e6',
+                backgroundColor: '#ffffff',
+                color: '#555660',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Briefcase size={13} style={{ color: '#7285d5' }} />
+              <span>Kelola Lowongan ({jobsCount})</span>
+            </button>
+          )}
+
+          {onSwitchToApply && (
+            <button
+              type="button"
+              onClick={onSwitchToApply}
+              className="btn-press"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 7,
+                width: '100%',
+                padding: '7px 11px',
+                borderRadius: 8,
+                border: '1px solid #e9e8e6',
+                backgroundColor: '#ffffff',
+                color: '#555660',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <ExternalLink size={13} style={{ color: '#7285d5' }} />
+              <span>Buka Form Pelamar (/apply)</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Sidebar Footer with OpenDots Star Note and Integrations */}

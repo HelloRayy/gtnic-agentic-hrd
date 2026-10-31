@@ -246,7 +246,17 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         commitAuthors,
         isPotentialClone,
         cached: false,
-        homepageUrl: repoInfo.homepage ? repoInfo.homepage.trim() : null,
+        homepageUrl: (() => {
+          if (repoInfo.homepage && repoInfo.homepage.trim()) return repoInfo.homepage.trim();
+          if (repoInfo.description) {
+            const match = repoInfo.description.match(/https?:\/\/[^\s)]+(?:vercel\.app|netlify\.app|github\.io|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}\b[^\s)]*)/i);
+            if (match) return match[0];
+          }
+          if ('has_pages' in repoInfo && Boolean(repoInfo.has_pages)) {
+            return `https://${owner}.github.io/${repo}`;
+          }
+          return null;
+        })(),
       };
 
       auditCacheStore.set(owner, repo, result);
