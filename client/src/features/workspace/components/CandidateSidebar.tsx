@@ -286,14 +286,14 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                               height: 30,
                               borderRadius: 7,
                               background: isActive ? '#e0e4f4' : '#f0eee9',
-                              color: isActive ? '#596aa9' : '#858690',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               flexShrink: 0,
+                              overflow: 'hidden',
                             }}
                           >
-                            <User size={15} strokeWidth={isActive ? 2 : 1.75} />
+                            <OpenDotsMascot identity={cand.id} size="sm" decorative />
                           </div>
 
                           <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
