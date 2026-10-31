@@ -110,12 +110,14 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
       formData.append('cvText', cvText.trim());
     }
 
+    setIsSubmitted(true);
+
     try {
       await onSubmit(formData);
-      setIsSubmitted(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal mengirim berkas lamaran.';
       setError(msg);
+      setIsSubmitted(false);
     }
   };
 
@@ -127,6 +129,7 @@ export const CandidateApplyPage: React.FC<CandidateApplyPageProps> = ({
           handleClear();
           setIsSubmitted(false);
         }}
+        isAnalyzing={isLoading}
       />
     );
   }
