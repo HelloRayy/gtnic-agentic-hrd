@@ -27,10 +27,18 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
       case 'PARTIAL':
         return <PillBadge variant="partial" size="xs">SEBAGIAN</PillBadge>;
       case 'TRANSFERABLE':
-        return <PillBadge variant="neutral" size="xs">TRANSFERABLE</PillBadge>;
+        return (
+          <span title="Aman untuk dilanjutkan ke interview teknis: Kandidat menguasai teknologi serumpun yang relevan">
+            <PillBadge variant="live" size="xs">SKILL SERUMPUN (BISA ADAPTASI)</PillBadge>
+          </span>
+        );
       case 'NO_PUBLIC_EVIDENCE':
       default:
-        return <PillBadge variant="unverified" size="xs">TIDAK ADA BUKTI</PillBadge>;
+        return (
+          <span title="Belum ada bukti publik di GitHub. Wajib ditanyakan saat sesi interview teknis.">
+            <PillBadge variant="unverified" size="xs">TIDAK ADA BUKTI PUBLIK</PillBadge>
+          </span>
+        );
     }
   };
 
@@ -52,6 +60,17 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
             {item.evidenceSummary}
           </p>
 
+          {item.status === 'TRANSFERABLE' && (
+            <div className="text-[10px] text-[#465799] bg-[#f2f4fc] px-2.5 py-1 rounded-[6px] border border-[#d8dcf7] flex items-center gap-1.5 font-medium">
+              <span>Rekomendasi HRD: Aman dilanjutkan ke interview teknis (kandidat menguasai teknologi sejenis).</span>
+            </div>
+          )}
+
+          {item.status === 'NO_PUBLIC_EVIDENCE' && (
+            <div className="text-[10px] text-[#912d26] bg-[#fdf0ef] px-2.5 py-1 rounded-[6px] border border-[#f6cbc7] flex items-center gap-1.5 font-medium">
+              <span>Catatan HRD: Belum ada bukti publik. Jadikan bahan pertanyaan klarifikasi saat interview.</span>
+            </div>
+          )}
           {item.fileAnchor && (
             <div className="pt-1 flex items-center justify-between text-[10px] text-[#8c8d97] border-t border-[#f4f3f0]">
               <span className="text-[#7285d5] font-medium truncate max-w-[200px]">

@@ -96,7 +96,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
           <OpenDotsMascot color="blue" size="md" isWorking={isDeliberating} />
           <div className="persona-meta">
             <strong>TalentTrace Co-Pilot</strong>
-            <span>Candidate Deliberation Partner · Grounded in AST</span>
+            <span>Asisten Verifikasi Bukti Kerja Nyata · Berbasis Proyek Asli</span>
           </div>
 
           <div className="chat-persona-actions">
@@ -218,7 +218,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
             <span />
             <span />
             <span />
-            <span>TalentTrace Co-Pilot sedang menganalisis AST codebase & repositori...</span>
+            <span>TalentTrace Co-Pilot sedang memverifikasi bukti kode asli & repositori kandidat...</span>
           </div>
         )}
 
@@ -281,7 +281,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
         </div>
 
         <div className="chat-compose-note">
-          Deliberation Partner answers are grounded in audited GitHub codebase AST & Git history.
+          Jawaban asisten terverifikasi langsung berdasarkan bukti riil riwayat commit dan repositori kandidat.
         </div>
       </form>
     </div>

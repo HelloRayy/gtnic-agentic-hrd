@@ -104,20 +104,29 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
         <div className="p-4 rounded-[10px] bg-[#fdfcfb] border border-[#eeedea] flex flex-col justify-center">
           <span className="text-xs font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2">
-            Tally Bukti Matriks Grounding:
+            Rangkuman Bukti Faktual CV:
           </span>
           <div className="flex items-center gap-3.5 text-xs">
-            <span className="inline-flex items-center gap-1.5 text-[#2b8a3e] font-medium">
+            <span
+              className="inline-flex items-center gap-1.5 text-[#2b8a3e] font-medium"
+              title="Klaim terbukti langsung di kode repositori"
+            >
               <CheckCircle2 size={14} /> {verifiedCount} Terverifikasi
             </span>
             {transferableCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-[#8492c6] font-medium">
-                <ShieldCheck size={14} /> {transferableCount} Serumpun
+              <span
+                className="inline-flex items-center gap-1.5 text-[#5269bb] font-medium cursor-help"
+                title="Aman untuk dilanjutkan ke interview teknis: kandidat menguasai teknologi sejenis"
+              >
+                <ShieldCheck size={14} /> {transferableCount} Serumpun (Bisa Adaptasi)
               </span>
             )}
             {missingCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-[#c05621] font-medium">
-                <AlertCircle size={14} /> {missingCount} Perlu Tanya
+              <span
+                className="inline-flex items-center gap-1.5 text-[#c05621] font-medium cursor-help"
+                title="Belum ada bukti publik: gunakan sebagai bahan klarifikasi interview"
+              >
+                <AlertCircle size={14} /> {missingCount} Perlu Ditanyakan
               </span>
             )}
           </div>

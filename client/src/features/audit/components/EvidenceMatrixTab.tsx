@@ -12,7 +12,7 @@ function renderStatusLozenge(status: EvidenceItem['status']) {
     case 'VERIFIED':
       return <Lozenge appearance="success">TERVERIFIKASI</Lozenge>;
     case 'TRANSFERABLE':
-      return <Lozenge appearance="moved">TRANSFERABLE (SERUMPUN)</Lozenge>;
+      return <Lozenge appearance="moved">SKILL SERUMPUN (BISA ADAPTASI)</Lozenge>;
     case 'PARTIAL':
       return <Lozenge appearance="inprogress">SEBAGIAN</Lozenge>;
     case 'NO_PUBLIC_EVIDENCE':

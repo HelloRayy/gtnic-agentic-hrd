@@ -63,7 +63,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         <span className="online-dot" />
         <div className="profile-label">
           <strong>Forensic Dot</strong>
-          <span>ready · AST live</span>
+          <span>siap · verifikasi aktif</span>
         </div>
       </div>
 

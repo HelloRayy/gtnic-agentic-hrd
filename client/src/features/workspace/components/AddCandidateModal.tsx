@@ -298,7 +298,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
         <div className="pt-2 flex items-center justify-between border-t border-[#f0eee9]">
           <div className="text-[10px] text-[#8c8d97] flex items-center gap-1">
             <CheckCircle2 size={12} className="text-[#8cac91]" />
-            <span>AI akan membedah AST kode & mencocokkan klaim</span>
+            <span>AI akan memverifikasi bukti kode proyek & mencocokkan klaim CV</span>
           </div>
           <div className="flex items-center gap-2">
             <Button type="button" variant="subtle" onClick={onClose} disabled={isLoading}>

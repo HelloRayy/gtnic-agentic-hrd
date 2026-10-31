@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus, ShieldCheck, Terminal, Sparkles, BookOpen, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, ShieldCheck, Terminal, Sparkles, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { TraceEvent } from '@/types/audit.js';
 
@@ -16,6 +16,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
   traceEvents,
   onOpenUploadModal,
 }) => {
+  const [showTrace, setShowTrace] = useState(false);
+
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
@@ -27,10 +29,10 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
 
         <div className="space-y-1.5 max-w-md">
           <h2 className="text-base font-semibold text-[#242730]">
-            Audit Forensik Otonom Berjalan
+            Verifikasi Bukti Nyata Sedang Berjalan
           </h2>
           <p className="text-xs text-[#707070] leading-relaxed">
-            AI Agent sedang membedah AST kode sumber repositori, memeriksa integritas commit, dan menyusun matriks bukti faktual.
+            AI Agent sedang memeriksa bukti riil file proyek kandidat, riwayat commit Git, dan mencocokkan dengan klaim di CV.
           </p>
         </div>
 
@@ -40,30 +42,49 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
         </div>
 
         {traceEvents.length > 0 && (
-          <div className="w-full max-w-xl bg-[#242730] text-[#e2e4ed] p-3.5 rounded-xl text-left text-[11px] shadow-sm space-y-1.5 max-h-48 overflow-y-auto font-mono">
-            <div className="text-[10px] uppercase tracking-wider text-[#8c8d97] font-sans font-semibold pb-1 border-b border-[#363a47] flex items-center justify-between">
-              <span>Jejak Penalaran Agen (CoT 4-P)</span>
-              <span>{traceEvents.length} Event</span>
+          <div className="w-full max-w-xl space-y-2">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs text-[#707070]">
+                Proses pemeriksaan: {traceEvents.length} langkah terekam
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowTrace(!showTrace)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium text-[#5269bb] bg-white border border-[#e3e6f5] hover:bg-[#f4f6fc] transition-colors cursor-pointer"
+              >
+                <Terminal size={12} />
+                <span>{showTrace ? 'Tutup Detail' : 'Detail Analisis Sistem'}</span>
+                {showTrace ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+              </button>
             </div>
-            {traceEvents.map((evt, idx) => (
-              <div key={idx} className="flex items-start gap-2 leading-relaxed">
-                <span className="text-[#8c8d97] shrink-0 text-[10px]">{evt.timestamp}</span>
-                <span
-                  className={`font-semibold shrink-0 text-[10px] ${
-                    evt.phase === 'PLAN'
-                      ? 'text-[#8292d6]'
-                      : evt.phase === 'TOOL_CALL'
-                        ? 'text-[#e2a36b]'
-                        : evt.phase === 'OBSERVATION'
-                          ? 'text-[#8cac91]'
-                          : 'text-[#d9756c]'
-                  }`}
-                >
-                  [{evt.phase}]
-                </span>
-                <span className="truncate text-[#d4d6e0]">{evt.detail}</span>
+
+            {showTrace && (
+              <div className="bg-[#242730] text-[#e2e4ed] p-3.5 rounded-xl text-left text-[11px] shadow-sm space-y-1.5 max-h-48 overflow-y-auto font-mono">
+                <div className="text-[10px] uppercase tracking-wider text-[#8c8d97] font-sans font-semibold pb-1 border-b border-[#363a47] flex items-center justify-between">
+                  <span>Jejak Audit Teknis (Plan - Tool - Observation - Reflection)</span>
+                  <span>{traceEvents.length} Event</span>
+                </div>
+                {traceEvents.map((evt, idx) => (
+                  <div key={idx} className="flex items-start gap-2 leading-relaxed">
+                    <span className="text-[#8c8d97] shrink-0 text-[10px]">{evt.timestamp}</span>
+                    <span
+                      className={`font-semibold shrink-0 text-[10px] ${
+                        evt.phase === 'PLAN'
+                          ? 'text-[#8292d6]'
+                          : evt.phase === 'TOOL_CALL'
+                            ? 'text-[#e2a36b]'
+                            : evt.phase === 'OBSERVATION'
+                              ? 'text-[#8cac91]'
+                              : 'text-[#d9756c]'
+                      }`}
+                    >
+                      [{evt.phase}]
+                    </span>
+                    <span className="truncate text-[#d4d6e0]">{evt.detail}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
@@ -102,9 +123,9 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
             <div className="w-7 h-7 rounded-lg bg-[#eeeff7] flex items-center justify-center text-[#7285d5]">
               <ShieldCheck size={15} />
             </div>
-            <div className="text-xs font-semibold text-[#242730]">Bedah AST Kode</div>
+            <div className="text-xs font-semibold text-[#242730]">Bedah Kode Proyek Asli</div>
             <div className="text-[11px] text-[#707070] leading-normal">
-              Memeriksa struktur file tree, dependensi riil, dan integritas commit Git kandidat.
+              Memeriksa struktur file repositori, dependensi riil, dan integritas commit Git kandidat.
             </div>
           </div>
 
