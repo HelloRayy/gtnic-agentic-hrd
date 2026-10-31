@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle } from 'lucide-react';
+import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
 import type { WorkspaceCandidate } from '../types.js';
@@ -73,58 +73,123 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
       {/* 4. Repositori Fisik yang Diaudit & Status Git Authorship */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-        <div className="p-4 rounded-[10px] bg-[#fdfcfb] border border-[#eeedea]">
-          <span className="text-[13px] font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2.5">
-            Repositori Publik yang Diaudit:
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {dossier.auditedRepos.length > 0 ? (
-              dossier.auditedRepos.map((repo) => (
-                <a
-                  key={repo}
-                  href={`https://github.com/${repo.includes('/') ? repo : `${dossier.candidate.githubUsername || 'kandidat'}/${repo}`}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-[#5269bb] hover:underline font-medium bg-white px-3 py-1.5 rounded-[6px] border border-[#eeedea]"
-                >
-                  <GitBranch size={15} />
-                  <span>{repo}</span>
-                  <ExternalLink size={12} />
-                </a>
-              ))
-            ) : (
-              <span className="text-xs text-[#a3a4af]">Tidak ada repositori publik terdeteksi</span>
-            )}
+        {/* Kolom Kiri: Repositori Publik yang Diaudit */}
+        <div className="p-4.5 rounded-[12px] bg-[#fcfbf9] border border-[#eae8e3] flex flex-col justify-between shadow-[0_1px_3px_rgba(57,57,74,0.02)]">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <FolderGit2 size={15} className="text-[#7285d5]" />
+                <span className="text-[12px] font-bold text-[#626471] uppercase tracking-wider">
+                  Repositori Publik yang Diaudit
+                </span>
+              </div>
+              <span className="text-[11px] font-semibold text-[#5264a7] bg-[#edf0fb] border border-[#d8e0f7] px-2 py-0.5 rounded-full">
+                {dossier.auditedRepos.length} Repositori
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 items-start">
+              {dossier.auditedRepos.length > 0 ? (
+                dossier.auditedRepos.map((repo) => {
+                  const fullUrl = `https://github.com/${repo.includes('/') ? repo : `${dossier.candidate.githubUsername || 'kandidat'}/${repo}`}`;
+                  return (
+                    <a
+                      key={repo}
+                      href={fullUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 text-[13px] text-[#333641] hover:text-[#5269bb] font-medium bg-white hover:bg-[#fafafc] px-3 py-2 rounded-[8px] border border-[#e5e4de] hover:border-[#7285d5] transition-all shadow-[0_1px_2px_rgba(57,57,74,0.03)]"
+                      title={`Buka ${repo} di GitHub`}
+                    >
+                      <GitBranch size={14} className="text-[#7285d5] shrink-0" />
+                      <span className="truncate max-w-[200px]">{repo}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] ml-0.5" title="AST Aktif" />
+                      <ExternalLink size={12} className="text-[#a5a5ad] group-hover:text-[#5269bb] transition-colors" />
+                    </a>
+                  );
+                })
+              ) : (
+                <span className="text-xs text-[#a3a4af] italic py-2">Tidak ada repositori publik terdeteksi</span>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="p-4 rounded-[10px] bg-[#fdfcfb] border border-[#eeedea] flex flex-col justify-center">
-          <span className="text-[13px] font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2.5">
-            Rangkuman Bukti Faktual CV:
-          </span>
-          <div className="flex items-center gap-4 text-sm flex-wrap">
-            <span
-              className="inline-flex items-center gap-2 text-[#2b8a3e] font-medium"
-              title="Klaim terbukti langsung di kode repositori"
-            >
-              <CheckCircle2 size={16} /> {verifiedCount} Terverifikasi
-            </span>
-            {transferableCount > 0 && (
-              <span
-                className="inline-flex items-center gap-2 text-[#5269bb] font-medium cursor-help"
-                title="Aman untuk dilanjutkan ke interview teknis: kandidat menguasai teknologi sejenis"
-              >
-                <ShieldCheck size={16} /> {transferableCount} Serumpun (Bisa Adaptasi)
+        {/* Kolom Kanan: Rangkuman Bukti Faktual CV */}
+        <div className="p-4.5 rounded-[12px] bg-[#fcfbf9] border border-[#eae8e3] flex flex-col justify-between shadow-[0_1px_3px_rgba(57,57,74,0.02)]">
+          <div>
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-2">
+                <Layers size={15} className="text-[#2b8a3e]" />
+                <span className="text-[12px] font-bold text-[#626471] uppercase tracking-wider">
+                  Rangkuman Bukti Faktual CV
+                </span>
+              </div>
+              <span className="text-[11px] text-[#8c8d97] font-medium">
+                Total {dossier.evidenceMatrix.length} Klaim
               </span>
-            )}
-            {missingCount > 0 && (
-              <span
-                className="inline-flex items-center gap-2 text-[#c05621] font-medium cursor-help"
+            </div>
+
+            {/* Sleek Segmented Progress Ratio Bar */}
+            <div className="w-full h-2 rounded-full bg-[#eeedea] overflow-hidden flex gap-0.5 mb-3">
+              <div
+                className="bg-[#2b8a3e] transition-all duration-300"
+                style={{ width: `${dossier.evidenceMatrix.length ? (verifiedCount / dossier.evidenceMatrix.length) * 100 : 0}%` }}
+                title={`${verifiedCount} Terverifikasi`}
+              />
+              <div
+                className="bg-[#5269bb] transition-all duration-300"
+                style={{ width: `${dossier.evidenceMatrix.length ? (transferableCount / dossier.evidenceMatrix.length) * 100 : 0}%` }}
+                title={`${transferableCount} Serumpun`}
+              />
+              <div
+                className="bg-[#d97736] transition-all duration-300"
+                style={{ width: `${dossier.evidenceMatrix.length ? (missingCount / dossier.evidenceMatrix.length) * 100 : 0}%` }}
+                title={`${missingCount} Perlu Ditanyakan`}
+              />
+            </div>
+
+            {/* Structured Stat Cards */}
+            <div className="grid grid-cols-3 gap-2">
+              <div
+                className="p-2.5 rounded-[8px] bg-[#f0f9f1] border border-[#cde8d0] flex flex-col justify-between"
+                title="Klaim terbukti langsung di kode repositori"
+              >
+                <div className="flex items-center justify-between">
+                  <CheckCircle2 size={14} className="text-[#2b8a3e]" />
+                  <span className="text-base font-bold text-[#206930] tabular-nums">{verifiedCount}</span>
+                </div>
+                <span className="text-[11px] font-semibold text-[#246b33] mt-1 leading-tight">
+                  Terverifikasi
+                </span>
+              </div>
+
+              <div
+                className="p-2.5 rounded-[8px] bg-[#eff3fd] border border-[#d2defa] flex flex-col justify-between cursor-help"
+                title="Aman untuk dilanjutkan: kandidat menguasai teknologi ekuivalen sejenis"
+              >
+                <div className="flex items-center justify-between">
+                  <ShieldCheck size={14} className="text-[#4b63b0]" />
+                  <span className="text-base font-bold text-[#344a8e] tabular-nums">{transferableCount}</span>
+                </div>
+                <span className="text-[11px] font-semibold text-[#344a8e] mt-1 leading-tight">
+                  Serumpun
+                </span>
+              </div>
+
+              <div
+                className="p-2.5 rounded-[8px] bg-[#fdf6ed] border border-[#fadbc2] flex flex-col justify-between cursor-help"
                 title="Belum ada bukti publik: gunakan sebagai bahan klarifikasi interview"
               >
-                <AlertCircle size={16} /> {missingCount} Perlu Ditanyakan
-              </span>
-            )}
+                <div className="flex items-center justify-between">
+                  <AlertCircle size={14} className="text-[#c05621]" />
+                  <span className="text-base font-bold text-[#a04618] tabular-nums">{missingCount}</span>
+                </div>
+                <span className="text-[11px] font-semibold text-[#a04618] mt-1 leading-tight">
+                  Perlu Tanya
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
