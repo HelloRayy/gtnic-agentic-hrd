@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, User, Calendar, GripVertical } from 'lucide-react';
+import { Plus, Calendar, GripVertical } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
