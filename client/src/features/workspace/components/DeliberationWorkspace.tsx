@@ -28,7 +28,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onSendMessage,
   onOpenWebIde,
   onOpenUploadModal,
-) => {
+}) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
   if (!candidate) {
