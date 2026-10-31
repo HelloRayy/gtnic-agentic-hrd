@@ -6,3 +6,5 @@ export * from './Notice.js';
 export * from './Spinner.js';
 export * from './card.js';
 export * from './badge.js';
+export * from './TechBadge.js';
+export * from './techIcons.js';

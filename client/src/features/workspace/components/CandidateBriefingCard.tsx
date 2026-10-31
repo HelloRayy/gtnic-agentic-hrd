@@ -1,6 +1,7 @@
 import React from 'react';
 import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle } from 'lucide-react';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { TechBadge } from '@/components/ui/TechBadge.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface CandidateBriefingCardProps {
@@ -65,12 +66,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </span>
         <div className="flex flex-wrap items-center gap-2">
           {dossier.candidate.claimedSkills.map((skill, idx) => (
-            <span
-              key={idx}
-              className="px-3 py-1 rounded-[7px] bg-[#f8f7f4] border border-[#e3e2de] text-[#333641] text-[12.5px] font-medium"
-            >
-              {skill}
-            </span>
+            <TechBadge key={idx} name={skill} />
           ))}
         </div>
       </div>
