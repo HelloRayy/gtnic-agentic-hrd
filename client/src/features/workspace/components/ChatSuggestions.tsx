@@ -93,36 +93,36 @@ export const ChatSuggestions: React.FC<ChatSuggestionsProps> = ({
   return (
     <div className="space-y-2.5 mb-3">
       {/* Mode Switcher Tabs */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="p-0.5 bg-[#eceae6] rounded-[8px] inline-flex items-center gap-1 border border-[#e1deda]">
+      <div className="flex items-center justify-between flex-wrap gap-2.5">
+        <div className="p-1 bg-[#eceae6] rounded-[9px] inline-flex items-center gap-1.5 border border-[#e1deda]">
           <button
             type="button"
             onClick={() => setMode('hrd')}
-            className={`py-1 px-2.5 rounded-[6px] text-xs transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`py-1.5 px-3 rounded-[7px] text-[13px] transition-all flex items-center gap-2 cursor-pointer ${
               mode === 'hrd'
                 ? 'bg-white text-[#333641] font-semibold shadow-[0_1px_2px_rgba(57,57,74,0.06)] border border-[#dedcd7]'
                 : 'text-[#777885] hover:text-[#333641] font-medium'
             }`}
           >
-            <UserCheck size={13} className={mode === 'hrd' ? 'text-[#3b82f6]' : 'text-[#8c8d97]'} />
+            <UserCheck size={15} className={mode === 'hrd' ? 'text-[#3b82f6]' : 'text-[#8c8d97]'} />
             <span>Mode HRD (Saringan Awal)</span>
           </button>
 
           <button
             type="button"
             onClick={() => setMode('techlead')}
-            className={`py-1 px-2.5 rounded-[6px] text-xs transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`py-1.5 px-3 rounded-[7px] text-[13px] transition-all flex items-center gap-2 cursor-pointer ${
               mode === 'techlead'
                 ? 'bg-white text-[#333641] font-semibold shadow-[0_1px_2px_rgba(57,57,74,0.06)] border border-[#dedcd7]'
                 : 'text-[#777885] hover:text-[#333641] font-medium'
             }`}
           >
-            <Terminal size={13} className={mode === 'techlead' ? 'text-[#8492c6]' : 'text-[#8c8d97]'} />
+            <Terminal size={15} className={mode === 'techlead' ? 'text-[#8492c6]' : 'text-[#8c8d97]'} />
             <span>Mode Tech Lead (Uji Teknis)</span>
           </button>
         </div>
 
-        <span className="text-[10px] text-[#8c8d97]">
+        <span className="text-xs text-[#70707c] font-medium">
           {mode === 'hrd'
             ? 'Pertanyaan ramah bahasa awam & keputusan rekrutmen'
             : 'Audit mendalam arsitektur, concurrency & codebase'}
@@ -139,10 +139,10 @@ export const ChatSuggestions: React.FC<ChatSuggestionsProps> = ({
             disabled={isDeliberating}
             className="suggestion group text-left cursor-pointer disabled:opacity-50"
           >
-            <div className="mb-1">{item.icon}</div>
+            <div className="mb-1.5">{item.icon}</div>
             <strong>{item.title}</strong>
             <p>{item.desc}</p>
-            <ArrowUpRight size={13} className="group-hover:text-[#8292d6] transition-colors" />
+            <ArrowUpRight size={15} className="group-hover:text-[#8292d6] transition-colors" />
           </button>
         ))}
       </div>

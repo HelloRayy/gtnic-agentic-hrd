@@ -119,10 +119,10 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
         {/* 1. Recruitment Role & Preset Selection */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#333641]">
+            <label className="text-sm font-semibold text-[#333641]">
               1. Kriteria Posisi Rekrutmen
             </label>
-            <span className="text-[10px] text-[#8c8d97]">Pilih template lowongan</span>
+            <span className="text-xs text-[#8c8d97]">Pilih template lowongan</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
@@ -133,7 +133,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
                   key={preset.id}
                   type="button"
                   onClick={() => handleSelectPreset(preset)}
-                  className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                  className={`text-[13px] px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-[#eeeff7] border-[#7285d5] text-[#4d5eb0] font-medium shadow-sm'
                       : 'bg-[#fbfaf8] border-[#e9e8e6] text-[#555660] hover:bg-white'
@@ -151,28 +151,26 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
               placeholder="Target Posisi / Peran"
-              required
-              className="text-xs p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+              className="text-sm p-2.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
             />
             <input
               type="text"
               value={jobDesc}
               onChange={(e) => setJobDesc(e.target.value)}
               placeholder="Kualifikasi / Job Description"
-              className="text-xs p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+              className="text-sm p-2.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
             />
           </div>
         </div>
-
         {/* 2. Candidate Identity */}
         <div className="space-y-2 pt-1 border-t border-[#f0eee9]">
-          <div className="text-xs font-semibold text-[#333641]">
+          <div className="text-sm font-semibold text-[#333641]">
             2. Profil Pelamar
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
-              <label className="text-[11px] text-[#555660] block mb-1">
+              <label className="text-xs text-[#555660] block mb-1">
                 Nama Lengkap Kandidat *
               </label>
               <input
@@ -181,11 +179,11 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
                 onChange={(e) => setCandidateName(e.target.value)}
                 placeholder="Contoh: Budi Santoso"
                 required
-                className="w-full text-xs p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+                className="w-full text-sm p-2.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
               />
             </div>
             <div>
-              <label className="text-[11px] text-[#555660] block mb-1">
+              <label className="text-xs text-[#555660] block mb-1">
                 URL Profil / Repositori GitHub
               </label>
               <input
@@ -193,7 +191,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
                 value={githubUrl}
                 onChange={(e) => setGithubUrl(e.target.value)}
                 placeholder="https://github.com/username"
-                className="w-full text-xs p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+                className="w-full text-sm p-2.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
               />
             </div>
           </div>
@@ -202,7 +200,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
         {/* 3. CV Input Mode (Direct Text by Default) */}
         <div className="space-y-2 pt-1 border-t border-[#f0eee9]">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="text-xs font-semibold text-[#333641]">
+            <div className="text-sm font-semibold text-[#333641]">
               3. Berkas CV & Pengalaman
             </div>
 
@@ -210,7 +208,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
               <button
                 type="button"
                 onClick={() => handleApplySnippet('rayhan')}
-                className="text-[10.5px] px-2 py-1 rounded-md bg-[#edf3ec] border border-[#dae7da] text-[#2f5535] hover:bg-[#e4ede3] font-medium transition-colors cursor-pointer"
+                className="text-xs px-2.5 py-1 rounded-md bg-[#edf3ec] border border-[#dae7da] text-[#2f5535] hover:bg-[#e4ede3] font-medium transition-colors cursor-pointer"
                 title="Muat teks CV Rayhan Pratama (Terverifikasi / High Fit)"
               >
                 + Template CV Rayhan (High Fit)
@@ -218,7 +216,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
               <button
                 type="button"
                 onClick={() => handleApplySnippet('johnDoe')}
-                className="text-[10.5px] px-2 py-1 rounded-md bg-[#fdf0ef] border border-[#f6cbc7] text-[#912d26] hover:bg-[#fae6e4] font-medium transition-colors cursor-pointer"
+                className="text-xs px-2.5 py-1 rounded-md bg-[#fdf0ef] border border-[#f6cbc7] text-[#912d26] hover:bg-[#fae6e4] font-medium transition-colors cursor-pointer"
                 title="Muat teks CV John Doe (Klaim Bualan / Low Fit)"
               >
                 + Template CV John Doe (Low Fit)
@@ -240,7 +238,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
             <button
               type="button"
               onClick={() => setInputMode('text')}
-              className={`flex items-center gap-1.5 py-1 px-2.5 rounded-md transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-md transition-all cursor-pointer ${
                 inputMode === 'text'
                   ? 'bg-white border border-[#e9e8e6] text-[#7285d5] font-semibold shadow-xs'
                   : 'text-[#8c8d97] hover:text-[#333641]'
@@ -269,7 +267,7 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
               value={cvText}
               onChange={(e) => setCvText(e.target.value)}
               placeholder="Tempel teks CV pelamar di sini (ringkasan profil, klaim keahlian, riwayat proyek, tautan GitHub)..."
-              className="w-full text-[11.5px] p-2.5 rounded-xl border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] font-mono leading-relaxed focus:outline-none focus:border-[#7285d5] resize-y"
+              className="w-full text-[13px] p-3 rounded-xl border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] font-mono leading-relaxed focus:outline-none focus:border-[#7285d5] resize-y"
             />
           ) : (
             <div className="border-2 border-dashed border-[#e9e8e6] hover:border-[#7285d5]/60 rounded-xl p-4 text-center bg-[#fbfaf8] transition-colors cursor-pointer relative">
@@ -284,10 +282,10 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
               <UploadCloud className="w-5 h-5 text-[#7285d5] mx-auto mb-1" />
-              <div className="text-xs font-medium text-[#333641]">
+              <div className="text-sm font-medium text-[#333641]">
                 {selectedFile ? selectedFile.name : 'Pilih file PDF atau seret ke sini'}
               </div>
-              <div className="text-[10px] text-[#8c8d97] mt-0.5">
+              <div className="text-xs text-[#8c8d97] mt-1">
                 Maksimal 10MB • Format PDF
               </div>
             </div>
@@ -295,9 +293,9 @@ export const AddCandidateModal: React.FC<AddCandidateModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-2 flex items-center justify-between border-t border-[#f0eee9]">
-          <div className="text-[10px] text-[#8c8d97] flex items-center gap-1">
-            <CheckCircle2 size={12} className="text-[#8cac91]" />
+        <div className="pt-3 flex items-center justify-between border-t border-[#f0eee9]">
+          <div className="text-xs text-[#8c8d97] flex items-center gap-1.5">
+            <CheckCircle2 size={14} className="text-[#8cac91]" />
             <span>AI akan memverifikasi bukti kode proyek & mencocokkan klaim CV</span>
           </div>
           <div className="flex items-center gap-2">

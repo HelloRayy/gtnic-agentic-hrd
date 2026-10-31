@@ -23,20 +23,20 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
   const getStatusBadge = (status: EvidenceItem['status']) => {
     switch (status) {
       case 'VERIFIED':
-        return <PillBadge variant="verified" size="xs">TERVERIFIKASI</PillBadge>;
+        return <PillBadge variant="verified" size="sm">TERVERIFIKASI</PillBadge>;
       case 'PARTIAL':
-        return <PillBadge variant="partial" size="xs">SEBAGIAN</PillBadge>;
+        return <PillBadge variant="partial" size="sm">SEBAGIAN</PillBadge>;
       case 'TRANSFERABLE':
         return (
           <span title="Aman untuk dilanjutkan ke interview teknis: Kandidat menguasai teknologi serumpun yang relevan">
-            <PillBadge variant="live" size="xs">SKILL SERUMPUN (BISA ADAPTASI)</PillBadge>
+            <PillBadge variant="live" size="sm">SKILL SERUMPUN (BISA ADAPTASI)</PillBadge>
           </span>
         );
       case 'NO_PUBLIC_EVIDENCE':
       default:
         return (
           <span title="Belum ada bukti publik di GitHub. Wajib ditanyakan saat sesi interview teknis.">
-            <PillBadge variant="unverified" size="xs">TIDAK ADA BUKTI PUBLIK</PillBadge>
+            <PillBadge variant="unverified" size="sm">TIDAK ADA BUKTI PUBLIK</PillBadge>
           </span>
         );
     }
@@ -47,33 +47,33 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
       {evidenceMatrix.map((item, idx) => (
         <div
           key={idx}
-          className="p-3 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-1.5"
+          className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-2"
         >
-          <div className="flex items-start justify-between gap-2">
-            <span className="text-xs font-semibold text-[#333641] leading-tight">
+          <div className="flex items-start justify-between gap-2.5">
+            <span className="text-sm font-semibold text-[#333641] leading-tight">
               {item.claim}
             </span>
             {getStatusBadge(item.status)}
           </div>
 
-          <p className="text-[11px] text-[#555660] leading-relaxed">
+          <p className="text-[13px] text-[#555660] leading-relaxed">
             {item.evidenceSummary}
           </p>
 
           {item.status === 'TRANSFERABLE' && (
-            <div className="text-[10px] text-[#465799] bg-[#f2f4fc] px-2.5 py-1 rounded-[6px] border border-[#d8dcf7] flex items-center gap-1.5 font-medium">
+            <div className="text-xs text-[#465799] bg-[#f2f4fc] px-3 py-1.5 rounded-[7px] border border-[#d8dcf7] flex items-center gap-2 font-medium">
               <span>Rekomendasi HRD: Aman dilanjutkan ke interview teknis (kandidat menguasai teknologi sejenis).</span>
             </div>
           )}
 
           {item.status === 'NO_PUBLIC_EVIDENCE' && (
-            <div className="text-[10px] text-[#912d26] bg-[#fdf0ef] px-2.5 py-1 rounded-[6px] border border-[#f6cbc7] flex items-center gap-1.5 font-medium">
+            <div className="text-xs text-[#912d26] bg-[#fdf0ef] px-3 py-1.5 rounded-[7px] border border-[#f6cbc7] flex items-center gap-2 font-medium">
               <span>Catatan HRD: Belum ada bukti publik. Jadikan bahan pertanyaan klarifikasi saat interview.</span>
             </div>
           )}
           {item.fileAnchor && (
-            <div className="pt-1 flex items-center justify-between text-[10px] text-[#8c8d97] border-t border-[#f4f3f0]">
-              <span className="text-[#7285d5] font-medium truncate max-w-[200px]">
+            <div className="pt-1.5 flex items-center justify-between text-xs text-[#8c8d97] border-t border-[#f4f3f0]">
+              <span className="text-[#7285d5] font-medium truncate max-w-[220px]">
                 {item.fileAnchor}
               </span>
               {item.repoAnchor && (

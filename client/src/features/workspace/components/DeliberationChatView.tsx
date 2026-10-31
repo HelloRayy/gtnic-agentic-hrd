@@ -147,14 +147,14 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
                     <span
                       key={aIdx}
                       style={{
-                        fontSize: 10,
+                        fontSize: 12,
                         background: '#e5f1ef',
                         color: '#35766f',
-                        padding: '2px 7px',
-                        borderRadius: 4,
+                        padding: '3px 8px',
+                        borderRadius: 5,
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: 4,
+                        gap: 5,
                         fontWeight: 500,
                       }}
                     >

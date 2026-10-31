@@ -76,17 +76,17 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
   return (
     <div className="space-y-3.5">
       {/* Auth Status Notification */}
-      <div className="p-3 bg-[#edf3ec]/70 border border-[#dae7da] rounded-xl text-xs text-[#2f5535] flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="p-3.5 bg-[#edf3ec]/70 border border-[#dae7da] rounded-xl text-[13px] text-[#2f5535] flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
           <Calendar className="w-4 h-4 text-[#8cac91]" />
           <div>
-            <div className="font-semibold">Integrasi Google Meet & Calendar</div>
-            <div className="text-[10.5px] text-[#3d6643]">
+            <div className="font-semibold text-sm">Integrasi Google Meet & Calendar</div>
+            <div className="text-xs text-[#3d6643] mt-0.5">
               {googleStatus?.isAuthenticated ? `Terhubung: ${googleStatus.email}` : 'Mode Dispatch Siap'}
             </div>
           </div>
         </div>
-        <span className="w-2 h-2 rounded-full bg-[#8cac91]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#8cac91]" />
       </div>
 
       {/* Result Confirmation Banner */}
@@ -123,49 +123,48 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
       )}
 
       {/* Scheduler Form */}
-      <form onSubmit={handleSchedule} className="p-3 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-3">
-        <div className="text-xs font-semibold text-[#333641]">
+      <form onSubmit={handleSchedule} className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-3.5">
+        <div className="text-sm font-semibold text-[#333641]">
           Jadwalkan Wawancara Forensik
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2.5">
           <div>
-            <label className="text-[10px] font-medium text-[#8c8d97] block mb-1">
+            <label className="text-xs font-medium text-[#737582] block mb-1">
               Tanggal
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full text-xs p-1.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+              className="w-full text-[13px] p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
               required
             />
           </div>
           <div>
-            <label className="text-[10px] font-medium text-[#8c8d97] block mb-1">
+            <label className="text-xs font-medium text-[#737582] block mb-1">
               Waktu
             </label>
             <input
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full text-xs p-1.5 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
+              className="w-full text-[13px] p-2 rounded-lg border border-[#e9e8e6] bg-[#fbfaf8] text-[#333641] focus:outline-none focus:border-[#7285d5]"
               required
             />
           </div>
         </div>
-
         <div>
-          <label className="text-[10px] font-medium text-[#8c8d97] block mb-1">
+          <label className="text-xs font-medium text-[#737582] block mb-1.5">
             Durasi Sesi
           </label>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-3 gap-2">
             {[30, 45, 60].map((mins) => (
               <button
                 key={mins}
                 type="button"
                 onClick={() => setDurationMinutes(mins)}
-                className={`py-1 text-xs rounded-lg border transition-all cursor-pointer ${
+                className={`py-1.5 text-xs rounded-lg border transition-all cursor-pointer ${
                   durationMinutes === mins
                     ? 'bg-[#7285d5] text-white border-[#7285d5] font-semibold'
                     : 'bg-[#fbfaf8] text-[#555660] border-[#e9e8e6] hover:bg-[#f0eee9]'
@@ -185,20 +184,20 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
               onChange={(e) => setSendEmail(e.target.checked)}
               className="rounded text-[#7285d5]"
             />
-            <span className="text-[11px]">Kirim Draf Gmail ke Pelamar</span>
+            <span className="text-xs font-medium">Kirim Draf Gmail ke Pelamar</span>
           </label>
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-2 px-3 rounded-xl text-xs font-semibold text-white bg-[#7285d5] hover:bg-[#6074ca] shadow-[0_1px_3px_rgba(114,133,213,0.3)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 btn-press cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-white bg-[#7285d5] hover:bg-[#6074ca] shadow-[0_1px_3px_rgba(114,133,213,0.3)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 btn-press cursor-pointer"
         >
           {isSubmitting ? (
             <span>Memproses...</span>
           ) : (
             <>
-              <Calendar className="w-3.5 h-3.5" />
+              <Calendar className="w-4 h-4" />
               <span>Jadwalkan & Kirim Undangan Meet</span>
             </>
           )}

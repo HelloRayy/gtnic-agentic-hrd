@@ -27,7 +27,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             className={activeTab === 'matrix' ? 'selected' : ''}
             onClick={() => setActiveTab('matrix')}
           >
-            <BookOpen size={13} />
+            <BookOpen size={15} />
             <span>Bukti</span>
           </button>
           <button
@@ -36,7 +36,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             onClick={() => setActiveTab('webide')}
             title="Kode Sumber (Khusus User / Tech Lead saat interview)"
           >
-            <Monitor size={13} />
+            <Monitor size={15} />
             <span>Kode (Tech Lead)</span>
           </button>
           <button
@@ -44,7 +44,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             className={activeTab === 'radar' ? 'selected' : ''}
             onClick={() => setActiveTab('radar')}
           >
-            <Sparkles size={13} />
+            <Sparkles size={15} />
             <span>Radar</span>
           </button>
           <button
@@ -52,7 +52,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             className={activeTab === 'action' ? 'selected' : ''}
             onClick={() => setActiveTab('action')}
           >
-            <Calendar size={13} />
+            <Calendar size={15} />
             <span>Aksi</span>
           </button>
         </div>

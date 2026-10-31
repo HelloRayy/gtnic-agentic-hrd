@@ -42,7 +42,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   ];
 
   return (
-    <aside className="sidebar" style={{ width: 280 }}>
+    <aside className="sidebar" style={{ width: 300 }}>
       {/* Authentic OpenDots Wordmark */}
       <button type="button" className="wordmark">
         <span className="dotted-logo">
@@ -79,12 +79,12 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
             justifyContent: 'center',
             gap: 8,
             flex: 1,
-            padding: '9px 13px',
+            padding: '10px 14px',
             borderRadius: 8,
             border: '1px solid #e9e8e6',
             backgroundColor: '#ffffff',
             color: '#242424',
-            fontSize: 13,
+            fontSize: 13.5,
             fontWeight: 500,
             cursor: 'pointer',
             boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
@@ -160,21 +160,21 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                   marginBottom: 4,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                   <span
                     style={{
-                      width: 6,
-                      height: 6,
+                      width: 7,
+                      height: 7,
                       borderRadius: '50%',
                       backgroundColor: stage.dotColor,
                     }}
                   />
                   <span
                     style={{
-                      fontSize: 10.5,
-                      fontWeight: 650,
+                      fontSize: 12,
+                      fontWeight: 700,
                       color: '#555660',
-                      letterSpacing: '0.6px',
+                      letterSpacing: '0.8px',
                       textTransform: 'uppercase',
                     }}
                   >
@@ -183,11 +183,11 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                 </div>
                 <span
                   style={{
-                    fontSize: 9.5,
+                    fontSize: 11,
                     fontWeight: 600,
                     color: '#8c8d97',
                     backgroundColor: '#eeede9',
-                    padding: '1px 6px',
+                    padding: '2px 7px',
                     borderRadius: 10,
                   }}
                 >
@@ -268,8 +268,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                           style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 10,
-                            padding: '9px 11px',
+                            gap: 11,
+                            padding: '10px 12px',
                             borderRadius: 8,
                             border: 0,
                             backgroundColor: isActive ? '#eeeff7' : '#ffffff',
@@ -282,9 +282,9 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                         >
                           <div
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 7,
+                              width: 34,
+                              height: 34,
+                              borderRadius: 8,
                               background: isActive ? '#e0e4f4' : '#f0eee9',
                               display: 'flex',
                               alignItems: 'center',
@@ -307,7 +307,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                             >
                               <span
                                 style={{
-                                  fontSize: 13,
+                                  fontSize: 14.5,
                                   fontWeight: isActive ? 600 : 550,
                                   color: '#242424',
                                   overflow: 'hidden',
@@ -319,11 +319,11 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                               </span>
                               <small
                                 style={{
-                                  fontSize: 10,
+                                  fontSize: 11.5,
                                   fontWeight: 550,
                                   color: isActive ? '#596aa9' : '#767676',
                                   background: isActive ? '#e0e4f4' : '#eeede9',
-                                  padding: '1.5px 5px',
+                                  padding: '2px 6px',
                                   borderRadius: 4,
                                   flexShrink: 0,
                                 }}
@@ -333,12 +333,12 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                             </div>
                             <div
                               style={{
-                                fontSize: 11,
-                                color: '#707070',
+                                fontSize: 12.5,
+                                color: '#686f7c',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
-                                marginTop: 2,
+                                marginTop: 3,
                                 lineHeight: 1.3,
                               }}
                             >

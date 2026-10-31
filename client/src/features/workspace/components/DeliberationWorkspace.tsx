@@ -63,29 +63,29 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
 
       {/* Verifikasi Bukti Nyata Progress Bar (Accordion untuk HRD) */}
       {isLoading && traceEvents.length > 0 && (
-        <div className="mx-8 mt-3 bg-white rounded-[11px] border border-[#e9e8e6] p-3 shadow-[0_2px_8px_rgba(57,57,74,0.03)] space-y-2 shrink-0">
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#7285d5] animate-ping" />
+        <div className="mx-8 mt-3 bg-white rounded-[11px] border border-[#e9e8e6] p-3.5 shadow-[0_2px_8px_rgba(57,57,74,0.03)] space-y-2 shrink-0">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#7285d5] animate-ping" />
               <span className="font-semibold text-[#333641]">
                 Memverifikasi Bukti Kerja Nyata Kandidat...
               </span>
-              <span className="text-[11px] text-[#8c8d97]">
+              <span className="text-xs text-[#8c8d97]">
                 ({traceEvents.length} langkah terekam)
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] text-[#8c8d97] font-medium tabular-nums">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs text-[#8c8d97] font-medium tabular-nums">
                 {elapsedSeconds.toFixed(1)}s
               </span>
               <button
                 type="button"
                 onClick={() => setShowTraceDetails((prev) => !prev)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-[#5269bb] hover:text-[#384c98] bg-[#f2f4fc] hover:bg-[#e7eaf9] rounded-md transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#5269bb] hover:text-[#384c98] bg-[#f2f4fc] hover:bg-[#e7eaf9] rounded-md transition-colors cursor-pointer"
               >
-                <Terminal size={11} />
+                <Terminal size={13} />
                 <span>{showTraceDetails ? 'Tutup Detail' : 'Detail Analisis Sistem'}</span>
-                {showTraceDetails ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                {showTraceDetails ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
             </div>
           </div>

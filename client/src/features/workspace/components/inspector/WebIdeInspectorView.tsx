@@ -40,12 +40,12 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
   return (
     <div className="space-y-3.5">
       {/* Role Notice Card for HRD */}
-      <div className="p-3 bg-[#f8f9fc] border border-[#e2e6f4] rounded-[9px] space-y-1">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-[#41518c]">
-          <ShieldAlert size={14} className="text-[#6474b4] shrink-0" />
+      <div className="p-3.5 bg-[#f8f9fc] border border-[#e2e6f4] rounded-[9px] space-y-1.5">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[#41518c]">
+          <ShieldAlert size={16} className="text-[#6474b4] shrink-0" />
           <span>Khusus User / Tech Lead</span>
         </div>
-        <p className="text-[11px] text-[#6b7280] leading-relaxed">
+        <p className="text-xs text-[#555866] leading-relaxed">
           Bagian ini disiapkan untuk diserahkan ke User atau Tech Lead saat sesi wawancara teknis. Tim HRD tidak perlu membaca atau mengaudit baris kode secara mandiri.
         </p>
       </div>
@@ -58,19 +58,19 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
           <span className="w-2 h-2 rounded-full bg-[#10b981]" />
           <span>https://github.dev/{cleanPrimary}</span>
         </div>
-        <div className="p-3 bg-[#fbfaf8] text-xs space-y-2">
-          <div className="text-[10px] text-[#8c8d97]">
+        <div className="p-3.5 bg-[#fbfaf8] text-xs space-y-2.5">
+          <div className="text-xs text-[#707280]">
             Web VS Code aktif. Pohon berkas dan kode sumber terbaca langsung tanpa download lokal.
           </div>
           <a
             href={`https://github.dev/${cleanPrimary}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-1.5 px-3 rounded-[7px] text-xs font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] inline-flex items-center justify-center gap-1.5 transition-all shadow-[0_1px_2px_rgba(118,137,211,0.25)]"
+            className="w-full py-2.5 px-4 rounded-[8px] text-[13px] font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] inline-flex items-center justify-center gap-2 transition-all shadow-[0_1px_2px_rgba(118,137,211,0.25)]"
           >
-            <Terminal size={13} />
+            <Terminal size={14} />
             <span>Buka Kode Sumber (Khusus Tech Lead)</span>
-            <ExternalLink size={12} />
+            <ExternalLink size={13} />
           </a>
         </div>
       </div>

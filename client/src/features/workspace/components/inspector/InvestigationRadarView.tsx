@@ -31,14 +31,14 @@ export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
       {interviewKit.map((item, idx) => (
         <div
           key={idx}
-          className="p-3 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-2.5"
+          className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-3"
         >
           <div className="flex items-start justify-between gap-2">
             <div>
-              <span className="text-[10px] font-semibold text-[#7285d5] uppercase tracking-wider">
+              <span className="text-[11px] font-semibold text-[#7285d5] uppercase tracking-wider">
                 Probe #{idx + 1}
               </span>
-              <div className="text-xs font-semibold text-[#333641] leading-tight mt-0.5">
+              <div className="text-[13.5px] font-semibold text-[#333641] leading-snug mt-0.5">
                 {item.topic}
               </div>
             </div>
@@ -57,7 +57,7 @@ export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
           </div>
 
           {/* Context & Question */}
-          <div className="p-2 bg-[#fbfaf8] border border-[#f0eee9] rounded-lg text-[11px] space-y-1">
+          <div className="p-2.5 bg-[#fbfaf8] border border-[#f0eee9] rounded-lg text-[12.5px] space-y-1.5 leading-relaxed">
             <div className="text-[#8c8d97]">
               <strong>Temuan:</strong> {item.context}
             </div>
@@ -68,9 +68,9 @@ export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
 
           {/* Sinyal Kompeten (Green Flags) */}
           {item.greenFlags && item.greenFlags.length > 0 && (
-            <div className="p-2 bg-[#edf3ec]/60 border border-[#dae7da] rounded-lg text-[10.5px] space-y-1">
-              <div className="font-semibold text-[#2f5535] flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-[#8cac91]" />
+            <div className="p-2.5 bg-[#edf3ec]/60 border border-[#dae7da] rounded-lg text-xs space-y-1">
+              <div className="font-semibold text-[#2f5535] flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#8cac91]" />
                 <span>Sinyal Kompeten (Green Flags):</span>
               </div>
               <ul className="list-disc list-inside text-[#3d6643] space-y-0.5">
@@ -83,9 +83,9 @@ export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
 
           {/* Indikasi Bualan (Red Flags) */}
           {item.redFlags && item.redFlags.length > 0 && (
-            <div className="p-2 bg-[#fdf0ef]/60 border border-[#f6cbc7] rounded-lg text-[10.5px] space-y-1">
-              <div className="font-semibold text-[#912d26] flex items-center gap-1">
-                <AlertOctagon className="w-3 h-3 text-[#d9756c]" />
+            <div className="p-2.5 bg-[#fdf0ef]/60 border border-[#f6cbc7] rounded-lg text-xs space-y-1">
+              <div className="font-semibold text-[#912d26] flex items-center gap-1.5">
+                <AlertOctagon className="w-3.5 h-3.5 text-[#d9756c]" />
                 <span>Indikasi Bualan (Red Flags):</span>
               </div>
               <ul className="list-disc list-inside text-[#96362e] space-y-0.5">

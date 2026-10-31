@@ -21,9 +21,9 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
           <OpenDotsMascot identity={candidate.id} size="md" />
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h2 className="text-xl font-semibold text-[#272a33] m-0 tracking-tight">{candidate.name}</h2>
+              <h2 className="text-2xl font-semibold text-[#272a33] m-0 tracking-tight">{candidate.name}</h2>
               <span
-                className={`text-xs font-semibold px-2.5 py-1 rounded-[6px] uppercase tracking-wider ${
+                className={`text-sm font-semibold px-3 py-1.5 rounded-[6px] uppercase tracking-wider ${
                   candidate.status === 'verified'
                     ? 'bg-[#e7f5ea] text-[#2b8a3e] border border-[#b2e2be]'
                     : candidate.status === 'partial'
@@ -34,40 +34,40 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                 {candidate.statusLabel}
               </span>
             </div>
-            <p className="text-sm text-[#707784] m-0 mt-1">{candidate.role}</p>
+            <p className="text-base text-[#686f7c] m-0 mt-1">{candidate.role}</p>
           </div>
         </div>
 
         {/* Metrik Faktual Bukti */}
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-xs font-semibold text-[#2b8a3e]">
-            <CheckCircle2 size={14} className="text-[#2b8a3e]" />
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-sm font-semibold text-[#2b8a3e]">
+            <CheckCircle2 size={16} className="text-[#2b8a3e]" />
             <span>{verifiedCount}/{dossier.evidenceMatrix.length} Klaim Terverifikasi</span>
           </div>
-          <span className="text-xs font-medium tabular-nums text-[#8c8d97] bg-[#fdfcfb] px-2.5 py-1.5 rounded-[8px] border border-[#eeedea]">
+          <span className="text-sm font-medium tabular-nums text-[#8c8d97] bg-[#fdfcfb] px-3 py-2 rounded-[8px] border border-[#eeedea]">
             {(dossier.executionTimeMs / 1000).toFixed(1)}s audit
           </span>
         </div>
       </div>
 
       {/* 2. Ringkasan Eksekutif & Deskripsi Portofolio */}
-      <div className="bg-[#fcfbf9] border-l-4 border-[#7285d5] rounded-r-[10px] p-4 text-[13.5px] text-[#333641] leading-[1.8]">
-        <strong className="block text-xs uppercase tracking-wider text-[#7988c5] font-semibold mb-1.5">
+      <div className="bg-[#fcfbf9] border-l-4 border-[#7285d5] rounded-r-[10px] p-5 text-[15px] text-[#333641] leading-[1.85]">
+        <strong className="block text-[13px] uppercase tracking-wider text-[#7988c5] font-semibold mb-2">
           Ringkasan Eksekutif Hasil Audit Faktual:
         </strong>
-        <p className="m-0 whitespace-pre-line text-[#333641] leading-[1.8]">{dossier.overallAssessment}</p>
+        <p className="m-0 whitespace-pre-line text-[#333641] leading-[1.85]">{dossier.overallAssessment}</p>
       </div>
 
       {/* 3. Klaim Keahlian (Badges) */}
       <div>
-        <span className="block text-xs uppercase tracking-wider font-semibold text-[#8c8d97] mb-2">
+        <span className="block text-[13px] uppercase tracking-wider font-semibold text-[#8c8d97] mb-2.5">
           Klaim Keahlian pada CV:
         </span>
         <div className="flex flex-wrap items-center gap-2">
           {dossier.candidate.claimedSkills.map((skill, idx) => (
             <span
               key={idx}
-              className="px-3 py-1 rounded-[7px] bg-[#f8f7f4] border border-[#e3e2de] text-[#333641] text-[12.5px] font-medium"
+              className="px-3.5 py-1.5 rounded-[7px] bg-[#f8f7f4] border border-[#e3e2de] text-[#333641] text-[14px] font-medium"
             >
               {skill}
             </span>
@@ -78,7 +78,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
       {/* 4. Repositori Fisik yang Diaudit & Status Git Authorship */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
         <div className="p-4 rounded-[10px] bg-[#fdfcfb] border border-[#eeedea]">
-          <span className="text-xs font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2">
+          <span className="text-[13px] font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2.5">
             Repositori Publik yang Diaudit:
           </span>
           <div className="flex flex-wrap gap-2">
@@ -89,11 +89,11 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                   href={`https://github.com/${repo.includes('/') ? repo : `${dossier.candidate.githubUsername || 'kandidat'}/${repo}`}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-[#5269bb] hover:underline font-medium bg-white px-2.5 py-1 rounded-[6px] border border-[#eeedea]"
+                  className="inline-flex items-center gap-2 text-sm text-[#5269bb] hover:underline font-medium bg-white px-3 py-1.5 rounded-[6px] border border-[#eeedea]"
                 >
-                  <GitBranch size={13} />
+                  <GitBranch size={15} />
                   <span>{repo}</span>
-                  <ExternalLink size={10} />
+                  <ExternalLink size={12} />
                 </a>
               ))
             ) : (
@@ -103,30 +103,30 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </div>
 
         <div className="p-4 rounded-[10px] bg-[#fdfcfb] border border-[#eeedea] flex flex-col justify-center">
-          <span className="text-xs font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2">
+          <span className="text-[13px] font-semibold text-[#8c8d97] uppercase tracking-wider block mb-2.5">
             Rangkuman Bukti Faktual CV:
           </span>
-          <div className="flex items-center gap-3.5 text-xs">
+          <div className="flex items-center gap-4 text-sm flex-wrap">
             <span
-              className="inline-flex items-center gap-1.5 text-[#2b8a3e] font-medium"
+              className="inline-flex items-center gap-2 text-[#2b8a3e] font-medium"
               title="Klaim terbukti langsung di kode repositori"
             >
-              <CheckCircle2 size={14} /> {verifiedCount} Terverifikasi
+              <CheckCircle2 size={16} /> {verifiedCount} Terverifikasi
             </span>
             {transferableCount > 0 && (
               <span
-                className="inline-flex items-center gap-1.5 text-[#5269bb] font-medium cursor-help"
+                className="inline-flex items-center gap-2 text-[#5269bb] font-medium cursor-help"
                 title="Aman untuk dilanjutkan ke interview teknis: kandidat menguasai teknologi sejenis"
               >
-                <ShieldCheck size={14} /> {transferableCount} Serumpun (Bisa Adaptasi)
+                <ShieldCheck size={16} /> {transferableCount} Serumpun (Bisa Adaptasi)
               </span>
             )}
             {missingCount > 0 && (
               <span
-                className="inline-flex items-center gap-1.5 text-[#c05621] font-medium cursor-help"
+                className="inline-flex items-center gap-2 text-[#c05621] font-medium cursor-help"
                 title="Belum ada bukti publik: gunakan sebagai bahan klarifikasi interview"
               >
-                <AlertCircle size={14} /> {missingCount} Perlu Ditanyakan
+                <AlertCircle size={16} /> {missingCount} Perlu Ditanyakan
               </span>
             )}
           </div>
@@ -135,22 +135,22 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
       {/* 5. Live Production Demo Website (Jika Ada) */}
       {dossier.liveDemos && dossier.liveDemos.length > 0 && (
-        <div className="bg-[#eef8f6] border border-[#bce3db] rounded-[10px] p-3.5 flex items-center justify-between flex-wrap gap-2.5">
-          <div className="flex items-center gap-2">
-            <Globe size={15} className="text-[#35766f]" />
-            <span className="text-sm font-semibold text-[#275954]">
+        <div className="bg-[#eef8f6] border border-[#bce3db] rounded-[10px] p-4 flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2.5">
+            <Globe size={17} className="text-[#35766f]" />
+            <span className="text-[15px] font-semibold text-[#275954]">
               Website Produksi Terdeteksi:
             </span>
-            <span className="text-sm text-[#35766f] font-medium">{dossier.liveDemos[0].repoName}</span>
+            <span className="text-[15px] text-[#35766f] font-medium">{dossier.liveDemos[0].repoName}</span>
           </div>
           <a
             href={dossier.liveDemos[0].url.startsWith('http') ? dossier.liveDemos[0].url : `https://${dossier.liveDemos[0].url}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-medium text-white bg-[#35766f] hover:bg-[#285d57] px-3 py-1.5 rounded-[7px] inline-flex items-center gap-1.5 transition-all shadow-xs"
+            className="text-sm font-medium text-white bg-[#35766f] hover:bg-[#285d57] px-3.5 py-2 rounded-[7px] inline-flex items-center gap-2 transition-all shadow-xs"
           >
             <span>Buka Live Demo</span>
-            <ExternalLink size={11} />
+            <ExternalLink size={13} />
           </a>
         </div>
       )}

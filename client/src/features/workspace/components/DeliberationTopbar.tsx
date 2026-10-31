@@ -38,9 +38,9 @@ export const DeliberationTopbar: React.FC<DeliberationTopbarProps> = ({
               type="button"
               onClick={onOpenWebIde}
               title="Disiapkan untuk User / Tech Lead saat sesi interview teknis, bukan kewajiban HRD untuk membaca kode."
-              className="text-button inline-flex items-center gap-1.5 cursor-pointer text-[#7f8290] hover:text-[#333641] transition-colors"
+              className="text-button inline-flex items-center gap-2 cursor-pointer text-[#707380] hover:text-[#333641] transition-colors text-[13px] font-medium"
             >
-              <ExternalLink size={13} className="text-[#8492c6]" />
+              <ExternalLink size={14} className="text-[#8492c6]" />
               <span>Buka Kode (Khusus Tech Lead)</span>
             </button>
 
@@ -48,9 +48,9 @@ export const DeliberationTopbar: React.FC<DeliberationTopbarProps> = ({
               type="button"
               onClick={onReaudit}
               disabled={isLoading}
-              className="primary inline-flex items-center gap-1.5 py-1.5 px-3 rounded-[8px] text-xs font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] shadow-[0_1px_2px_rgba(118,137,211,0.25)] transition-all cursor-pointer disabled:opacity-50"
+              className="primary inline-flex items-center gap-2 py-2 px-3.5 rounded-[8px] text-[13px] font-medium text-white bg-[#7689d3] hover:bg-[#6177c5] shadow-[0_1px_2px_rgba(118,137,211,0.25)] transition-all cursor-pointer disabled:opacity-50"
             >
-              <RefreshCw size={12} className={isLoading ? 'animate-spin' : ''} />
+              <RefreshCw size={13} className={isLoading ? 'animate-spin' : ''} />
               <span>{isLoading ? 'Mengaudit...' : 'Audit Ulang'}</span>
             </button>
           </>

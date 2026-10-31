@@ -36,15 +36,15 @@ export function PillBadge({
   };
 
   const sizeStyles = {
-    xs: 'text-[9.5px] px-1.5 py-0.5 gap-1 rounded',
-    sm: 'text-[11px] px-2 py-0.5 gap-1.5 rounded-md font-medium',
-    md: 'text-xs px-2.5 py-1 gap-1.5 rounded-md font-medium',
+    xs: 'text-[11px] px-2 py-0.5 gap-1 rounded',
+    sm: 'text-xs px-2.5 py-1 gap-1.5 rounded-md font-medium',
+    md: 'text-[13px] px-3 py-1.5 gap-1.5 rounded-md font-medium',
   };
 
   const dotSizeStyles = {
-    xs: 'w-1 h-1',
-    sm: 'w-1.5 h-1.5',
-    md: 'w-2 h-2',
+    xs: 'w-1.5 h-1.5',
+    sm: 'w-2 h-2',
+    md: 'w-2.5 h-2.5',
   };
 
   return (

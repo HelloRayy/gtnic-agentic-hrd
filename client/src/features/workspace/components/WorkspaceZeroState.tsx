@@ -96,11 +96,11 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
           <OpenDotsMascot color="blue" size="lg" state="idle" />
         </div>
 
-        <div className="space-y-2">
-          <h1 className="text-xl font-semibold text-[#242730] tracking-tight">
+        <div className="space-y-2.5">
+          <h1 className="text-2xl font-semibold text-[#242730] tracking-tight">
             Ruang Kerja Deliberasi Forensik Siap
           </h1>
-          <p className="text-xs text-[#707070] leading-relaxed max-w-md mx-auto">
+          <p className="text-sm text-[#656773] leading-relaxed max-w-lg mx-auto">
             Belum ada kandidat dalam antrean. Mulai sesi demonstrasi dengan menambahkan profil pelamar atau berkas CV untuk diaudit secara langsung.
           </p>
         </div>
@@ -109,9 +109,9 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
           <button
             type="button"
             onClick={onOpenUploadModal}
-            className="inline-flex items-center gap-2 py-2.5 px-5 rounded-xl text-xs font-semibold text-white bg-[#7285d5] hover:bg-[#5f74cb] shadow-[0_2px_6px_rgba(114,133,213,0.3)] transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 py-3 px-6 rounded-xl text-sm font-semibold text-white bg-[#7285d5] hover:bg-[#5f74cb] shadow-[0_2px_8px_rgba(114,133,213,0.3)] transition-all cursor-pointer"
           >
-            <Plus size={15} strokeWidth={2.5} />
+            <Plus size={16} strokeWidth={2.5} />
             <span>Tambah Pelamar untuk Diaudit</span>
           </button>
         </div>
@@ -121,8 +121,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
             <div className="w-7 h-7 rounded-lg bg-[#eeeff7] flex items-center justify-center text-[#7285d5]">
               <ShieldCheck size={15} />
             </div>
-            <div className="text-xs font-semibold text-[#242730]">Bedah Kode Proyek Asli</div>
-            <div className="text-[11px] text-[#707070] leading-normal">
+            <div className="text-[13.5px] font-semibold text-[#242730]">Bedah Kode Proyek Asli</div>
+            <div className="text-xs text-[#707070] leading-normal">
               Memeriksa struktur file repositori, dependensi riil, dan integritas commit Git kandidat.
             </div>
           </div>
@@ -131,8 +131,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
             <div className="w-7 h-7 rounded-lg bg-[#edf3ec] flex items-center justify-center text-[#8cac91]">
               <BookOpen size={15} />
             </div>
-            <div className="text-xs font-semibold text-[#242730]">Matriks Bukti Faktual</div>
-            <div className="text-[11px] text-[#707070] leading-normal">
+            <div className="text-[13.5px] font-semibold text-[#242730]">Matriks Bukti Faktual</div>
+            <div className="text-xs text-[#707070] leading-normal">
               Memetakan klaim resume terhadap baris kode nyata tanpa persentase arbitrer.
             </div>
           </div>
@@ -141,8 +141,8 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
             <div className="w-7 h-7 rounded-lg bg-[#fbfaf8] border border-[#f0eee9] flex items-center justify-center text-[#e2a36b]">
               <Sparkles size={15} />
             </div>
-            <div className="text-xs font-semibold text-[#242730]">Deliberasi AI Interaktif</div>
-            <div className="text-[11px] text-[#707070] leading-normal">
+            <div className="text-[13.5px] font-semibold text-[#242730]">Deliberasi AI Interaktif</div>
+            <div className="text-xs text-[#707070] leading-normal">
               Konsultasi copilot dengan sitasi berkas dan integrasi 1-klik Google Meet.
             </div>
           </div>
