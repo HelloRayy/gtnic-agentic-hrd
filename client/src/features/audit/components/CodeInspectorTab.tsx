@@ -38,12 +38,10 @@ export function CodeInspectorTab({
     <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
       <SectionMessage
         appearance="information"
-        title="Web IDE Forensics: Buka Kode Asli Kandidat dalam 1-Klik"
+        title="Pemeriksaan Kode Sumber (Khusus User / Tech Lead)"
       >
         <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5 }}>
-          Gunakan integrasi <strong>github.dev</strong> (VS Code resmi berbasis peramban) untuk
-          mengecek seluruh pohon direktori dan baris kode pelamar tanpa perlu mengunduh atau melakukan{' '}
-          <em>git clone</em> ke laptop Anda.
+          Bagian ini disiapkan untuk <strong>User / Tech Lead</strong> saat sesi wawancara teknis. Tim HRD tidak berkewajiban memeriksa baris kode kodingan. Integrasi <strong>github.dev</strong> (VS Code peramban) memungkinkan Tech Lead menelusuri arsitektur tanpa perlu <em>git clone</em>.
         </p>
       </SectionMessage>
 
@@ -108,7 +106,7 @@ export function CodeInspectorTab({
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                   <a href={githubDevUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                     <Button appearance="primary" iconBefore={<Terminal size={14} />}>
-                      Buka di github.dev (VS Code) <ExternalLink size={12} style={{ marginLeft: 4 }} />
+                      Buka Kode Sumber (Khusus Tech Lead) <ExternalLink size={12} style={{ marginLeft: 4 }} />
                     </Button>
                   </a>
 

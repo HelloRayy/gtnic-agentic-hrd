@@ -154,7 +154,7 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
         <TabList>
           <Tab>Deliberasi AI (Tanya Co-Pilot)</Tab>
           <Tab>Matriks Bukti ({dossier.evidenceMatrix.length})</Tab>
-          <Tab>Inspeksi Kode Web IDE ({dossier.auditedRepos.length})</Tab>
+          <Tab>Kode Sumber (Khusus Tech Lead) ({dossier.auditedRepos.length})</Tab>
           <Tab>Radar Investigasi & Sinyal ({dossier.interviewKit.length})</Tab>
           <Tab>Poin Klarifikasi ({dossier.clarificationPrompts.length})</Tab>
           <Tab>Jejak Penalaran CoT ({dossier.traceEvents?.length || 0})</Tab>
