@@ -1,5 +1,6 @@
 import React from 'react';
 import { ForensicCalloutPin } from './ForensicCalloutPin.js';
+import { highlightCodeLine } from './codeSyntaxHighlighter.js';
 import type { ForensicCallout } from '../../types.js';
 
 interface IdeCodeViewerProps {
@@ -11,6 +12,7 @@ interface IdeCodeViewerProps {
 
 export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
   code,
+  language,
   callouts,
   highlightedLine,
 }) => {
@@ -31,7 +33,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
   };
 
   return (
-    <div className="bg-[#0d1117] text-[#e6edf3] font-mono text-xs overflow-x-auto overflow-y-auto max-h-[520px] select-text border-t border-[#30363d] rounded-b-xl">
+    <div className="flex-1 h-full min-h-0 bg-[#0d1117] text-[#e6edf3] font-mono text-xs overflow-x-auto overflow-y-auto select-text">
       <table className="w-full border-collapse">
         <tbody>
           {lines.map((lineText, idx) => {
@@ -63,21 +65,21 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
             return (
               <React.Fragment key={lineNum}>
                 <tr className={`transition-colors ${rowBg}`}>
-                  {/* Line Number Gutter ala GitHub PR */}
+                  {/* Line Number Gutter */}
                   <td className="w-10 px-2 py-0.5 text-right text-[#6e7681] select-none text-[11px] font-mono border-r border-[#30363d]/60 shrink-0 align-top">
                     {lineNum}
                   </td>
-                  {/* Diff Sign (+ / ~ / !) */}
+                  {/* Diff Symbol (+ / ~ / !) */}
                   <td className={`w-4 text-center select-none text-[11px] font-mono shrink-0 align-top ${signColor}`}>
                     {diffSign}
                   </td>
-                  {/* Code Line Content */}
-                  <td className="px-2.5 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] text-[#e6edf3] align-top">
-                    {lineText || ' '}
+                  {/* Syntax Highlighted Code Line */}
+                  <td className="px-2.5 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] align-top">
+                    {highlightCodeLine(lineText, language)}
                   </td>
                 </tr>
 
-                {/* GitHub Style Inline Review Comment Box */}
+                {/* GitHub PR Style Inline Review Comment */}
                 {endCallout && (
                   <tr>
                     <td colSpan={3} className="p-0 bg-[#0d1117] border-y border-[#30363d]">

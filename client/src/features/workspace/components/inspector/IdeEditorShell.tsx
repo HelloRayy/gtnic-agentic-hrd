@@ -36,7 +36,7 @@ export const IdeEditorShell: React.FC<IdeEditorShellProps> = ({
   const verifiedCount = activeFile.callouts.filter((c) => c.type === 'VERIFIED').length;
 
   return (
-    <div className="rounded-xl border border-[#30363d] overflow-hidden bg-[#0d1117] shadow-lg text-xs space-y-0">
+    <div className="rounded-xl border border-[#30363d] overflow-hidden bg-[#0d1117] shadow-lg text-xs space-y-0 flex-1 h-full flex flex-col min-h-0">
       {/* 1. File Tabs ala GitHub PR Files Changed */}
       <IdeFileTabs
         files={files}
@@ -66,7 +66,7 @@ export const IdeEditorShell: React.FC<IdeEditorShellProps> = ({
       </div>
 
       {/* 3. Editor View Container with GitHub Review Diff */}
-      <div className="relative">
+      <div className="relative flex-1 min-h-0 overflow-hidden flex flex-col">
         {children}
       </div>
 

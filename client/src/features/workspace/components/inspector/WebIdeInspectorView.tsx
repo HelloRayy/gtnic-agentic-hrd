@@ -30,7 +30,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
   const primaryRepo = auditedRepos[0] || 'repository';
 
   return (
-    <div className="space-y-3.5">
+    <div className="flex-1 h-full flex flex-col space-y-3 min-h-0">
       {/* Role Notice Card for HRD */}
       <div className="p-3 bg-[#f8f9fc] border border-[#e2e6f4] rounded-xl space-y-1">
         <div className="flex items-center gap-2 text-xs font-semibold text-[#41518c]">

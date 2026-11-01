@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { CandidateSidebar } from '@/features/workspace/components/CandidateSidebar.js';
 import { DeliberationWorkspace } from '@/features/workspace/components/DeliberationWorkspace.js';
-import { ContextInspectorPanel } from '@/features/workspace/components/ContextInspectorPanel.js';
+import { ForensicExplorerPanel } from '@/features/workspace/components/ForensicExplorerPanel.js';
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
 import { CandidateApplyPage } from '@/features/workspace/components/CandidateApplyPage.js';
@@ -50,7 +50,29 @@ export default function App() {
 
   const [jobs, setJobs] = useState<RecruitmentPreset[]>(() => getStoredJobs());
   const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
-  const [inspectorTab, setInspectorTab] = useState<'ide' | 'cv' | 'matrix' | 'radar' | 'action'>('ide');
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<string>('chat');
+  const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>([
+    'chat',
+    'cv',
+    'code:core-logic',
+    'matrix',
+  ]);
+
+  const handleSelectWorkspaceTab = (tabId: string) => {
+    setOpenWorkspaceTabs((prev) => (prev.includes(tabId) ? prev : [...prev, tabId]));
+    setActiveWorkspaceTab(tabId);
+  };
+
+  const handleCloseWorkspaceTab = (tabId: string) => {
+    setOpenWorkspaceTabs((prev) => {
+      if (prev.length <= 1) return prev;
+      const nextTabs = prev.filter((t) => t !== tabId);
+      if (activeWorkspaceTab === tabId) {
+        setActiveWorkspaceTab(nextTabs[nextTabs.length - 1]);
+      }
+      return nextTabs;
+    });
+  };
   useEffect(() => {
     const handleHashChange = () => {
       if (window.location.hash === '#/apply') {
@@ -396,15 +418,18 @@ export default function App() {
         onSendMessage={handleSendMessage}
         onOpenWebIde={handleOpenWebIde}
         onOpenUploadModal={() => setIsAddModalOpen(true)}
-        onViewCv={() => setInspectorTab('cv')}
-        onInspectCode={() => setInspectorTab('ide')}
+        activeWorkspaceTab={activeWorkspaceTab}
+        openWorkspaceTabs={openWorkspaceTabs}
+        onSelectWorkspaceTab={handleSelectWorkspaceTab}
+        onCloseWorkspaceTab={handleCloseWorkspaceTab}
+        googleStatus={googleStatus}
       />
 
-      {/* Panel 3: Right Inspector Panel / Forensic Dossier */}
-      <ContextInspectorPanel
+      {/* Panel 3: Right Forensic Explorer Panel ala VS Code / Zed Project Panel */}
+      <ForensicExplorerPanel
         candidate={activeCandidate}
-        googleStatus={googleStatus}
-        targetTab={inspectorTab}
+        activeTabId={activeWorkspaceTab}
+        onSelectTab={handleSelectWorkspaceTab}
       />
       {/* Dialog Modals */}
       <AddCandidateModal

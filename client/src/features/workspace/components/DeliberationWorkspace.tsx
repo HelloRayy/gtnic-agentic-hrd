@@ -3,8 +3,15 @@ import { Terminal, ChevronDown, ChevronUp } from 'lucide-react';
 import { DeliberationTopbar } from './DeliberationTopbar.js';
 import { DeliberationChatView } from './DeliberationChatView.js';
 import { WorkspaceZeroState } from './WorkspaceZeroState.js';
+import { WorkspaceEditorTabBar } from './WorkspaceEditorTabBar.js';
+import { CvDocumentView } from './inspector/CvDocumentView.js';
+import { EvidenceMatrixView } from './inspector/EvidenceMatrixView.js';
+import { InvestigationRadarView } from './inspector/InvestigationRadarView.js';
+import { InterviewActionView } from './inspector/InterviewActionView.js';
+import { WebIdeInspectorView } from './inspector/WebIdeInspectorView.js';
+import { generateIdeSnippets } from '../services/ideCodeAdapter.js';
 import type { WorkspaceCandidate } from '../types.js';
-import type { TraceEvent } from '@/types/audit.js';
+import type { TraceEvent, GoogleAuthStatus } from '@/types/audit.js';
 
 interface DeliberationWorkspaceProps {
   candidate: WorkspaceCandidate | null;
@@ -16,8 +23,11 @@ interface DeliberationWorkspaceProps {
   onSendMessage: (message: string) => void;
   onOpenWebIde: () => void;
   onOpenUploadModal: () => void;
-  onViewCv?: () => void;
-  onInspectCode?: () => void;
+  activeWorkspaceTab: string;
+  openWorkspaceTabs: string[];
+  onSelectWorkspaceTab: (tabId: string) => void;
+  onCloseWorkspaceTab: (tabId: string) => void;
+  googleStatus: GoogleAuthStatus | null;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -30,8 +40,11 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onSendMessage,
   onOpenWebIde,
   onOpenUploadModal,
-  onViewCv,
-  onInspectCode,
+  activeWorkspaceTab,
+  openWorkspaceTabs,
+  onSelectWorkspaceTab,
+  onCloseWorkspaceTab,
+  googleStatus,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -55,9 +68,11 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   }
 
   const { dossier } = candidate;
+  const snippets = generateIdeSnippets(dossier);
+
   return (
     <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden">
-      {/* Topbar */}
+      {/* 1. Workspace Topbar */}
       <DeliberationTopbar
         candidate={candidate}
         isLoading={isLoading}
@@ -65,7 +80,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         onOpenWebIde={onOpenWebIde}
       />
 
-      {/* Verifikasi Bukti Nyata Progress Bar (Accordion untuk HRD) */}
+      {/* 2. CoT Forensic Progress Stream Bar (Active only while running) */}
       {isLoading && traceEvents.length > 0 && (
         <div className="mx-8 mt-3 bg-white rounded-[11px] border border-[#e9e8e6] p-3.5 shadow-[0_2px_8px_rgba(57,57,74,0.03)] space-y-2 shrink-0">
           <div className="flex items-center justify-between text-sm">
@@ -94,7 +109,6 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
             </div>
           </div>
 
-          {/* Accordion Konten Log Sistem (Hanya dibuka saat dibutuhkan) */}
           {showTraceDetails && (
             <div className="bg-[#242730] text-[#e2e4ed] p-2.5 rounded-[7px] text-[10.5px] max-h-32 overflow-y-auto space-y-1 font-mono">
               <div className="text-[10px] uppercase tracking-wider text-[#8c8d97] font-sans font-semibold pb-1 border-b border-[#363a47] flex items-center justify-between">
@@ -125,20 +139,76 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         </div>
       )}
 
-      {/* Full-Height Authentic OpenDots Chat Experience */}
+      {/* 3. VS Code / Zed Style Main Workspace Tab Bar */}
+      <WorkspaceEditorTabBar
+        openTabs={openWorkspaceTabs}
+        activeTabId={activeWorkspaceTab}
+        onSelectTab={onSelectWorkspaceTab}
+        onCloseTab={onCloseWorkspaceTab}
+        snippets={snippets}
+      />
+
+      {/* 4. Dynamic Main Workspace Canvas View Area */}
       <div className="flex-1 overflow-hidden flex flex-col">
-        <DeliberationChatView
-          candidate={candidate}
-          messages={candidate.chatHistory}
-          candidateName={candidate.name}
-          candidateRole={candidate.role}
-          auditedRepos={dossier.auditedRepos}
-          isDeliberating={isDeliberating}
-          onSendMessage={onSendMessage}
-          onSchedule={onOpenWebIde}
-          onViewCv={onViewCv}
-          onInspectCode={onInspectCode}
-        />
+        {activeWorkspaceTab === 'chat' && (
+          <DeliberationChatView
+            candidate={candidate}
+            messages={candidate.chatHistory}
+            candidateName={candidate.name}
+            candidateRole={candidate.role}
+            auditedRepos={dossier.auditedRepos}
+            isDeliberating={isDeliberating}
+            onSendMessage={onSendMessage}
+            onSchedule={onOpenWebIde}
+            onViewCv={() => onSelectWorkspaceTab('cv')}
+            onInspectCode={() => onSelectWorkspaceTab('code:core-logic')}
+          />
+        )}
+
+        {activeWorkspaceTab === 'cv' && (
+          <div className="flex-1 overflow-y-auto p-6 bg-[#f8f7f4]">
+            <div className="max-w-3xl mx-auto">
+              <CvDocumentView dossier={dossier} />
+            </div>
+          </div>
+        )}
+
+        {activeWorkspaceTab.startsWith('code:') && (
+          <div className="flex-1 overflow-hidden flex flex-col p-4 bg-[#0d1117]">
+            <WebIdeInspectorView
+              dossier={dossier}
+              initialFileId={activeWorkspaceTab.replace('code:', '')}
+            />
+          </div>
+        )}
+
+        {activeWorkspaceTab === 'matrix' && (
+          <div className="flex-1 overflow-y-auto p-6 bg-[#f8f7f4]">
+            <div className="max-w-4xl mx-auto">
+              <EvidenceMatrixView
+                evidenceMatrix={dossier.evidenceMatrix}
+                githubUsername={dossier.candidate.githubUsername}
+                onInspectCode={() => onSelectWorkspaceTab('code:core-logic')}
+              />
+            </div>
+          </div>
+        )}
+
+        {activeWorkspaceTab === 'radar' && (
+          <div className="flex-1 overflow-y-auto p-6 bg-[#f8f7f4]">
+            <div className="max-w-4xl mx-auto">
+              <InvestigationRadarView interviewKit={dossier.interviewKit} />
+            </div>
+          </div>
+        )}
+
+        {activeWorkspaceTab === 'action' && (
+          <div className="flex-1 overflow-y-auto p-6 bg-[#f8f7f4]">
+            <div className="max-w-2xl mx-auto">
+              <InterviewActionView dossier={dossier} googleStatus={googleStatus} />
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
