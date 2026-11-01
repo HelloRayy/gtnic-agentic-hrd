@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import {
   ChevronDown,
   ChevronRight,
-  FileCode,
   FileText,
-  FileJson,
   MessageSquare,
   BookOpen,
   Sparkles,
@@ -17,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { generateIdeSnippets } from '../services/ideCodeAdapter.js';
+import { RepoFolderTree } from './RepoFolderTree.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface ForensicExplorerPanelProps {
@@ -54,11 +53,6 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
   const snippets = dossier ? generateIdeSnippets(dossier) : [];
   const primaryRepo = dossier?.auditedRepos?.[0] || 'repository';
 
-  const getCodeFileIcon = (fileName: string) => {
-    if (fileName.endsWith('.json')) return <FileJson size={13} className="text-[#e2a36b] shrink-0" />;
-    if (fileName.endsWith('.yml') || fileName.endsWith('.yaml')) return <FileText size={13} className="text-[#d9756c] shrink-0" />;
-    return <FileCode size={13} className="text-[#58a6ff] shrink-0" />;
-  };
 
   const q = searchQuery.toLowerCase().trim();
 
@@ -192,56 +186,33 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
               )}
             </div>
 
-            {/* Section B: Repositori & Kode Sumber */}
-            <div>
-              <button
-                type="button"
-                onClick={() => toggleSection('repo')}
-                className="w-full flex items-center gap-1.5 px-2 py-1 rounded text-[#6b6f7f] hover:text-[#242730] hover:bg-[#edece6] font-semibold text-[11px] tracking-wider uppercase transition-colors cursor-pointer"
-              >
-                {openSections.repo ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-                {openSections.repo ? (
-                  <FolderOpen size={13} className="text-[#8492c6]" />
-                ) : (
-                  <Folder size={13} className="text-[#8492c6]" />
-                )}
-                <span className="truncate">{primaryRepo}</span>
-              </button>
+            {/* Section B: Repositori & Pohon Berkas Kode ala GitHub */}
+            <div className="space-y-1">
+              <div className="px-2 py-0.5 text-[10px] font-bold text-[#797d8c] uppercase tracking-wider">
+                Pohon Berkas GitHub ({dossier?.auditedRepos?.length || 1} Repo)
+              </div>
 
-              {openSections.repo && (
-                <div className="pl-3.5 pr-1 mt-0.5 space-y-0.5 border-l border-[#e5e3dc] ml-3">
-                  {snippets
-                    .filter((snip) => !q || snip.fileName.toLowerCase().includes(q))
-                    .map((snip) => {
-                      const tabKey = `code:${snip.id}`;
-                      const isActive = activeTabId === tabKey;
-                      const isVerified = snip.callouts.some((c) => c.type === 'VERIFIED');
-
-                      return (
-                        <button
-                          key={snip.id}
-                          type="button"
-                          onClick={() => onSelectTab(tabKey)}
-                          className={`w-full flex items-center justify-between gap-1.5 px-2 py-1 rounded text-left transition-all cursor-pointer ${
-                            isActive
-                              ? 'bg-[#e8ebf8] text-[#384c98] font-semibold border-l-2 border-[#7285d5]'
-                              : 'text-[#4d5160] hover:text-[#181a20] hover:bg-[#eeebe5]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            {getCodeFileIcon(snip.fileName)}
-                            <span className="truncate">{snip.fileName}</span>
-                          </div>
-                          {isVerified && (
-                            <span
-                              className="w-1.5 h-1.5 rounded-full bg-[#2b8a3e] shrink-0"
-                              title="Memuat bukti AST terverifikasi"
-                            />
-                          )}
-                        </button>
-                      );
-                    })}
-                </div>
+              {dossier?.auditedRepos && dossier.auditedRepos.length > 0 ? (
+                dossier.auditedRepos.map((repoName) => (
+                  <RepoFolderTree
+                    key={repoName}
+                    repoName={repoName}
+                    snippets={snippets}
+                    activeTabId={activeTabId}
+                    onSelectTab={onSelectTab}
+                    searchQuery={searchQuery}
+                    isAudited={true}
+                  />
+                ))
+              ) : (
+                <RepoFolderTree
+                  repoName={primaryRepo}
+                  snippets={snippets}
+                  activeTabId={activeTabId}
+                  onSelectTab={onSelectTab}
+                  searchQuery={searchQuery}
+                  isAudited={true}
+                />
               )}
             </div>
 

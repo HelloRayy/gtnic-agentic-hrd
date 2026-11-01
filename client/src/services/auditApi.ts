@@ -220,3 +220,21 @@ export async function generateConstructiveFeedback(
   const json = await res.json();
   return json.draft;
 }
+
+export async function fetchRepoFileContent(
+  owner: string,
+  repo: string,
+  path: string
+): Promise<{ content: string; fileName: string; filePath: string }> {
+  const params = new URLSearchParams({ owner, repo, path });
+  const res = await fetch(`${API_BASE}/repo/file-content?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error('Gagal memuat isi berkas dari repositori.');
+  }
+  const data = await res.json();
+  return {
+    content: data.content,
+    fileName: data.fileName,
+    filePath: data.filePath,
+  };
+}

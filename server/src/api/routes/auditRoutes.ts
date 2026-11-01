@@ -7,6 +7,7 @@ import {
   handleDiscoverRepos,
   handleDeliberationChat,
   handleConstructiveFeedback,
+  handleGetRepoFileContent,
 } from '../controllers/auditController.js';
 import { config } from '../../config/env.js';
 
@@ -36,3 +37,4 @@ auditRouter.post('/discover-repos', handleDiscoverRepos);
 auditRouter.post('/deliberate', handleDeliberationChat);
 auditRouter.post('/audit/chat', handleDeliberationChat);
 auditRouter.post('/constructive-feedback', handleConstructiveFeedback);
+auditRouter.get('/repo/file-content', handleGetRepoFileContent);
