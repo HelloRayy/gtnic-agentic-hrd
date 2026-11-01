@@ -312,11 +312,26 @@ export default function App() {
       };
 
       setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === activeCandidateId
-            ? { ...c, chatHistory: [...c.chatHistory, agentMessage] }
-            : c
-        )
+        prev.map((c) => {
+          if (c.id !== activeCandidateId) return c;
+          const updatedRepos =
+            res.newAuditedRepo && !c.dossier.auditedRepos.includes(res.newAuditedRepo)
+              ? [...c.dossier.auditedRepos, res.newAuditedRepo]
+              : c.dossier.auditedRepos;
+          const updatedMatrix = res.newEvidenceItem
+            ? [res.newEvidenceItem, ...c.dossier.evidenceMatrix]
+            : c.dossier.evidenceMatrix;
+          return {
+            ...c,
+            reposCount: updatedRepos.length,
+            dossier: {
+              ...c.dossier,
+              auditedRepos: updatedRepos,
+              evidenceMatrix: updatedMatrix,
+            },
+            chatHistory: [...c.chatHistory, agentMessage],
+          };
+        })
       );
     } catch (err: unknown) {
       const errMsg =

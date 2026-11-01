@@ -3,8 +3,10 @@ import { Octokit } from '@octokit/rest';
 import { config } from '../../config/env.js';
 import { routerClient } from '../../providers/routerClient.js';
 import { auditPipeline } from '../../workflow/pipeline.js';
-import type { TechnicalDossier, DiscoveredRepo, ConstructiveFeedbackDraft } from '../../core/types.js';
+import type { TechnicalDossier, DiscoveredRepo, ConstructiveFeedbackDraft, EvidenceItem, RepoAuditEvidence } from '../../core/types.js';
+import { toolRegistry } from '../../tools/index.js';
 
+const octokit = new Octokit({ auth: config.githubToken || undefined });
 function parseSelectedRepos(raw: unknown): string[] | undefined {
   if (typeof raw === 'string') {
     try {
@@ -328,6 +330,92 @@ You seamlessly serve both HR Recruiters and Tech Leads with a generalized, high-
 3. Candid & Balanced: Explicitly highlight verified technical strengths alongside real blind spots or missing public proof (no sugarcoating, no unearned praise).
 4. Natural Professional Bahasa Indonesia: Speak concisely, authoritatively, and incisively. Zero conversational pleasantries, zero robotic corporate fluff.
 5. Output valid JSON only: { "answer": "your comprehensive two-tier answer in Bahasa Indonesia", "anchors": ["repo/file references"] }`.trim();
+    // On-Demand Dynamic Repository Audit
+    let onDemandEvidenceNote = '';
+    let newAuditedRepo: string | undefined = undefined;
+    let newEvidenceItem: EvidenceItem | undefined = undefined;
+
+    const githubUsername =
+      rawDossier?.candidate?.githubUsername ||
+      (typeof body.githubUsername === 'string' ? body.githubUsername : undefined);
+
+    if (githubUsername) {
+      try {
+        const { data: allRepos } = await octokit.rest.repos.listForUser({
+          username: githubUsername,
+          per_page: 50,
+          sort: 'pushed',
+          direction: 'desc',
+        });
+
+        const unauditedRepos = allRepos.filter(
+          (r) =>
+            !r.fork &&
+            !r.archived &&
+            !auditedRepos.includes(r.name) &&
+            r.name.toLowerCase() !== githubUsername.toLowerCase()
+        );
+
+        const qLower = question.toLowerCase();
+        let targetRepo = unauditedRepos.find((r) => {
+          const rName = r.name.toLowerCase();
+          const rNorm = rName.replace(/[-_]/g, ' ');
+          return qLower.includes(rName) || qLower.includes(rNorm);
+        });
+
+        if (!targetRepo) {
+          const techKeywords = [
+            'websocket', 'socket', 'graphql', 'grpc', 'kafka', 'redis',
+            'docker', 'kubernetes', 'python', 'fastapi', 'flutter', 'dart',
+            'monorepo', 'next', 'tailwind', 'vue', 'angular', 'django',
+            'flask', 'security', 'auth', 'jwt', 'ci/cd', 'actions', 'soccer', 'wifi'
+          ];
+          const mentioned = techKeywords.filter((k) => qLower.includes(k));
+          if (mentioned.length > 0) {
+            targetRepo = unauditedRepos.find((r) => {
+              const rText = `${r.name} ${r.description || ''} ${r.language || ''}`.toLowerCase();
+              return mentioned.some((k) => rText.includes(k));
+            });
+          }
+        }
+
+        if (targetRepo) {
+          console.log(`[DeliberationChat] Executing on-demand audit for repo: ${targetRepo.name}`);
+          const evidence = await toolRegistry.executeTool<any, RepoAuditEvidence | null>(
+            'github_repo_audit',
+            { owner: githubUsername, repo: targetRepo.name }
+          );
+
+          if (evidence) {
+            newAuditedRepo = targetRepo.name;
+            const manifestsSummary = evidence.manifestFiles
+              .map((m) => `${m.path} (${m.dependencies.slice(0, 4).join(', ')})`)
+              .join('; ');
+
+            onDemandEvidenceNote = `
+BUKTI AUDIT ON-DEMAND TERBARU (Baru saja diaudit langsung dari repositori publik tambahan kandidat '${targetRepo.name}'):
+- Repositori: ${targetRepo.name} (${targetRepo.html_url})
+- Bahasa: ${evidence.primaryLanguage}
+- Kepemilikan Author: ${evidence.authorshipStatus} (Commits: ${evidence.commitCountSample})
+- Dependensi: ${manifestsSummary || 'Native'}
+- Pohon Berkas: ${evidence.fileTreeSample.slice(0, 6).join(', ')}
+- Fitur: Docker=${evidence.hasDocker}, Tests=${evidence.hasTests}, CI/CD=${evidence.hasCiCd}
+Instruksi: Gunakan temuan riil ini untuk menjawab pertanyaan dan sebutkan bahwa repositori ini baru saja diverifikasi langsung!
+`.trim();
+
+            newEvidenceItem = {
+              claim: `Implementasi pada proyek ${targetRepo.name}`,
+              status: evidence.authorshipStatus === 'VERIFIED_AUTHOR' ? 'VERIFIED' : 'PARTIAL',
+              evidenceSummary: `Diverifikasi on-demand di repo ${targetRepo.name} (${evidence.primaryLanguage}, ${evidence.commitCountSample} commits, dependensi: ${evidence.manifestFiles[0]?.dependencies.slice(0, 3).join(', ') || 'native'}).`,
+              repoAnchor: targetRepo.name,
+              fileAnchor: evidence.fileTreeSample[0] || null,
+            };
+          }
+        }
+      } catch (err: unknown) {
+        console.warn('[DeliberationChat] On-demand audit attempt skipped:', err);
+      }
+    }
 
     const userPrompt = `
 Kandidat: ${candidateName}
@@ -337,6 +425,7 @@ Ringkasan Eksekutif: ${overallAssessment}
 Matriks Bukti Klaim:
 ${evidenceMatrix.map((e) => `- [${e.status}] ${e.claim}: ${e.evidenceSummary} (Repo: ${e.repoAnchor || 'null'})`).join('\n')}
 
+${onDemandEvidenceNote ? `${onDemandEvidenceNote}\n` : ''}
 Pertanyaan Tim Rekruter/Tech Lead:
 ${question}
     `.trim();
@@ -345,9 +434,10 @@ ${question}
     res.json({
       success: true,
       answer: response.answer || 'Analisis selesai.',
-      anchors: response.anchors || [],
+      anchors: Array.from(new Set([...(response.anchors || []), ...(newAuditedRepo ? [newAuditedRepo] : [])])),
+      newAuditedRepo,
+      newEvidenceItem,
     });
-  } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     res.status(500).json({ success: false, error: msg });
   }

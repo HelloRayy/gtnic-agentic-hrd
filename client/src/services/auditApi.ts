@@ -6,6 +6,7 @@ import type {
   ScheduleInterviewResponse,
   DiscoveredRepo,
   ConstructiveFeedbackDraft,
+  EvidenceItem,
 } from '@/types/audit.js';
 
 const API_BASE = '/api';
@@ -175,10 +176,17 @@ export async function discoverCandidateRepos(
   return json.repos || [];
 }
 
+export interface DeliberationResponse {
+  answer: string;
+  anchors: string[];
+  newAuditedRepo?: string;
+  newEvidenceItem?: EvidenceItem;
+}
+
 export async function sendDeliberationQuestion(
   dossier: TechnicalDossier,
   question: string
-): Promise<{ answer: string; anchors: string[] }> {
+): Promise<DeliberationResponse> {
   const res = await fetch(`${API_BASE}/deliberate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -192,6 +200,8 @@ export async function sendDeliberationQuestion(
   return {
     answer: json.answer || '',
     anchors: json.anchors || [],
+    newAuditedRepo: json.newAuditedRepo,
+    newEvidenceItem: json.newEvidenceItem,
   };
 }
 
