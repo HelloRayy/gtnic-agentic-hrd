@@ -12,6 +12,7 @@ const octokit = new Octokit({
 export interface GithubTriageParams {
   username: string;
   targetSkills?: string[];
+  cvText?: string;
   maxRepos?: number;
 }
 
@@ -31,23 +32,45 @@ export class GithubTriageTool implements BaseTool<GithubTriageParams, string[]> 
         per_page: 30,
       });
 
-      const originalRepos = repos.filter(r => !r.fork && !r.archived);
+      const usernameLower = params.username.toLowerCase();
+      const originalRepos = repos.filter(
+        r => !r.fork && !r.archived && r.name.toLowerCase() !== usernameLower
+      );
       const targetSkillsLower = (params.targetSkills || []).map(s => s.toLowerCase());
+      const cvTextLower = (params.cvText || '').toLowerCase();
 
       const scored = originalRepos.map(r => {
         let score = 0;
         const nameLower = r.name.toLowerCase();
+        const nameNormalized = nameLower.replace(/[-_]/g, ' ');
         const descLower = (r.description || '').toLowerCase();
         const langLower = (r.language || '').toLowerCase();
         const rawTopics = 'topics' in r && Array.isArray(r.topics) ? r.topics : [];
         const topics = rawTopics.map((t: string) => t.toLowerCase());
-        for (const skill of targetSkillsLower) {
-          if (langLower.includes(skill) || skill.includes(langLower)) score += 10;
-          if (nameLower.includes(skill)) score += 8;
-          if (descLower.includes(skill)) score += 5;
-          if (topics.some((t: string) => t.includes(skill))) score += 6;
+
+        // 1. Direct CV Project claim match (Massive boost for claimed projects!)
+        if (cvTextLower && (cvTextLower.includes(nameLower) || cvTextLower.includes(nameNormalized))) {
+          score += 50;
         }
 
+        // 2. Language match (Bugfix: ensure langLower is truthy to prevent empty string matches)
+        if (langLower) {
+          for (const skill of targetSkillsLower) {
+            if (langLower.includes(skill) || skill.includes(langLower)) {
+              score += 15;
+              break;
+            }
+          }
+        }
+
+        // 3. Name, description, topics skill matching
+        for (const skill of targetSkillsLower) {
+          if (nameLower.includes(skill)) score += 10;
+          if (descLower.includes(skill)) score += 5;
+          if (topics.some((t: string) => t.includes(skill))) score += 8;
+        }
+
+        // 4. Stars & Recency
         const stars = typeof r.stargazers_count === 'number' ? r.stargazers_count : 0;
         if (stars > 0) score += Math.min(stars, 5);
 
@@ -55,14 +78,14 @@ export class GithubTriageTool implements BaseTool<GithubTriageParams, string[]> 
         if (dateStr) {
           const pushedDate = new Date(dateStr).getTime();
           const oneYearAgo = Date.now() - 365 * 24 * 3600 * 1000;
-          if (pushedDate > oneYearAgo) score += 4;
+          if (pushedDate > oneYearAgo) score += 5;
         }
 
         return { repo: r, score };
       });
 
       scored.sort((a, b) => b.score - a.score);
-      const limit = params.maxRepos || 4;
+      const limit = params.maxRepos || 5;
       const selectedNames = scored.slice(0, limit).map(s => s.repo.name);
       return selectedNames.length > 0 ? selectedNames : originalRepos.slice(0, limit).map(r => r.name);
     } catch (err: unknown) {

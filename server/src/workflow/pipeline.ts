@@ -62,7 +62,8 @@ export class AuditPipeline {
         repoNames = await toolRegistry.executeTool<any, string[]>('github_triage', {
           username: candidate.githubUsername,
           targetSkills: candidate.claimedSkills,
-          maxRepos: 4,
+          cvText: input.cvText || candidate.summary,
+          maxRepos: 5,
         });
         traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
       }

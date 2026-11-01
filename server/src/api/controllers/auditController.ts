@@ -171,7 +171,7 @@ export async function handleDiscoverRepos(req: Request, res: Response): Promise<
       per_page: 30,
     });
 
-    const originalRepos = repos.filter((r) => !r.fork && !r.archived);
+    const originalRepos = repos.filter((r) => !r.fork && !r.archived && r.name.toLowerCase() !== username.toLowerCase());
     const targetSkillsLower = targetSkills.map((s) => s.toLowerCase());
 
     const discovered = originalRepos.map((r) => {
@@ -185,7 +185,7 @@ export async function handleDiscoverRepos(req: Request, res: Response): Promise<
 
       const matched: string[] = [];
       for (const skill of targetSkillsLower) {
-        if (langLower.includes(skill) || skill.includes(langLower)) {
+        if (langLower && (langLower.includes(skill) || skill.includes(langLower))) {
           score += 10;
           if (r.language) matched.push(r.language);
         }
