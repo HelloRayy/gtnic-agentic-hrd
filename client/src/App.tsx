@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { CandidateSidebar } from '@/features/workspace/components/CandidateSidebar.js';
 import { DeliberationWorkspace } from '@/features/workspace/components/DeliberationWorkspace.js';
-import { ContextInspectorPanel } from '@/features/workspace/components/ContextInspectorPanel.js';
+import { ForensicExplorerPanel } from '@/features/workspace/components/ForensicExplorerPanel.js';
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
 import { CandidateApplyPage } from '@/features/workspace/components/CandidateApplyPage.js';
@@ -52,7 +52,6 @@ export default function App() {
   const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<string>('chat');
   const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>(['chat', 'cv']);
-  const [inspectorTab, setInspectorTab] = useState<'ide' | 'cv' | 'matrix' | 'radar' | 'action'>('cv');
   const handleSelectWorkspaceTab = (tabId: string) => {
     if (tabId === 'chat') {
       setActiveWorkspaceTab('chat');
@@ -443,21 +442,19 @@ export default function App() {
         onSelectWorkspaceTab={handleSelectWorkspaceTab}
         onCloseWorkspaceTab={handleCloseWorkspaceTab}
         onViewCv={() => {
-          setInspectorTab('cv');
           handleSelectWorkspaceTab('cv');
         }}
         onInspectCode={() => {
-          setInspectorTab('ide');
           handleSelectWorkspaceTab('code:core-logic');
         }}
         googleStatus={googleStatus}
       />
 
-      {/* Panel 3: Right Inspector Panel / In-App CV Document Viewer by Default */}
-      <ContextInspectorPanel
+      {/* Panel 3: Right Forensic Explorer Panel - Struktur Folder Tree */}
+      <ForensicExplorerPanel
         candidate={activeCandidate}
-        googleStatus={googleStatus}
-        targetTab={inspectorTab}
+        activeTabId={activeWorkspaceTab}
+        onSelectTab={handleSelectWorkspaceTab}
       />
       <AddCandidateModal
         isOpen={isAddModalOpen}
