@@ -3,8 +3,8 @@ import { ShieldAlert, Terminal } from 'lucide-react';
 import { IdeEditorShell } from './IdeEditorShell.js';
 import { IdeCodeViewer } from './IdeCodeViewer.js';
 import { generateIdeSnippets } from '../../services/ideCodeAdapter.js';
+import { fetchRepoFileContent } from '@/services/auditApi.js';
 import type { TechnicalDossier, EvidenceItem, InterviewQuestion } from '@/types/audit.js';
-
 interface WebIdeInspectorViewProps {
   dossier: TechnicalDossier;
   auditedRepos?: string[];
@@ -23,12 +23,34 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
   const snippets = generateIdeSnippets(dossier);
   const defaultFileId = initialFileId || snippets[0]?.id || 'manifest';
   const [activeFileId, setActiveFileId] = useState<string>(defaultFileId);
+  const [liveCodeCache, setLiveCodeCache] = useState<Record<string, string>>({});
 
   const activeSnippet =
     snippets.find((s) => s.id === activeFileId) || snippets[0];
 
-  const primaryRepo = auditedRepos[0] || 'repository';
+  React.useEffect(() => {
+    if (!activeSnippet) return;
+    if (liveCodeCache[activeSnippet.id]) return;
+    if (activeSnippet.code && !activeSnippet.code.startsWith('// Memuat')) return;
 
+    const parts = activeSnippet.filePath.split('/');
+    const repo = parts[0];
+    const path = parts.slice(1).join('/');
+
+    if (githubUsername && repo && path) {
+      fetchRepoFileContent(githubUsername, repo, path)
+        .then((res) => {
+          if (res.content) {
+            setLiveCodeCache((prev) => ({ ...prev, [activeSnippet.id]: res.content }));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [activeSnippet, githubUsername, liveCodeCache]);
+
+  const primaryRepo = auditedRepos[0] || 'repository';
+  const displayCode =
+    (activeSnippet && liveCodeCache[activeSnippet.id]) || activeSnippet?.code || '';
   return (
     <div className="flex-1 h-full flex flex-col space-y-3 min-h-0">
       {/* Role Notice Card for HRD */}
@@ -52,7 +74,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
           primaryRepo={primaryRepo}
         >
           <IdeCodeViewer
-            code={activeSnippet.code}
+            code={displayCode}
             language={activeSnippet.language}
             callouts={activeSnippet.callouts}
           />

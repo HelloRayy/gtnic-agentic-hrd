@@ -70,6 +70,7 @@ export interface TechnicalDossier {
   interviewKit: InterviewQuestion[];
   clarificationPrompts: string[];
   auditedRepos: string[];
+  repoDetails?: RepoAuditEvidence[];
   executionTimeMs: number;
   traceEvents?: TraceEvent[];
   liveDemos?: { repoName: string; url: string }[];

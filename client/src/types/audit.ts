@@ -70,9 +70,29 @@ export interface TechnicalDossier {
   interviewKit: InterviewQuestion[];
   clarificationPrompts: string[];
   auditedRepos: string[];
+  repoDetails?: RepoAuditEvidence[];
   executionTimeMs: number;
   traceEvents?: TraceEvent[];
   liveDemos?: { repoName: string; url: string }[];
+}
+
+export interface RepoAuditEvidence {
+  repoName: string;
+  repoUrl: string;
+  description: string;
+  primaryLanguage: string;
+  stars: number;
+  isFork: boolean;
+  lastUpdated: string;
+  manifestFiles: { path: string; dependencies: string[] }[];
+  fileTreeSample: string[];
+  hasTests: boolean;
+  hasCiCd: boolean;
+  hasDocker: boolean;
+  commitCountSample: number;
+  recentCommitSample: string[];
+  isMonorepo: boolean;
+  homepageUrl?: string | null;
 }
 
 export interface GoogleAuthStatus {

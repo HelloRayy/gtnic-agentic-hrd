@@ -283,6 +283,7 @@ export class AuditPipeline {
       interviewKit,
       clarificationPrompts,
       auditedRepos: auditedRepos.map(r => r.repoName),
+      repoDetails: auditedRepos,
       executionTimeMs: Date.now() - startTime,
       traceEvents: traceStore.getEvents(),
       liveDemos,

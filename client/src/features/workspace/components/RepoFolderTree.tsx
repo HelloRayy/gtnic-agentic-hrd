@@ -30,13 +30,7 @@ export const RepoFolderTree: React.FC<RepoFolderTreeProps> = ({
   onTriggerAudit,
 }) => {
   const [isRepoOpen, setIsRepoOpen] = useState(true);
-  const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({
-    src: true,
-    services: true,
-    components: true,
-    '.github': true,
-    workflows: true,
-  });
+  const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
 
   const toggleFolder = (folderName: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -53,19 +47,21 @@ export const RepoFolderTree: React.FC<RepoFolderTreeProps> = ({
 
   const q = searchQuery.toLowerCase().trim();
 
-  // Group snippets by top folder
+  // Dynamic folder grouping
   const rootFiles: IdeFileSnippet[] = [];
-  const srcFiles: IdeFileSnippet[] = [];
-  const githubFiles: IdeFileSnippet[] = [];
+  const folderMap = new Map<string, IdeFileSnippet[]>();
 
   snippets.forEach((snip) => {
     const cleanPath = snip.filePath.replace(new RegExp(`^${repoName}/`), '');
-    if (cleanPath.startsWith('src/')) {
-      srcFiles.push(snip);
-    } else if (cleanPath.startsWith('.github/')) {
-      githubFiles.push(snip);
-    } else {
+    const parts = cleanPath.split('/');
+    if (parts.length === 1) {
       rootFiles.push(snip);
+    } else {
+      const topFolder = parts[0];
+      if (!folderMap.has(topFolder)) {
+        folderMap.set(topFolder, []);
+      }
+      folderMap.get(topFolder)!.push(snip);
     }
   });
 
@@ -139,54 +135,37 @@ export const RepoFolderTree: React.FC<RepoFolderTreeProps> = ({
       {/* Expanded Tree Content */}
       {isRepoOpen && (
         <div className="pl-3.5 pr-1 space-y-0.5 border-l border-[#e5e3dc] ml-3 text-xs">
-          {/* Subfolder: .github/workflows */}
-          {githubFiles.length > 0 && (
-            <div>
-              <button
-                type="button"
-                onClick={(e) => toggleFolder('.github', e)}
-                className="w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[#555866] hover:text-[#242730] hover:bg-[#eeebe5] text-xs cursor-pointer font-medium"
-              >
-                {openFolders['.github'] ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-                {openFolders['.github'] ? (
-                  <FolderOpen size={12} className="text-[#8492c6]" />
-                ) : (
-                  <Folder size={12} className="text-[#8492c6]" />
+          {/* Dynamic Top Folders (src, .github, public, components, etc.) */}
+          {Array.from(folderMap.entries()).map(([folderName, files]) => {
+            const isFolderOpen = openFolders[folderName] ?? true;
+            return (
+              <div key={folderName}>
+                <button
+                  type="button"
+                  onClick={(e) => toggleFolder(folderName, e)}
+                  className="w-full flex items-center justify-between gap-1.5 px-1.5 py-0.5 rounded text-[#555866] hover:text-[#242730] hover:bg-[#eeebe5] text-xs cursor-pointer font-medium"
+                >
+                  <div className="flex items-center gap-1.5 truncate">
+                    {isFolderOpen ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+                    {isFolderOpen ? (
+                      <FolderOpen size={12} className="text-[#8492c6] shrink-0" />
+                    ) : (
+                      <Folder size={12} className="text-[#8492c6] shrink-0" />
+                    )}
+                    <span className="truncate">{folderName}</span>
+                  </div>
+                  <span className="text-[10px] text-[#8c909e] font-mono shrink-0">
+                    {files.length}
+                  </span>
+                </button>
+                {isFolderOpen && (
+                  <div className="pl-3 border-l border-[#e5e3dc] ml-2.5 space-y-0.5 mt-0.5">
+                    {files.map(renderFileItem)}
+                  </div>
                 )}
-                <span>.github / workflows</span>
-              </button>
-              {openFolders['.github'] && (
-                <div className="pl-3 border-l border-[#e5e3dc] ml-2.5 space-y-0.5 mt-0.5">
-                  {githubFiles.map(renderFileItem)}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Subfolder: src/ */}
-          {srcFiles.length > 0 && (
-            <div>
-              <button
-                type="button"
-                onClick={(e) => toggleFolder('src', e)}
-                className="w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[#555866] hover:text-[#242730] hover:bg-[#eeebe5] text-xs cursor-pointer font-medium"
-              >
-                {openFolders.src ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-                {openFolders.src ? (
-                  <FolderOpen size={12} className="text-[#8492c6]" />
-                ) : (
-                  <Folder size={12} className="text-[#8492c6]" />
-                )}
-                <span>src</span>
-              </button>
-              {openFolders.src && (
-                <div className="pl-3 border-l border-[#e5e3dc] ml-2.5 space-y-0.5 mt-0.5">
-                  {srcFiles.map(renderFileItem)}
-                </div>
-              )}
-            </div>
-          )}
-
+              </div>
+            );
+          })}
           {/* Root Level Files (package.json, README.md, docker-compose.yml) */}
           {rootFiles.map(renderFileItem)}
         </div>

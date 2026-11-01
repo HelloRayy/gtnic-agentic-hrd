@@ -242,6 +242,55 @@ jobs:
         run: npm test -- --coverage`,
     callouts: devopsCallouts,
   });
+  // 4. Enrich with real fileTreeSample from GitHub if repoDetails exists
+  if (dossier.repoDetails && dossier.repoDetails.length > 0) {
+    const existingPaths = new Set(snippets.map((s) => s.filePath));
+
+    dossier.repoDetails.forEach((repo) => {
+      const rName = repo.repoName;
+      (repo.fileTreeSample || []).forEach((filePath) => {
+        const fullPath = `${rName}/${filePath}`;
+        if (!existingPaths.has(fullPath)) {
+          existingPaths.add(fullPath);
+          const fName = filePath.split('/').pop() || filePath;
+          const matchingMatrix = matrix.filter(
+            (m) => m.fileAnchor && filePath.includes(m.fileAnchor)
+          );
+          const callouts: ForensicCallout[] = matchingMatrix.map((m) => ({
+            startLine: 1,
+            endLine: 10,
+            type: m.status === 'VERIFIED' ? 'VERIFIED' : 'PARTIAL',
+            claimTitle: m.claim,
+            astEvidenceSummary: m.evidenceSummary,
+          }));
+
+          const ext = filePath.toLowerCase();
+          const lang = ext.endsWith('.json')
+            ? 'json'
+            : ext.endsWith('.go')
+            ? 'go'
+            : ext.endsWith('.py')
+            ? 'python'
+            : ext.endsWith('.yml') || ext.endsWith('.yaml')
+            ? 'yaml'
+            : ext.endsWith('.sql')
+            ? 'sql'
+            : ext.endsWith('.js') || ext.endsWith('.jsx')
+            ? 'javascript'
+            : 'typescript';
+
+          snippets.push({
+            id: `${rName}:${filePath.replace(/[/.]/g, '_')}`,
+            fileName: fName,
+            filePath: fullPath,
+            language: lang,
+            code: `// Memuat ${filePath} langsung dari GitHub repository @${dossier.candidate.githubUsername || 'kandidat'}/${rName}...`,
+            callouts,
+          });
+        }
+      });
+    });
+  }
 
   return snippets;
 }

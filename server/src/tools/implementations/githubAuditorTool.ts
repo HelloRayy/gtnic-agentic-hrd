@@ -255,7 +255,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         isFork: repoInfo.fork,
         lastUpdated: repoInfo.pushed_at || repoInfo.updated_at,
         manifestFiles,
-        fileTreeSample: filePaths.slice(0, 25),
+        fileTreeSample: filePaths.slice(0, 60),
         hasTests,
         hasCiCd,
         hasDocker,
