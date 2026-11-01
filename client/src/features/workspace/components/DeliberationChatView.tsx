@@ -10,7 +10,6 @@ import {
 import { SkillsMenuPopover } from './SkillsMenuPopover.js';
 import { OpenDotsMascot } from './OpenDotsMascot.js';
 import { CandidateBriefingCard } from './CandidateBriefingCard.js';
-import { ChatSuggestions } from './ChatSuggestions.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
@@ -151,12 +150,6 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
           candidate={candidate}
           onViewCv={onViewCv}
           onInspectCode={onInspectCode}
-        />
-        {/* Quick Action Suggestion Cards (HRD vs Tech Lead Modes) */}
-        <ChatSuggestions
-          candidateName={candidateName}
-          isDeliberating={isDeliberating}
-          onSendMessage={onSendMessage}
         />
 
         {/* Dialogue Messages */}
