@@ -139,14 +139,16 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         </div>
       )}
 
-      {/* 3. VS Code / Zed Style Main Workspace Tab Bar */}
-      <WorkspaceEditorTabBar
-        openTabs={openWorkspaceTabs}
-        activeTabId={activeWorkspaceTab}
-        onSelectTab={onSelectWorkspaceTab}
-        onCloseTab={onCloseWorkspaceTab}
-        snippets={snippets}
-      />
+      {/* 3. VS Code / Zed Style Main Workspace Tab Bar (Only visible when user opened a file tab) */}
+      {openWorkspaceTabs.length > 0 && (
+        <WorkspaceEditorTabBar
+          openTabs={openWorkspaceTabs}
+          activeTabId={activeWorkspaceTab}
+          onSelectTab={onSelectWorkspaceTab}
+          onCloseTab={onCloseWorkspaceTab}
+          snippets={snippets}
+        />
+      )}
 
       {/* 4. Dynamic Main Workspace Canvas View Area */}
       <div className="flex-1 overflow-hidden flex flex-col">

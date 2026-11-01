@@ -51,22 +51,27 @@ export default function App() {
   const [jobs, setJobs] = useState<RecruitmentPreset[]>(() => getStoredJobs());
   const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<string>('chat');
-  const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>([
-    'chat',
-    'cv',
-    'code:core-logic',
-    'matrix',
-  ]);
+  const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>([]);
 
   const handleSelectWorkspaceTab = (tabId: string) => {
-    setOpenWorkspaceTabs((prev) => (prev.includes(tabId) ? prev : [...prev, tabId]));
+    if (tabId === 'chat') {
+      setActiveWorkspaceTab('chat');
+      return;
+    }
+    setOpenWorkspaceTabs((prev) => {
+      const base = prev.length === 0 ? ['chat'] : prev;
+      return base.includes(tabId) ? base : [...base, tabId];
+    });
     setActiveWorkspaceTab(tabId);
   };
 
   const handleCloseWorkspaceTab = (tabId: string) => {
     setOpenWorkspaceTabs((prev) => {
-      if (prev.length <= 1) return prev;
       const nextTabs = prev.filter((t) => t !== tabId);
+      if (nextTabs.length === 0 || (nextTabs.length === 1 && nextTabs[0] === 'chat')) {
+        setActiveWorkspaceTab('chat');
+        return [];
+      }
       if (activeWorkspaceTab === tabId) {
         setActiveWorkspaceTab(nextTabs[nextTabs.length - 1]);
       }

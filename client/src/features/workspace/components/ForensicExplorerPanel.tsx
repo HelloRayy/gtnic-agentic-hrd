@@ -63,7 +63,7 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
   const q = searchQuery.toLowerCase().trim();
 
   return (
-    <aside className="w-[260px] shrink-0 bg-[#16171d] border-l border-[#282a35] text-[#d6d9e8] font-mono text-xs select-none flex flex-col h-screen overflow-hidden">
+    <aside className="w-[260px] shrink-0 bg-[#16171d] border-l border-[#282a35] text-[#d6d9e8] font-sans text-xs select-none flex flex-col h-screen overflow-hidden">
       {/* 1. Termul Explorer Header (PANEL_HEADER_CLASS) */}
       <div className="h-10 px-3 bg-[#131418] border-b border-[#242630] flex items-center justify-between text-xs shrink-0 select-none">
         <span className="text-[11px] font-sans font-bold tracking-wider text-[#9aa0b8] uppercase">
@@ -119,7 +119,7 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari berkas forensik…"
-            className="w-full text-[11px] bg-transparent border-0 outline-none text-[#d6d9e8] placeholder-[#65697d] font-mono"
+            className="w-full text-[12px] bg-transparent border-0 outline-none text-[#d6d9e8] placeholder-[#65697d] font-sans"
           />
           {searchQuery && (
             <button
@@ -320,7 +320,7 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
           <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950]" />
           <span>AST Grounded</span>
         </div>
-        <span className="font-mono text-[9.5px] text-[#555866]">termul-tree v1</span>
+        <span className="font-sans text-[10px] text-[#555866]">termul-tree v1</span>
       </footer>
     </aside>
   );

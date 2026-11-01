@@ -75,7 +75,7 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
   };
 
   return (
-    <div className="h-9 px-2 bg-[#f0eee9] border-b border-[#e2dfd8] flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0 select-none">
+    <div className="h-10 px-2 bg-[#181920] border-b border-[#292b37] flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0 select-none font-sans">
       {openTabs.map((tabId) => {
         const isActive = tabId === activeTabId;
         const config = getTabConfig(tabId);
@@ -84,10 +84,10 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
           <div
             key={tabId}
             onClick={() => onSelectTab(tabId)}
-            className={`group flex items-center gap-2 px-3 py-1.5 rounded-t-lg text-xs font-mono transition-all border-t border-x cursor-pointer shrink-0 ${
+            className={`group flex items-center gap-2 px-3 py-2 rounded-t-md text-xs font-sans transition-all border-x cursor-pointer shrink-0 ${
               isActive
-                ? 'bg-[#ffffff] text-[#242730] border-[#dedcd6] font-semibold shadow-xs'
-                : 'bg-transparent text-[#707488] hover:text-[#242730] border-transparent hover:bg-[#e7e5df]'
+                ? 'bg-[#252836] text-white border-t-2 border-t-[#7285d5] border-[#34374a] font-medium shadow-xs'
+                : 'bg-transparent text-[#8e93a7] hover:text-[#f0f2fb] border-transparent hover:bg-[#1f212a]'
             }`}
           >
             {config.icon}
@@ -100,7 +100,7 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
                   e.stopPropagation();
                   onCloseTab(tabId);
                 }}
-                className="opacity-0 group-hover:opacity-100 hover:bg-[#e2dfd8] rounded p-0.5 text-[#8c8d97] hover:text-[#333641] transition-opacity cursor-pointer ml-1"
+                className="opacity-0 group-hover:opacity-100 hover:bg-[#383b4d] rounded p-0.5 text-[#8e93a7] hover:text-white transition-all cursor-pointer ml-1"
                 title="Tutup tab"
               >
                 <X size={11} />
