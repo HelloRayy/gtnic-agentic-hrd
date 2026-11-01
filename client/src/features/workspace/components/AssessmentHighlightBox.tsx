@@ -1,5 +1,12 @@
-import React from 'react';
-import { AlertOctagon, CheckCircle2, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  AlertOctagon,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldAlert,
+  Info,
+  UserCheck,
+} from 'lucide-react';
 
 interface AssessmentHighlightBoxProps {
   assessment: string;
@@ -63,6 +70,8 @@ export const AssessmentHighlightBox: React.FC<AssessmentHighlightBoxProps> = ({
   assessment,
   status,
 }) => {
+  const [isReviewed, setIsReviewed] = useState(false);
+
   const isNegative =
     status === 'warning' ||
     /tidak direkomendasikan|ketidaksesuaian fundamental|sangat berisiko|risiko tinggi/i.test(assessment);
@@ -80,9 +89,17 @@ export const AssessmentHighlightBox: React.FC<AssessmentHighlightBoxProps> = ({
 
   return (
     <div className={`rounded-r-[12px] p-5 text-[15px] text-[#333641] leading-[1.85] shadow-[0_1px_4px_rgba(57,57,74,0.03)] border-y border-r border-[#e9e8e6] ${borderColor}`}>
-      <strong className="block text-[13px] uppercase tracking-wider text-[#636675] font-bold mb-2.5">
-        Ringkasan Eksekutif Hasil Audit Faktual:
-      </strong>
+      {/* Header Bar with Mandatory HR Review Badge */}
+      <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#eceae5] flex-wrap gap-2">
+        <strong className="block text-[13px] uppercase tracking-wider text-[#636675] font-bold m-0">
+          Ringkasan Eksekutif Hasil Audit Faktual:
+        </strong>
+
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#fef2f2] text-[#b91c1c] border border-[#fecaca] text-[10.5px] font-bold tracking-wide uppercase">
+          <ShieldAlert size={12} className="text-[#ef4444]" />
+          Wajib Ditinjau Tim HRD
+        </span>
+      </div>
 
       {/* Point of Focus Banner for HRD */}
       {isNegative && (
@@ -131,6 +148,39 @@ export const AssessmentHighlightBox: React.FC<AssessmentHighlightBoxProps> = ({
       <p className="m-0 whitespace-pre-line text-[#333641] leading-[1.85] select-text">
         {highlightKeyPhrases(assessment)}
       </p>
+
+      {/* Human-in-the-Loop Review & Sign-Off Checkpoint */}
+      <div className="mt-4 pt-3 border-t border-[#eceae5] flex items-center justify-between flex-wrap gap-3 select-none">
+        <div className="flex items-start gap-2 max-w-lg">
+          <Info size={14} className="text-[#7285d5] shrink-0 mt-0.5" />
+          <p className="text-[11.5px] text-[#6b6f7f] leading-relaxed m-0 font-normal">
+            <strong>Mandat Human-in-the-Loop:</strong> Ringkasan ini adalah data pendukung otonom. Tim HRD wajib melakukan peninjauan mandiri sebelum mengambil keputusan akhir.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsReviewed(!isReviewed)}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-xs ${
+            isReviewed
+              ? 'bg-[#edf7ed] text-[#2e7d32] border border-[#c4e3c9]'
+              : 'bg-white hover:bg-[#f6f5f2] text-[#444754] border border-[#d6d4ce]'
+          }`}
+          title="Tandai bahwa ringkasan ini telah divalidasi oleh HRD"
+        >
+          {isReviewed ? (
+            <>
+              <CheckCircle2 size={14} className="text-[#2e7d32]" />
+              <span>Telah Ditinjau oleh Recruiter</span>
+            </>
+          ) : (
+            <>
+              <UserCheck size={14} className="text-[#7285d5]" />
+              <span>Tandai Selesai Ditinjau</span>
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 };
