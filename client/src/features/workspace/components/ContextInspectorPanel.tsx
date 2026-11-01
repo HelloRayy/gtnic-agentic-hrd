@@ -31,7 +31,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
   googleStatus,
   targetTab,
 }) => {
-  const [activeTab, setActiveTab] = useState<InspectorTab>('ide');
+  const [activeTab, setActiveTab] = useState<InspectorTab>('cv');
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,6 +54,16 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
         <div className="pane-tabs">
           <button
             type="button"
+            className={activeTab === 'cv' ? 'selected' : ''}
+            onClick={() => setActiveTab('cv')}
+            title="Dokumen CV Asli Pelamar"
+          >
+            <FileText size={13} />
+            <span>CV</span>
+          </button>
+
+          <button
+            type="button"
             className={activeTab === 'ide' ? 'selected' : ''}
             onClick={() => setActiveTab('ide')}
             title="Mini Forensic IDE ala GitHub PR Review"
@@ -65,16 +75,6 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
                 3
               </span>
             )}
-          </button>
-
-          <button
-            type="button"
-            className={activeTab === 'cv' ? 'selected' : ''}
-            onClick={() => setActiveTab('cv')}
-            title="Dokumen CV Pelamar"
-          >
-            <FileText size={13} />
-            <span>CV</span>
           </button>
 
           <button

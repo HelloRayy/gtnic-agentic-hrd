@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { CandidateSidebar } from '@/features/workspace/components/CandidateSidebar.js';
 import { DeliberationWorkspace } from '@/features/workspace/components/DeliberationWorkspace.js';
-import { ForensicExplorerPanel } from '@/features/workspace/components/ForensicExplorerPanel.js';
+import { ContextInspectorPanel } from '@/features/workspace/components/ContextInspectorPanel.js';
 import { AddCandidateModal } from '@/features/workspace/components/AddCandidateModal.js';
 import { GoogleIntegrationsModal } from '@/features/workspace/components/GoogleIntegrationsModal.js';
 import { CandidateApplyPage } from '@/features/workspace/components/CandidateApplyPage.js';
@@ -51,8 +51,8 @@ export default function App() {
   const [jobs, setJobs] = useState<RecruitmentPreset[]>(() => getStoredJobs());
   const [isManageJobsOpen, setIsManageJobsOpen] = useState(false);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<string>('chat');
-  const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>([]);
-
+  const [openWorkspaceTabs, setOpenWorkspaceTabs] = useState<string[]>(['chat', 'cv']);
+  const [inspectorTab, setInspectorTab] = useState<'ide' | 'cv' | 'matrix' | 'radar' | 'action'>('cv');
   const handleSelectWorkspaceTab = (tabId: string) => {
     if (tabId === 'chat') {
       setActiveWorkspaceTab('chat');
@@ -442,16 +442,23 @@ export default function App() {
         openWorkspaceTabs={openWorkspaceTabs}
         onSelectWorkspaceTab={handleSelectWorkspaceTab}
         onCloseWorkspaceTab={handleCloseWorkspaceTab}
+        onViewCv={() => {
+          setInspectorTab('cv');
+          handleSelectWorkspaceTab('cv');
+        }}
+        onInspectCode={() => {
+          setInspectorTab('ide');
+          handleSelectWorkspaceTab('code:core-logic');
+        }}
         googleStatus={googleStatus}
       />
 
-      {/* Panel 3: Right Forensic Explorer Panel ala VS Code / Zed Project Panel */}
-      <ForensicExplorerPanel
+      {/* Panel 3: Right Inspector Panel / In-App CV Document Viewer by Default */}
+      <ContextInspectorPanel
         candidate={activeCandidate}
-        activeTabId={activeWorkspaceTab}
-        onSelectTab={handleSelectWorkspaceTab}
+        googleStatus={googleStatus}
+        targetTab={inspectorTab}
       />
-      {/* Dialog Modals */}
       <AddCandidateModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

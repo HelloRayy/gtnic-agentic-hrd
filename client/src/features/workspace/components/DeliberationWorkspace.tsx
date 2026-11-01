@@ -28,6 +28,8 @@ interface DeliberationWorkspaceProps {
   onSelectWorkspaceTab: (tabId: string) => void;
   onCloseWorkspaceTab: (tabId: string) => void;
   googleStatus: GoogleAuthStatus | null;
+  onViewCv?: () => void;
+  onInspectCode?: () => void;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -45,6 +47,8 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onSelectWorkspaceTab,
   onCloseWorkspaceTab,
   googleStatus,
+  onViewCv,
+  onInspectCode,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -162,8 +166,8 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
             isDeliberating={isDeliberating}
             onSendMessage={onSendMessage}
             onSchedule={onOpenWebIde}
-            onViewCv={() => onSelectWorkspaceTab('cv')}
-            onInspectCode={() => onSelectWorkspaceTab('code:core-logic')}
+            onViewCv={onViewCv || (() => onSelectWorkspaceTab('cv'))}
+            onInspectCode={onInspectCode || (() => onSelectWorkspaceTab('code:core-logic'))}
           />
         )}
 

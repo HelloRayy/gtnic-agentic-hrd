@@ -405,7 +405,7 @@ Instruksi: Gunakan temuan riil ini untuk menjawab pertanyaan dan sebutkan bahwa 
 
             newEvidenceItem = {
               claim: `Implementasi pada proyek ${targetRepo.name}`,
-              status: evidence.authorshipStatus === 'VERIFIED_AUTHOR' ? 'VERIFIED' : 'PARTIAL',
+              status: evidence.authorshipStatus === 'MATCHED' ? 'VERIFIED' : 'PARTIAL',
               evidenceSummary: `Diverifikasi on-demand di repo ${targetRepo.name} (${evidence.primaryLanguage}, ${evidence.commitCountSample} commits, dependensi: ${evidence.manifestFiles[0]?.dependencies.slice(0, 3).join(', ') || 'native'}).`,
               repoAnchor: targetRepo.name,
               fileAnchor: evidence.fileTreeSample[0] || null,
@@ -438,6 +438,7 @@ ${question}
       newAuditedRepo,
       newEvidenceItem,
     });
+  } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     res.status(500).json({ success: false, error: msg });
   }
