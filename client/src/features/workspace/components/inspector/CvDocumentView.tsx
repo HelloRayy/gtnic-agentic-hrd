@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, FileText, Mail, Github, Globe } from 'lucide-react';
+import { Copy, Check, Download, FileText, Mail, GitBranch, Globe } from 'lucide-react';
 import type { TechnicalDossier } from '@/types/audit.js';
 
 interface CvDocumentViewProps {
@@ -77,7 +77,7 @@ ${candidate.claimedSkills.join(', ')}`;
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[#5269bb] hover:underline"
               >
-                <Github size={11} /> {candidate.githubUsername || 'github'}
+                <GitBranch size={11} /> {candidate.githubUsername || 'github'}
               </a>
             )}
           </div>
