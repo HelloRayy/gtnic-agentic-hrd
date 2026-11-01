@@ -2,6 +2,7 @@ import React from 'react';
 import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers, FileText, Code2 } from 'lucide-react';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
+import { AssessmentHighlightBox } from './AssessmentHighlightBox.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface CandidateBriefingCardProps {
@@ -85,13 +86,11 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </div>
       </div>
 
-      {/* 2. Ringkasan Eksekutif & Deskripsi Portofolio */}
-      <div className="bg-[#fcfbf9] border-l-4 border-[#7285d5] rounded-r-[10px] p-5 text-[15px] text-[#333641] leading-[1.85]">
-        <strong className="block text-[13px] uppercase tracking-wider text-[#7988c5] font-semibold mb-2">
-          Ringkasan Eksekutif Hasil Audit Faktual:
-        </strong>
-        <p className="m-0 whitespace-pre-line text-[#333641] leading-[1.85]">{dossier.overallAssessment}</p>
-      </div>
+      {/* 2. Ringkasan Eksekutif & Poin Fokus HRD */}
+      <AssessmentHighlightBox
+        assessment={dossier.overallAssessment}
+        status={candidate.status}
+      />
 
       {/* 3. Klaim Keahlian (Badges) */}
       <div>
