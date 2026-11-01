@@ -16,7 +16,6 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
 }) => {
   const lines = code.split('\n');
 
-  // Find callouts ending at a specific line number to render pin right after
   const calloutsByEndLine = new Map<number, ForensicCallout>();
   callouts.forEach((c) => {
     calloutsByEndLine.set(c.endLine, c);
@@ -32,7 +31,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
   };
 
   return (
-    <div className="bg-[#1c1d22] text-[#e1e4ee] font-mono text-xs overflow-x-auto overflow-y-auto max-h-[520px] select-text border-t border-[#2e313d] rounded-b-xl">
+    <div className="bg-[#0d1117] text-[#e6edf3] font-mono text-xs overflow-x-auto overflow-y-auto max-h-[520px] select-text border-t border-[#30363d] rounded-b-xl">
       <table className="w-full border-collapse">
         <tbody>
           {lines.map((lineText, idx) => {
@@ -41,34 +40,47 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
             const calloutOnLine = getLineCallout(lineNum);
             const endCallout = calloutsByEndLine.get(lineNum);
 
-            let rowBg = 'hover:bg-[#252730]/60';
+            let rowBg = 'hover:bg-[#161b22]';
+            let diffSign = ' ';
+            let signColor = 'text-[#6e7681]';
+
             if (highlighted) {
               if (calloutOnLine?.type === 'VERIFIED') {
-                rowBg = 'bg-[#7285d5]/15 border-l-2 border-[#7285d5]';
+                rowBg = 'bg-[#2ea043]/15 text-[#e6edf3]';
+                diffSign = '+';
+                signColor = 'text-[#3fb950] font-bold';
               } else if (calloutOnLine?.type === 'PARTIAL') {
-                rowBg = 'bg-[#d9a441]/15 border-l-2 border-[#d9a441]';
+                rowBg = 'bg-[#bb8009]/15 text-[#e6edf3]';
+                diffSign = '~';
+                signColor = 'text-[#d29922] font-bold';
               } else {
-                rowBg = 'bg-[#d9756c]/15 border-l-2 border-[#d9756c]';
+                rowBg = 'bg-[#f85149]/15 text-[#e6edf3]';
+                diffSign = '!';
+                signColor = 'text-[#f85149] font-bold';
               }
             }
 
             return (
               <React.Fragment key={lineNum}>
                 <tr className={`transition-colors ${rowBg}`}>
-                  {/* Line Number Gutter */}
-                  <td className="w-10 px-2.5 py-0.5 text-right text-[#575a6c] select-none text-[11px] font-mono border-r border-[#2d303d] shrink-0 align-top">
+                  {/* Line Number Gutter ala GitHub PR */}
+                  <td className="w-10 px-2 py-0.5 text-right text-[#6e7681] select-none text-[11px] font-mono border-r border-[#30363d]/60 shrink-0 align-top">
                     {lineNum}
                   </td>
+                  {/* Diff Sign (+ / ~ / !) */}
+                  <td className={`w-4 text-center select-none text-[11px] font-mono shrink-0 align-top ${signColor}`}>
+                    {diffSign}
+                  </td>
                   {/* Code Line Content */}
-                  <td className="px-3 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] text-[#d6d9e8] align-top">
+                  <td className="px-2.5 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] text-[#e6edf3] align-top">
                     {lineText || ' '}
                   </td>
                 </tr>
 
-                {/* Inline Forensic Callout Pin Box */}
+                {/* GitHub Style Inline Review Comment Box */}
                 {endCallout && (
                   <tr>
-                    <td colSpan={2} className="p-0 bg-[#21232b]">
+                    <td colSpan={3} className="p-0 bg-[#0d1117] border-y border-[#30363d]">
                       <ForensicCalloutPin callout={endCallout} />
                     </td>
                   </tr>

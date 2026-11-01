@@ -13,17 +13,18 @@ export const IdeFileTabs: React.FC<IdeFileTabsProps> = ({
   activeFileId,
   onSelectFile,
 }) => {
-  const getFileIcon = (fileName: string) => {
-    if (fileName.endsWith('.json')) return <FileJson size={13} className="text-[#e2a36b]" />;
-    if (fileName.endsWith('.yml') || fileName.endsWith('.yaml')) return <FileText size={13} className="text-[#d9756c]" />;
-    return <FileCode size={13} className="text-[#7285d5]" />;
-  };
-
   return (
-    <div className="flex items-center gap-1 overflow-x-auto bg-[#18191e] px-2 pt-2 border-b border-[#292b36] no-scrollbar">
+    <div className="flex items-center gap-1 overflow-x-auto bg-[#010409] px-2.5 pt-2 border-b border-[#30363d] no-scrollbar select-none">
       {files.map((file) => {
         const isActive = file.id === activeFileId;
         const hasVerifiedCallout = file.callouts.some((c) => c.type === 'VERIFIED');
+
+        let fileIcon = <FileCode size={13} className="text-[#58a6ff]" />;
+        if (file.fileName.endsWith('.json')) {
+          fileIcon = <FileJson size={13} className="text-[#d29922]" />;
+        } else if (file.fileName.endsWith('.yml') || file.fileName.endsWith('.yaml')) {
+          fileIcon = <FileText size={13} className="text-[#f85149]" />;
+        }
 
         return (
           <button
@@ -32,16 +33,16 @@ export const IdeFileTabs: React.FC<IdeFileTabsProps> = ({
             onClick={() => onSelectFile(file.id)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-t-lg text-xs font-mono transition-all border-t border-x cursor-pointer shrink-0 ${
               isActive
-                ? 'bg-[#1c1d22] text-[#f0f2fb] border-[#363a48] font-medium'
-                : 'bg-transparent text-[#767a8c] hover:text-[#c4c7d6] border-transparent hover:bg-[#20222a]'
+                ? 'bg-[#0d1117] text-[#f0f6fc] border-[#30363d] font-semibold shadow-xs'
+                : 'bg-transparent text-[#7d8590] hover:text-[#c9d1d9] border-transparent hover:bg-[#161b22]'
             }`}
           >
-            {getFileIcon(file.fileName)}
+            {fileIcon}
             <span>{file.fileName}</span>
 
             {hasVerifiedCallout && (
               <span
-                className="w-1.5 h-1.5 rounded-full bg-[#8cac91]"
+                className="w-1.5 h-1.5 rounded-full bg-[#3fb950]"
                 title="Memuat bukti AST terverifikasi"
               />
             )}
