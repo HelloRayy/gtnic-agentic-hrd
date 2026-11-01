@@ -75,7 +75,7 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
   };
 
   return (
-    <div className="h-10 px-2 bg-[#181920] border-b border-[#292b37] flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0 select-none font-sans">
+    <div className="h-10 px-2 bg-[#f0eee9] border-b border-[#dedbd4] flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0 select-none font-sans">
       {openTabs.map((tabId) => {
         const isActive = tabId === activeTabId;
         const config = getTabConfig(tabId);
@@ -86,8 +86,8 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
             onClick={() => onSelectTab(tabId)}
             className={`group flex items-center gap-2 px-3 py-2 rounded-t-md text-xs font-sans transition-all border-x cursor-pointer shrink-0 ${
               isActive
-                ? 'bg-[#252836] text-white border-t-2 border-t-[#7285d5] border-[#34374a] font-medium shadow-xs'
-                : 'bg-transparent text-[#8e93a7] hover:text-[#f0f2fb] border-transparent hover:bg-[#1f212a]'
+                ? 'bg-[#ffffff] text-[#242730] border-t-2 border-t-[#7285d5] border-[#dedbd4] font-semibold shadow-xs'
+                : 'bg-transparent text-[#6b6f7f] hover:text-[#242730] border-transparent hover:bg-[#e4e2db]'
             }`}
           >
             {config.icon}
@@ -100,7 +100,7 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
                   e.stopPropagation();
                   onCloseTab(tabId);
                 }}
-                className="opacity-0 group-hover:opacity-100 hover:bg-[#383b4d] rounded p-0.5 text-[#8e93a7] hover:text-white transition-all cursor-pointer ml-1"
+                className="opacity-0 group-hover:opacity-100 hover:bg-[#eae7df] rounded p-0.5 text-[#8c91a4] hover:text-[#242730] transition-all cursor-pointer ml-1"
                 title="Tutup tab"
               >
                 <X size={11} />

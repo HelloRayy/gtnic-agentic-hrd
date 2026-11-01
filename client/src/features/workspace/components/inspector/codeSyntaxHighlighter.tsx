@@ -10,32 +10,32 @@ const RULES: TokenRule[] = [
   {
     type: 'comment',
     pattern: /(\/\/.*$|#.*$)/,
-    className: 'text-[#8b949e] italic',
+    className: 'text-[#6e7781] italic',
   },
   {
     type: 'string',
     pattern: /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)/,
-    className: 'text-[#a5d6ff]',
+    className: 'text-[#0a3069]',
   },
   {
     type: 'keyword',
     pattern: /\b(import|export|from|class|interface|type|const|let|var|return|function|public|private|protected|new|async|await|default|module|package|require|if|else|runs-on|steps|uses|name|on|branches)\b/,
-    className: 'text-[#ff7b72] font-semibold',
+    className: 'text-[#cf222e] font-semibold',
   },
   {
     type: 'type',
     pattern: /\b(string|number|boolean|any|void|object|Map|Set|Buffer|Array|Promise|Error|Record|TechnicalDossier|DispatchSession|Date)\b/,
-    className: 'text-[#ffa657]',
+    className: 'text-[#953800]',
   },
   {
     type: 'function',
     pattern: /\b([a-zA-Z_$][a-zA-Z0-9_$]*)(?=\()/,
-    className: 'text-[#d2a8ff]',
+    className: 'text-[#8250df]',
   },
   {
     type: 'number',
     pattern: /\b(\d+(\.\d+)?)\b/,
-    className: 'text-[#79c0ff]',
+    className: 'text-[#0550ae]',
   },
 ];
 
@@ -50,7 +50,7 @@ export function highlightCodeLine(line: string, language: string): React.ReactNo
     if (jsonKeyMatch) {
       return (
         <>
-          <span className="text-[#7ee787] font-semibold">{jsonKeyMatch[1]}</span>
+          <span className="text-[#116329] font-semibold">{jsonKeyMatch[1]}</span>
           {highlightCodeLine(jsonKeyMatch[2], 'text')}
         </>
       );
@@ -73,7 +73,7 @@ export function highlightCodeLine(line: string, language: string): React.ReactNo
     }
 
     const matchedText = match[0];
-    let matchedClass = 'text-[#e6edf3]';
+    let matchedClass = 'text-[#24292f]';
 
     for (const rule of RULES) {
       if (rule.pattern.test(matchedText)) {

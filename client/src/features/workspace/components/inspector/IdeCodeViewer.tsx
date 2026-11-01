@@ -33,7 +33,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
   };
 
   return (
-    <div className="flex-1 h-full min-h-0 bg-[#0d1117] text-[#e6edf3] font-mono text-xs overflow-x-auto overflow-y-auto select-text">
+    <div className="flex-1 h-full min-h-0 bg-[#ffffff] text-[#24292f] font-mono text-xs overflow-x-auto overflow-y-auto select-text">
       <table className="w-full border-collapse">
         <tbody>
           {lines.map((lineText, idx) => {
@@ -42,23 +42,23 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
             const calloutOnLine = getLineCallout(lineNum);
             const endCallout = calloutsByEndLine.get(lineNum);
 
-            let rowBg = 'hover:bg-[#161b22]';
+            let rowBg = 'hover:bg-[#f6f8fa]';
             let diffSign = ' ';
-            let signColor = 'text-[#6e7681]';
+            let signColor = 'text-[#8c959f]';
 
             if (highlighted) {
               if (calloutOnLine?.type === 'VERIFIED') {
-                rowBg = 'bg-[#2ea043]/15 text-[#e6edf3]';
+                rowBg = 'bg-[#e6ffec] text-[#24292f]';
                 diffSign = '+';
-                signColor = 'text-[#3fb950] font-bold';
+                signColor = 'text-[#1a7f37] font-bold';
               } else if (calloutOnLine?.type === 'PARTIAL') {
-                rowBg = 'bg-[#bb8009]/15 text-[#e6edf3]';
+                rowBg = 'bg-[#fff8c5] text-[#24292f]';
                 diffSign = '~';
-                signColor = 'text-[#d29922] font-bold';
+                signColor = 'text-[#9a6700] font-bold';
               } else {
-                rowBg = 'bg-[#f85149]/15 text-[#e6edf3]';
+                rowBg = 'bg-[#ffebe9] text-[#24292f]';
                 diffSign = '!';
-                signColor = 'text-[#f85149] font-bold';
+                signColor = 'text-[#cf222e] font-bold';
               }
             }
 
@@ -66,7 +66,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
               <React.Fragment key={lineNum}>
                 <tr className={`transition-colors ${rowBg}`}>
                   {/* Line Number Gutter */}
-                  <td className="w-10 px-2 py-0.5 text-right text-[#6e7681] select-none text-[11px] font-mono border-r border-[#30363d]/60 shrink-0 align-top">
+                  <td className="w-10 px-2 py-0.5 text-right bg-[#f6f8fa] text-[#8c959f] select-none text-[11px] font-mono border-r border-[#d0d7de] shrink-0 align-top">
                     {lineNum}
                   </td>
                   {/* Diff Symbol (+ / ~ / !) */}
@@ -74,7 +74,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
                     {diffSign}
                   </td>
                   {/* Syntax Highlighted Code Line */}
-                  <td className="px-2.5 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] align-top">
+                  <td className="px-2.5 py-0.5 whitespace-pre leading-relaxed font-mono text-[12px] align-top text-[#24292f]">
                     {highlightCodeLine(lineText, language)}
                   </td>
                 </tr>
@@ -82,7 +82,7 @@ export const IdeCodeViewer: React.FC<IdeCodeViewerProps> = ({
                 {/* GitHub PR Style Inline Review Comment */}
                 {endCallout && (
                   <tr>
-                    <td colSpan={3} className="p-0 bg-[#0d1117] border-y border-[#30363d]">
+                    <td colSpan={3} className="p-0 bg-[#f6f8fa] border-y border-[#d0d7de]">
                       <ForensicCalloutPin callout={endCallout} />
                     </td>
                   </tr>

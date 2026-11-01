@@ -58,7 +58,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
           />
         </IdeEditorShell>
       ) : (
-        <div className="p-6 text-center text-xs text-[#8c8d97] bg-[#1c1d22] rounded-xl border border-[#2b2d38]">
+        <div className="p-6 text-center text-xs text-[#57606a] bg-[#ffffff] rounded-xl border border-[#d0d7de]">
           <Terminal size={18} className="mx-auto mb-2 text-[#7285d5]" />
           <span>Tidak ada berkas snippet kode terdeteksi.</span>
         </div>

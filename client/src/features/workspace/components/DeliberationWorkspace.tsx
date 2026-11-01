@@ -176,7 +176,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         )}
 
         {activeWorkspaceTab.startsWith('code:') && (
-          <div className="flex-1 overflow-hidden flex flex-col p-4 bg-[#0d1117]">
+          <div className="flex-1 overflow-hidden flex flex-col p-4 bg-[#f8f7f4]">
             <WebIdeInspectorView
               dossier={dossier}
               initialFileId={activeWorkspaceTab.replace('code:', '')}
