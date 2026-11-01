@@ -79,9 +79,13 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
             </button>
           )}
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-xs font-semibold text-[#2b8a3e]">
+          <div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-[8px] bg-[#eef7ee] border border-[#c4e3c9] text-xs font-semibold text-[#2b8a3e]"
+            title={`${verifiedCount} dari ${dossier.evidenceMatrix.length} keahlian terverifikasi bukti riil repositori publik. Keahlian lain wajar berasal dari proyek internal kantor sebelumnya.`}
+          >
             <CheckCircle2 size={15} className="text-[#2b8a3e]" />
             <span>{verifiedCount}/{dossier.evidenceMatrix.length} Bukti Terverifikasi</span>
+          </div>
           </div>
         </div>
       </div>
@@ -136,7 +140,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                     >
                       <GitBranch size={14} className="text-[#7285d5] shrink-0" />
                       <span className="truncate max-w-[200px]">{repo}</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] ml-0.5" title="AST Aktif" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] ml-0.5" title="Terhubung ke Kode Sumber" />
                       <ExternalLink size={12} className="text-[#a5a5ad] group-hover:text-[#5269bb] transition-colors" />
                     </a>
                   );

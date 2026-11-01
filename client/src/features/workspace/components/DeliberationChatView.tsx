@@ -133,7 +133,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
         {/* Authentic OpenDots Page Context Indicator */}
         <div className="page-chat-context">
-          <span>Working on</span>
+          <span>Memeriksa:</span>
           <strong style={{ color: '#333641' }}>{candidateName}</strong>
           <span>·</span>
           <span>{candidateRole}</span>

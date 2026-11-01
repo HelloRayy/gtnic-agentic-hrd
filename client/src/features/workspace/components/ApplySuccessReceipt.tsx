@@ -50,7 +50,7 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
               Memverifikasi Portofolio GitHub Anda
             </h1>
             <p className="text-xs text-[#707070] leading-relaxed max-w-md mx-auto">
-              AI Agent sedang memeriksa repositori publik, menganalisis struktur AST kode, dan memverifikasi keaslian commit author Anda.
+              AI Agent sedang memeriksa repositori publik, menganalisis struktur kode proyek, dan memverifikasi keaslian commit author Anda.
             </p>
           </div>
 
@@ -104,10 +104,10 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
           type="button"
           onClick={onSwitchToWorkspace}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#eeeff7] hover:bg-[#e0e4f4] text-[#596aa9] text-xs font-semibold cursor-pointer transition-colors shadow-xs"
-          title="Pintasan demonstrasi untuk juri lomba"
+          title="Buka ruang kerja evaluasi rekrutmen"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#7285d5] animate-pulse" />
-          <span>Demo Juri: Ke Workspace Tech Lead</span>
+          <span>Buka Workspace HR</span>
           <ArrowRight size={12} />
         </button>
       </div>
@@ -153,7 +153,7 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
           >
             <span className="flex items-center gap-1.5">
               <Terminal size={12} className="text-[#7285d5]" />
-              <span>Inspeksi Pipeline Agen Forensik (Khusus Demo Juri)</span>
+              <span>Inspeksi Pipeline Audit Otonom</span>
             </span>
             {showDebugLogs ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
@@ -175,7 +175,7 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[#8cac91]">✓</span>
-                  <span className="text-[#d4d6e0]">Pohon Sintaksis AST & Integritas Commit</span>
+                  <span className="text-[#d4d6e0]">Validasi Berkas Kode & Integritas Commit</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[#8cac91]">✓</span>

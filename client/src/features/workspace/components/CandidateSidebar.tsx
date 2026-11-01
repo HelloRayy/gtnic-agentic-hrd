@@ -69,8 +69,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         </div>
         <span className="online-dot" />
         <div className="profile-label">
-          <strong>Forensic Dot</strong>
-          <span>siap · verifikasi aktif</span>
+          <strong>Tim Rekrutmen</strong>
+          <span>Workspace HR · Aktif</span>
         </div>
       </div>
 
@@ -478,13 +478,13 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         <div className="dot-note" style={{ padding: '14px 10px 16px' }}>
           <span className="tiny-star" style={{ fontSize: 24 }}>✦</span>
           <p style={{ fontSize: 11, color: '#707070', lineHeight: 1.6 }}>
-            Geser kartu pelamar dengan tangan untuk klasifikasi status otonom.
+            Tarik & lepas kartu pelamar untuk memindahkan tahapan rekrutmen.
           </p>
         </div>
 
         <div className="version" style={{ fontSize: 8.5, color: '#a0a0ac' }}>
-          <span>GTNIC 2026</span>
-          <span>v2.4 · AG-UI</span>
+          <span>TalentTrace HR</span>
+          <span>v2.4 · Enterprise</span>
         </div>
       </div>
     </aside>

@@ -98,7 +98,7 @@ export function CodeInspectorTab({
                     </span>
                   </div>
                   <p style={{ margin: 0, fontSize: 12, color: '#5E6C84' }}>
-                    Pemilik: @{githubUsername || 'kandidat'} | Jalur inspeksi: Web VS Code & AST Tree
+                    Pemilik: @{githubUsername || 'kandidat'} | Jalur inspeksi: Web VS Code Resmi (github.dev)
                   </p>
                 </div>
 

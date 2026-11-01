@@ -22,14 +22,14 @@ export const ApplyHeaderCard: React.FC<ApplyHeaderCardProps> = ({
             <i />
             <i />
           </span>
-          <span className="font-semibold tracking-tight text-[#242730]">TalentTrace Ingestion</span>
+          <span className="font-semibold tracking-tight text-[#242730]">Portal Rekrutmen TalentTrace</span>
         </div>
         <button
           type="button"
           onClick={onSwitchToWorkspace}
           className="inline-flex items-center gap-1.5 font-medium text-[#7285d5] hover:text-[#5f74cb] transition-colors cursor-pointer"
         >
-          <span>Workspace Tech Lead</span>
+          <span>Workspace HR</span>
           <ArrowRight size={13} />
         </button>
       </div>
@@ -55,7 +55,7 @@ export const ApplyHeaderCard: React.FC<ApplyHeaderCardProps> = ({
         <div className="pt-3 border-t border-[#f0eee9] flex items-center gap-2 flex-wrap">
           <span className="text-[11px] text-[#8c8d97] font-medium flex items-center gap-1">
             <Sparkles size={12} className="text-[#7285d5]" />
-            Demo Sampel:
+            Contoh Pelamar:
           </span>
           <button
             type="button"

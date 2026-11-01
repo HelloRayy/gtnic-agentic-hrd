@@ -157,7 +157,7 @@ export function DossierTabs({ dossier }: DossierTabsProps) {
           <Tab>Kode Sumber (Khusus Tech Lead) ({dossier.auditedRepos.length})</Tab>
           <Tab>Radar Investigasi & Sinyal ({dossier.interviewKit.length})</Tab>
           <Tab>Poin Klarifikasi ({dossier.clarificationPrompts.length})</Tab>
-          <Tab>Jejak Penalaran CoT ({dossier.traceEvents?.length || 0})</Tab>
+          <Tab>Detail Analisis Sistem ({dossier.traceEvents?.length || 0})</Tab>
         </TabList>
 
         <TabPanel>
