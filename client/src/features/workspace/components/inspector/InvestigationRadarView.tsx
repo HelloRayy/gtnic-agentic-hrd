@@ -4,12 +4,23 @@ import type { InterviewQuestion } from '@/types/audit.js';
 
 interface InvestigationRadarViewProps {
   interviewKit: InterviewQuestion[];
+  searchQuery?: string;
 }
 
 export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
   interviewKit,
+  searchQuery = '',
 }) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const q = searchQuery.toLowerCase().trim();
+  const items = q
+    ? interviewKit.filter(
+        (item) =>
+          item.topic.toLowerCase().includes(q) ||
+          item.question.toLowerCase().includes(q) ||
+          item.context.toLowerCase().includes(q)
+      )
+    : interviewKit;
 
   if (!interviewKit || interviewKit.length === 0) {
     return (
@@ -28,7 +39,12 @@ export const InvestigationRadarView: React.FC<InvestigationRadarViewProps> = ({
 
   return (
     <div className="space-y-3">
-      {interviewKit.map((item, idx) => (
+      {items.length === 0 && q && (
+        <div className="p-4 text-center text-xs text-[#8c8d97] bg-white rounded-xl border border-[#e9e8e6]">
+          Tidak ada pertanyaan yang cocok dengan &ldquo;{searchQuery}&rdquo;.
+        </div>
+      )}
+      {items.map((item, idx) => (
         <div
           key={idx}
           className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-3"

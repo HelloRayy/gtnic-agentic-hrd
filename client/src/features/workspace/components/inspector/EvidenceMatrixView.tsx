@@ -7,13 +7,23 @@ interface EvidenceMatrixViewProps {
   evidenceMatrix: EvidenceItem[];
   githubUsername?: string;
   onInspectCode?: (fileAnchor?: string) => void;
+  searchQuery?: string;
 }
 
 export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
   evidenceMatrix,
   githubUsername,
   onInspectCode,
+  searchQuery = '',
 }) => {
+  const q = searchQuery.toLowerCase().trim();
+  const items = q
+    ? evidenceMatrix.filter(
+        (e) =>
+          e.claim.toLowerCase().includes(q) ||
+          e.evidenceSummary.toLowerCase().includes(q)
+      )
+    : evidenceMatrix;
   if (!evidenceMatrix || evidenceMatrix.length === 0) {
     return (
       <div className="p-4 text-center text-xs text-[#8c8d97]">
@@ -46,7 +56,12 @@ export const EvidenceMatrixView: React.FC<EvidenceMatrixViewProps> = ({
 
   return (
     <div className="space-y-2.5">
-      {evidenceMatrix.map((item, idx) => (
+      {items.length === 0 && q && (
+        <div className="p-4 text-center text-xs text-[#8c8d97] bg-white rounded-xl border border-[#e9e8e6]">
+          Tidak ada bukti yang cocok dengan &ldquo;{searchQuery}&rdquo;.
+        </div>
+      )}
+      {items.map((item, idx) => (
         <div
           key={idx}
           className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-2"

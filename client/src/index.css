@@ -558,51 +558,68 @@ body {
   color: #bbbcc6;
 }
 
-/* Result / Inspector Pane */
+/* Result / Inspector Pane ala Zed IDE Dock */
 .result-pane {
-  width: 395px;
+  width: 410px;
   flex-shrink: 0;
   background: #fbfaf8;
   border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   height: 100vh;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+.result-pane.expanded {
+  width: 560px;
+}
+
 .pane-header {
-  height: 72px;
-  padding: 0 18px;
+  height: 48px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #ecebe8;
   background: #faf9f6;
   flex-shrink: 0;
+  gap: 6px;
 }
+
 .pane-tabs {
   display: flex;
-  gap: 4px;
-  background: #f0eee9;
-  padding: 3px;
-  border-radius: 8px;
+  gap: 2px;
+  background: #eeedea;
+  padding: 2px;
+  border-radius: 7px;
+  overflow-x: auto;
 }
+
 .pane-tabs button {
   border: 0;
   background: none;
-  padding: 7px 12px;
-  font-size: 13px;
-  color: #858690;
-  border-radius: 6px;
+  padding: 4px 7px;
+  font-size: 11.5px;
+  color: #797d8c;
+  border-radius: 5px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   transition: all 0.12s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
+
+.pane-tabs button:hover:not(.selected) {
+  color: #272a33;
+  background: rgba(255, 255, 255, 0.5);
+}
+
 .pane-tabs button.selected {
   background: white;
-  color: #333641;
-  font-weight: 550;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  color: #272a33;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 .browser-bar {
   border: 1px solid var(--line);
