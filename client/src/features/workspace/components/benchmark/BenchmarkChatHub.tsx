@@ -124,7 +124,7 @@ export const BenchmarkChatHub: React.FC<BenchmarkChatHubProps> = ({
                       : 'bg-white border border-[#e5e3dc] text-[#333641] shadow-[0_1px_2px_rgba(0,0,0,0.02)] rounded-tl-none'
                   }`}
                 >
-                  <FormattedChatMessage content={msg.content} isUser={isUser} />
+                  <FormattedChatMessage content={msg.content} isUser={isUser} size="compact" />
                   {msg.anchors && msg.anchors.length > 0 && (
                     <div className="mt-2 pt-1.5 border-t border-[#f0eee9] flex items-center gap-1.5 flex-wrap">
                       <Terminal size={11} className="text-[#8c8d97]" />

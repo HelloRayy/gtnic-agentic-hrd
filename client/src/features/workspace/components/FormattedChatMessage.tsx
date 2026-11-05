@@ -3,6 +3,7 @@ import React from 'react';
 interface FormattedChatMessageProps {
   content: string;
   isUser?: boolean;
+  size?: 'normal' | 'compact';
 }
 
 /**
@@ -27,7 +28,7 @@ function renderInlineFormatting(text: string): React.ReactNode[] {
       return (
         <code
           key={index}
-          className="px-1.5 py-0.5 mx-0.5 rounded-[5px] bg-[#ecebe5] text-[#2c303d] text-[12px] font-mono border border-[#dedcd5]"
+          className="px-1.5 py-0.5 mx-0.5 rounded-[5px] bg-[#ecebe5] text-[#2c303d] text-[13.5px] font-mono border border-[#dedcd5]"
         >
           {codeText}
         </code>
@@ -42,21 +43,36 @@ function renderInlineFormatting(text: string): React.ReactNode[] {
 export const FormattedChatMessage: React.FC<FormattedChatMessageProps> = ({
   content,
   isUser = false,
+  size = 'normal',
 }) => {
+  const isCompact = size === 'compact';
+
   if (isUser) {
-    return <div className="whitespace-pre-wrap leading-relaxed">{content}</div>;
+    return (
+      <div
+        className={`whitespace-pre-wrap ${
+          isCompact ? 'text-[13px] leading-relaxed' : 'text-[15.5px] leading-[1.85]'
+        }`}
+      >
+        {content}
+      </div>
+    );
   }
 
   const lines = content.split('\n');
 
   return (
-    <div className="space-y-1.5 text-[13px] leading-relaxed text-[#2f323e]">
+    <div
+      className={`space-y-2 text-[#2f323e] ${
+        isCompact ? 'text-[13px] leading-relaxed' : 'text-[15.5px] leading-[1.85]'
+      }`}
+    >
       {lines.map((line, idx) => {
         const trimmed = line.trim();
 
         // Empty line -> vertical space
         if (!trimmed) {
-          return <div key={idx} className="h-1" />;
+          return <div key={idx} className={isCompact ? 'h-1' : 'h-2'} />;
         }
 
         // Headings (#, ##, ###) -> convert to prominent bold title without raw #
@@ -65,7 +81,9 @@ export const FormattedChatMessage: React.FC<FormattedChatMessageProps> = ({
           return (
             <div
               key={idx}
-              className="font-semibold text-[13.5px] text-[#1e2028] pt-1.5 pb-0.5 tracking-tight border-b border-[#f0eee9]"
+              className={`font-semibold text-[#1e2028] tracking-tight border-b border-[#f0eee9] ${
+                isCompact ? 'text-[13.5px] pt-1.5 pb-0.5' : 'text-[16.5px] pt-2 pb-1'
+              }`}
             >
               {renderInlineFormatting(headingMatch[1])}
             </div>
@@ -76,8 +94,12 @@ export const FormattedChatMessage: React.FC<FormattedChatMessageProps> = ({
         const bulletMatch = trimmed.match(/^[-*]\s+(.*)/);
         if (bulletMatch) {
           return (
-            <div key={idx} className="flex items-start gap-2 pl-1.5 text-[12.8px]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#7285d5] mt-1.5 shrink-0" />
+            <div key={idx} className="flex items-start gap-2.5 pl-1.5">
+              <span
+                className={`rounded-full bg-[#7285d5] shrink-0 ${
+                  isCompact ? 'w-1.5 h-1.5 mt-1.5' : 'w-2 h-2 mt-2.5'
+                }`}
+              />
               <div className="flex-1">{renderInlineFormatting(bulletMatch[1])}</div>
             </div>
           );
@@ -87,8 +109,8 @@ export const FormattedChatMessage: React.FC<FormattedChatMessageProps> = ({
         const numberedMatch = trimmed.match(/^(\d+\.)\s+(.*)/);
         if (numberedMatch) {
           return (
-            <div key={idx} className="flex items-start gap-2 pl-1.5 text-[12.8px]">
-              <span className="font-semibold text-[#5269bb] shrink-0 text-xs">
+            <div key={idx} className="flex items-start gap-2.5 pl-1.5">
+              <span className="font-semibold text-[#5269bb] shrink-0">
                 {numberedMatch[1]}
               </span>
               <div className="flex-1">{renderInlineFormatting(numberedMatch[2])}</div>
