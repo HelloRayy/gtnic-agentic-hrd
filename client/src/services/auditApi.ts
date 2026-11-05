@@ -6,7 +6,6 @@ import type {
   ScheduleInterviewResponse,
   DiscoveredRepo,
   ConstructiveFeedbackDraft,
-  EvidenceItem,
 } from '@/types/audit.js';
 
 const API_BASE = '/api';
@@ -278,6 +277,8 @@ export async function saveAuditRecord(
   }
   const json = await res.json();
   return json.id;
+}
+
 export interface BenchmarkDeliberationResponse {
   answer: string;
   anchors: string[];
