@@ -67,7 +67,7 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
     if (tabId.startsWith('code:')) {
       const snipId = tabId.replace('code:', '');
       const snip = snippets.find((s) => s.id === snipId);
-      const name = snip ? snip.fileName : 'code.ts';
+      const name = snip ? snip.fileName : snipId.split('/').pop() || 'code.ts';
       const icon = name.endsWith('.json') ? (
         <FileJson size={13} className="text-[#e2a36b]" />
       ) : (

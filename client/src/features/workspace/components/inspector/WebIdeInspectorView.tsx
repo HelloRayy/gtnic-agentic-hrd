@@ -25,9 +25,29 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
   const [activeFileId, setActiveFileId] = useState<string>(defaultFileId);
   const [liveCodeCache, setLiveCodeCache] = useState<Record<string, string>>({});
 
-  const activeSnippet =
-    snippets.find((s) => s.id === activeFileId) || snippets[0];
+  const primaryRepo = auditedRepos[0] || 'repository';
+  const activeSnippet = React.useMemo(() => {
+    const existing = snippets.find((s) => s.id === activeFileId || s.filePath.endsWith(activeFileId));
+    if (existing) return existing;
 
+    const fileName = activeFileId.split('/').pop() || activeFileId;
+    let lang: 'typescript' | 'javascript' | 'json' | 'go' | 'python' | 'yaml' | 'sql' = 'typescript';
+    if (fileName.endsWith('.json')) lang = 'json';
+    else if (fileName.endsWith('.py')) lang = 'python';
+    else if (fileName.endsWith('.go')) lang = 'go';
+    else if (fileName.endsWith('.yml') || fileName.endsWith('.yaml')) lang = 'yaml';
+    else if (fileName.endsWith('.sql')) lang = 'sql';
+    else if (fileName.endsWith('.js')) lang = 'javascript';
+
+    return {
+      id: activeFileId,
+      fileName,
+      filePath: activeFileId.includes('/') ? activeFileId : `${primaryRepo}/${activeFileId}`,
+      language: lang,
+      code: `// Berkas: ${fileName}\n// Jalur: ${activeFileId}\n// Memuat isi berkas dari repositori...`,
+      callouts: [],
+    };
+  }, [snippets, activeFileId, primaryRepo]);
   React.useEffect(() => {
     if (!activeSnippet) return;
     if (liveCodeCache[activeSnippet.id]) return;
@@ -48,7 +68,6 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
     }
   }, [activeSnippet, githubUsername, liveCodeCache]);
 
-  const primaryRepo = auditedRepos[0] || 'repository';
   const displayCode =
     (activeSnippet && liveCodeCache[activeSnippet.id]) || activeSnippet?.code || '';
   return (
@@ -68,7 +87,7 @@ export const WebIdeInspectorView: React.FC<WebIdeInspectorViewProps> = ({
       {activeSnippet ? (
         <IdeEditorShell
           activeFile={activeSnippet}
-          files={snippets}
+          files={snippets.some((s) => s.id === activeSnippet.id) ? snippets : [activeSnippet, ...snippets]}
           onSelectFile={setActiveFileId}
           githubUsername={githubUsername}
           primaryRepo={primaryRepo}
