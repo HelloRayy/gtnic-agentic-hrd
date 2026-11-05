@@ -9,7 +9,8 @@
     "build:server": "npm run build --prefix server",
     "build:client": "npm run build --prefix client",
     "build": "npm run build:client && npm run build:server",
-    "start": "npm start --prefix server"
+    "start": "npm start --prefix server",
+    "test": "npm run test --prefix server"
   },
   "keywords": [],
   "author": "",
