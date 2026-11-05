@@ -63,7 +63,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
 
   if (!candidate) {
     return (
-      <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden">
+      <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden min-w-0">
         <DeliberationTopbar
           candidate={null}
           isLoading={isLoading}
@@ -84,7 +84,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   const snippets = generateIdeSnippets(dossier);
 
   return (
-    <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden">
+    <main className="flex-1 h-screen flex flex-col bg-[#f8f7f4] overflow-hidden min-w-0">
       {/* 1. Workspace Topbar */}
       <DeliberationTopbar
         candidate={candidate}

@@ -540,7 +540,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#f8f7f4]">
+    <div className="flex h-screen w-full overflow-hidden bg-[#f8f7f4]">
       {/* Panel 1: Candidate Sidebar & Ingestion Queue */}
       <CandidateSidebar
         candidates={candidates}
