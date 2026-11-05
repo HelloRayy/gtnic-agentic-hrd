@@ -51,7 +51,7 @@ export interface IdeFileSnippet {
 * **Rincian Pekerjaan**:
   1. **Tab Utama Right Panel**:
      - Urutkan 4 tab: `IDE` (Code2), `Matriks` (BookOpen), `Radar` (Sparkles), dan `Aksi` (Calendar).
-     - Berikan status visual aktif dengan latar belakang putih dan teks tegas sesuai token tema OpenDots.
+     - Berikan status visual aktif dengan latar belakang putih dan teks tegas sesuai token tema TalentTrace.
   2. **Struktur Jendela IDE (`IdeEditorShell.tsx`)**:
      - Bagian atas memuat 3 titik kontrol jendela ala macOS (merah `#ef4444`, kuning `#f59e0b`, hijau `#10b981`).
      - Tampilkan breadcrumbs path berkas aktif (contoh: `repo-kandidat / src / services / tokenService.ts`) dan badge bahasa pemrograman di pojok kanan.

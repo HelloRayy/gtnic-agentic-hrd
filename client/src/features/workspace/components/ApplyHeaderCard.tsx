@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
-import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { TalentTraceMascot } from './TalentTraceMascot.js';
 
 interface ApplyHeaderCardProps {
   onApplyPreset: (snippetKey: 'rayhan' | 'johnDoe') => void;
@@ -34,7 +34,7 @@ export const ApplyHeaderCard: React.FC<ApplyHeaderCardProps> = ({
         </button>
       </div>
 
-      {/* Header Card (TalentTrace / OpenDots Minimalist Style) */}
+      {/* Header Card (TalentTrace Enterprise Style) */}
       <div className="bg-white rounded-2xl border border-[#e9e8e6] p-7 shadow-[0_2px_12px_rgba(57,57,74,0.03)] space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5">
@@ -48,7 +48,7 @@ export const ApplyHeaderCard: React.FC<ApplyHeaderCardProps> = ({
               Screening teknikal objektif berbasis bukti commit dan arsitektur kode nyata di repositori publik.
             </p>
           </div>
-          <OpenDotsMascot color="blue" size="md" decorative />
+          <TalentTraceMascot color="blue" size="md" decorative />
         </div>
 
         {/* Quick Demo Pill Fill */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { OpenDotsMascot, type DotCharacter } from './OpenDotsMascot.js';
+import { TalentTraceMascot, type DotCharacter } from './TalentTraceMascot.js';
 
 interface CandidateAvatarProps {
   name: string;
@@ -46,7 +46,7 @@ export const CandidateAvatar: React.FC<CandidateAvatarProps> = ({
   };
 
   if (!resolvedUrl || imgError) {
-    return <OpenDotsMascot identity={identity || name} color={color} size={size} />;
+    return <TalentTraceMascot identity={identity || name} color={color} size={size} />;
   }
 
   return (

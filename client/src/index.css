@@ -23,7 +23,7 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
 
-    /* OpenDots Design System Tokens */
+    /* TalentTrace Enterprise Design Tokens */
     --canvas: #f8f7f4;
     --canvas-sidebar: #fbfaf8;
     --canvas-card: #ffffff;
@@ -73,7 +73,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* OpenDots Micro-interactions & Utilities */
+/* TalentTrace UI Micro-interactions & Utilities */
 .btn-press {
   transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
@@ -98,7 +98,7 @@ body {
 }
 
 /* ========================================================
-   Authentic CopilotKit/OpenDots CSS Architecture
+   TalentTrace Workspace Brand & Typography Architecture
    ======================================================== */
 
 .wordmark {
@@ -142,7 +142,7 @@ body {
   opacity: 0.6;
 }
 
-/* Sidebar Nav & Profile (OpenDots Exact Spec) */
+/* Sidebar Navigation & Recruiter Profile Component */
 .sidebar {
   width: 300px;
   flex-shrink: 0;
@@ -343,7 +343,7 @@ body {
   display: inline-block;
 }
 
-/* Authentic OpenDots 3D Mascot Styles & Micro-Animations */
+/* TalentTrace 3D Agent Avatar Styles & Micro-Animations */
 .mascot {
   display: inline-flex;
   align-items: center;
@@ -382,7 +382,7 @@ body {
     transform: translateY(-5px);
   }
 }
-@keyframes opendots-bob {
+@keyframes talenttrace-bob {
   0%, 100% {
     transform: translateY(0);
   }
@@ -393,7 +393,7 @@ body {
 
 .dot-bob {
   display: inline-flex;
-  animation: opendots-bob 3.2s ease-in-out var(--bob-delay, 0s) infinite;
+  animation: talenttrace-bob 3.2s ease-in-out var(--bob-delay, 0s) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -672,7 +672,7 @@ body {
 }
 
 /* ========================================================
-   Authentic OpenDots Chat Architecture Spec
+   TalentTrace Deliberation Chat Workspace Architecture
    ======================================================== */
 .chat-workspace {
   flex: 1;

@@ -13,7 +13,7 @@ export const DeliberationTopbar: React.FC<DeliberationTopbarProps> = ({
 }) => {
   return (
     <header className="topbar select-none">
-      {/* Authentic OpenDots Breadcrumbs */}
+      {/* TalentTrace Navigation Breadcrumbs */}
       <div className="breadcrumbs">
         <span>TalentTrace</span>
         <span>/</span>

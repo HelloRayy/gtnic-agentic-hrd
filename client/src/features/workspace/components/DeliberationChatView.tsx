@@ -8,7 +8,7 @@ import {
   Terminal,
 } from 'lucide-react';
 import { SkillsMenuPopover } from './SkillsMenuPopover.js';
-import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { TalentTraceMascot } from './TalentTraceMascot.js';
 import { CandidateBriefingCard } from './CandidateBriefingCard.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
@@ -87,11 +87,11 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
 
   return (
     <div className="live-chat">
-      {/* Authentic OpenDots Chat Transcript (Scrolls Everything Naturally) */}
+      {/* TalentTrace Chat Transcript */}
       <div className="chat-transcript">
-        {/* Authentic OpenDots Chat Persona Header */}
+        {/* TalentTrace Chat Persona Header */}
         <header className="chat-persona">
-          <OpenDotsMascot color="blue" size="md" isWorking={isDeliberating} />
+          <TalentTraceMascot color="blue" size="md" isWorking={isDeliberating} />
           <div className="persona-meta">
             <strong>TalentTrace Co-Pilot</strong>
             <span>Asisten Verifikasi Bukti Kerja Nyata · Berbasis Proyek Asli</span>
@@ -131,7 +131,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
           </div>
         </header>
 
-        {/* Authentic OpenDots Page Context Indicator */}
+        {/* TalentTrace Page Context Indicator */}
         <div className="page-chat-context">
           <span>Memeriksa:</span>
           <strong style={{ color: '#333641' }}>{candidateName}</strong>
@@ -210,7 +210,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
         <div ref={chatBottomRef} />
       </div>
 
-      {/* Authentic OpenDots Chat Composer (Fixed at Bottom) */}
+      {/* TalentTrace Chat Composer (Fixed at Bottom) */}
       <div className="chat-composer-wrapper relative">
         <form onSubmit={handleSubmit} className="chat-composer">
           <div className="chat-compose-row">

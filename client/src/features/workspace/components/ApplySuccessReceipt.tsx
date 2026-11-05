@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle2, Loader2, Sparkles, Terminal, ChevronDown, ChevronUp } from 'lucide-react';
-import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { TalentTraceMascot } from './TalentTraceMascot.js';
 
 interface ApplySuccessReceiptProps {
   onSwitchToWorkspace: () => void;
@@ -38,7 +38,7 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#7285d5] to-transparent animate-pulse" />
 
           <div className="flex justify-center pt-2">
-            <OpenDotsMascot color="blue" size="lg" state="working" />
+            <TalentTraceMascot color="blue" size="lg" state="working" />
           </div>
 
           <div className="space-y-2">
@@ -115,7 +115,7 @@ export const ApplySuccessReceipt: React.FC<ApplySuccessReceiptProps> = ({
       {/* Main Applicant Confirmation Card */}
       <div className="w-full max-w-lg bg-white rounded-2xl border border-[#e9e8e6] p-8 shadow-[0_4px_24px_rgba(57,57,74,0.04)] text-center space-y-6">
         <div className="flex justify-center">
-          <OpenDotsMascot color="blue" size="lg" state="complete" />
+          <TalentTraceMascot color="blue" size="lg" state="complete" />
         </div>
 
         <div className="space-y-2">

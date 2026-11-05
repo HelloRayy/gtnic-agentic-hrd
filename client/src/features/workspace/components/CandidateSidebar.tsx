@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Calendar, GripVertical, ExternalLink, Briefcase } from 'lucide-react';
-import { OpenDotsMascot } from './OpenDotsMascot.js';
+import { TalentTraceMascot } from './TalentTraceMascot.js';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { GoogleAuthStatus } from '@/types/audit.js';
@@ -50,7 +50,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
   return (
     <aside className="sidebar" style={{ width: 300 }}>
-      {/* Authentic OpenDots Wordmark */}
+      {/* TalentTrace Brand Wordmark */}
       <button type="button" className="wordmark">
         <span className="dotted-logo">
           <i />
@@ -62,10 +62,10 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         <span className="wordmark-dot">•</span>
       </button>
 
-      {/* Authentic OpenDots Profile Card */}
+      {/* TalentTrace Recruiter Profile Card */}
       <div className="profile">
         <div className="profile-mascot">
-          <OpenDotsMascot color="blue" size="md" />
+          <TalentTraceMascot color="blue" size="md" />
         </div>
         <span className="online-dot" />
         <div className="profile-label">
@@ -445,7 +445,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         </div>
       </div>
 
-      {/* Sidebar Footer with OpenDots Star Note and Integrations */}
+      {/* Sidebar Footer with Workspace Note and Integrations */}
       <div className="sidebar-bottom">
         <button
           type="button"

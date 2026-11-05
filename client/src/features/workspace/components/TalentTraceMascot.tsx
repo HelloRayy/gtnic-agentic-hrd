@@ -4,7 +4,7 @@ export type DotCharacter = 'blue' | 'mint' | 'orange' | 'purple';
 export type DotState = 'idle' | 'working' | 'complete' | 'paused' | 'needs-input';
 export type DotSize = 'sm' | 'md' | 'lg' | 'xl';
 
-export interface OpenDotsMascotProps {
+export interface TalentTraceMascotProps {
   color?: DotCharacter;
   identity?: string;
   size?: DotSize;
@@ -19,7 +19,7 @@ export interface OpenDotsMascotProps {
 const characters: readonly DotCharacter[] = ['blue', 'mint', 'orange', 'purple'] as const;
 
 /**
- * Stable hash identity matching OpenDots algorithm to keep each personality recognizable.
+ * Deterministic hash to assign consistent visual avatar personalities per candidate identity.
  */
 export function characterFor(identity?: string): DotCharacter {
   if (!identity) return 'blue';
@@ -30,13 +30,13 @@ export function characterFor(identity?: string): DotCharacter {
   return characters[hash % characters.length];
 }
 
-export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
+export const TalentTraceMascot: React.FC<TalentTraceMascotProps> = ({
   color,
   identity,
   size = 'md',
   state = 'idle',
   isWorking = false,
-  name = 'Forensic Dot',
+  name = 'TalentTrace AI Agent',
   decorative = false,
   className = '',
   style,
@@ -54,7 +54,7 @@ export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
   const dim = sizeDimensions[size] || sizeDimensions.md;
   const baseUrl = import.meta.env.BASE_URL || '/';
   const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const imgSrc = `${cleanBase}opendots/dot-${chosenColor}.png`;
+  const imgSrc = `${cleanBase}mascot/${chosenColor}.png`;
 
   return (
     <span
@@ -77,12 +77,13 @@ export const OpenDotsMascot: React.FC<OpenDotsMascotProps> = ({
     </span>
   );
 };
-export interface OpenDotsQuadHeroProps {
+
+export interface TalentTraceQuadHeroProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const OpenDotsQuadHero: React.FC<OpenDotsQuadHeroProps> = ({
+export const TalentTraceQuadHero: React.FC<TalentTraceQuadHeroProps> = ({
   className = '',
   size = 'md',
 }) => {
@@ -119,7 +120,7 @@ export const OpenDotsQuadHero: React.FC<OpenDotsQuadHeroProps> = ({
             height={96}
             decoding="async"
             className={`shrink-0 select-none ${sizeClass} drop-shadow-[0_4px_12px_rgba(57,57,74,0.06)]`}
-            src={`${cleanBase}opendots/dot-${color}.png`}
+            src={`${cleanBase}mascot/${color}.png`}
           />
         </span>
       ))}
@@ -127,4 +128,4 @@ export const OpenDotsQuadHero: React.FC<OpenDotsQuadHeroProps> = ({
   );
 };
 
-export default OpenDotsMascot;
+export default TalentTraceMascot;

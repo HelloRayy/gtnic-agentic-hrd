@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, ShieldCheck, Terminal, Sparkles, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
-import { OpenDotsMascot, OpenDotsQuadHero } from './OpenDotsMascot.js';
+import { TalentTraceMascot, TalentTraceQuadHero } from './TalentTraceMascot.js';
 import type { TraceEvent } from '@/types/audit.js';
 
 interface WorkspaceZeroStateProps {
@@ -22,7 +22,7 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
         <div className="relative flex items-center justify-center">
-          <OpenDotsMascot color="blue" size="lg" state="working" />
+          <TalentTraceMascot color="blue" size="lg" state="working" />
         </div>
 
         <div className="space-y-1.5 max-w-md">
@@ -93,7 +93,7 @@ export const WorkspaceZeroState: React.FC<WorkspaceZeroStateProps> = ({
     <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
       <div className="max-w-xl w-full text-center space-y-6">
         <div className="mx-auto flex items-center justify-center pt-2">
-          <OpenDotsQuadHero size="md" />
+          <TalentTraceQuadHero size="md" />
         </div>
 
         <div className="space-y-2.5">
