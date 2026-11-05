@@ -12,6 +12,7 @@ import type { TraceEvent, GoogleAuthStatus, TechnicalDossier } from '@/types/aud
 import {
   streamAuditExecution,
   sendDeliberationQuestion,
+  streamDeliberationQuestion,
   fetchGoogleAuthStatus,
   fetchAuditHistory,
   fetchAuditById,
