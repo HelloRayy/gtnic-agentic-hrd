@@ -4,18 +4,23 @@ import { config } from '../config/env.js';
 export class RouterClient {
   private client: OpenAI | null = null;
   private readonly fallbackModels = [
-    'ag/gemini-3.8-flash-low',
     'ag/gemini-3.8-flash',
-    'gemini-3.8-flash',
+    'ag/gemini-3.8-flash-low',
+    'gemini/gemini-3.8-flash',
     'claude-3-5-sonnet',
     'gpt-4o',
   ];
 
   constructor() {
     if (config.router.apiKey) {
+      let baseUrl = (config.router.baseUrl || '').trim().replace(/\/+$/, '');
+      if (baseUrl && !baseUrl.endsWith('/v1')) {
+        baseUrl = `${baseUrl}/v1`;
+      }
+
       this.client = new OpenAI({
         apiKey: config.router.apiKey,
-        baseURL: config.router.baseUrl,
+        baseURL: baseUrl || config.router.baseUrl,
         maxRetries: 2,
       });
     }
