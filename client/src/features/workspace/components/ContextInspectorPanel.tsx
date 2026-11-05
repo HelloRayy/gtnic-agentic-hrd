@@ -71,7 +71,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             <Code2 size={13} />
             <span>IDE</span>
             {candidate && (
-              <span className="text-[10px] font-mono px-1 py-0.2 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
+              <span className="text-[11px] font-mono px-1.5 py-0.5 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
                 3
               </span>
             )}
@@ -86,7 +86,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             <BookOpen size={13} />
             <span>Bukti</span>
             {matrixCount > 0 && (
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
+              <span className="text-[11px] font-mono px-1.5 py-0.5 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
                 {verifiedCount}/{matrixCount}
               </span>
             )}
@@ -101,7 +101,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             <Sparkles size={13} />
             <span>Radar</span>
             {radarCount > 0 && (
-              <span className="text-[10px] font-mono px-1 py-0.2 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
+              <span className="text-[11px] font-mono px-1.5 py-0.5 rounded-full bg-[#e4e2dd] text-[#555866] font-medium leading-none">
                 {radarCount}
               </span>
             )}
@@ -179,7 +179,7 @@ export const ContextInspectorPanel: React.FC<ContextInspectorPanelProps> = ({
             <div className="text-xs font-semibold text-[#333641]">
               Panel Forensik Siap
             </div>
-            <p className="text-[11px] text-[#8c8d97] leading-relaxed m-0">
+            <p className="text-xs text-[#8c8d97] leading-relaxed m-0">
               Pilih atau tambahkan kandidat untuk menginspeksi Mini Forensic IDE, dokumen CV asli, matriks bukti kode, radar investigasi wawancara, dan Google Meet.
             </p>
           </div>
