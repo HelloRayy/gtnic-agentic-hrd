@@ -23,6 +23,7 @@ interface CandidateSidebarProps {
   onOpenBenchmark?: () => void;
   isBenchmarkActive?: boolean;
   onToggleCollapse?: () => void;
+  width?: number;
 }
 
 export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
@@ -40,6 +41,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onOpenBenchmark,
   isBenchmarkActive = false,
   onToggleCollapse,
+  width = 300,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -55,7 +57,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   ];
 
   return (
-    <aside className="sidebar" style={{ width: 300 }}>
+    <aside className="sidebar" style={{ width, minWidth: width }}>
       {/* TalentTrace Brand Wordmark & Collapse Control */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <button type="button" className="wordmark" style={{ margin: 0 }}>

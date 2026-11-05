@@ -106,6 +106,77 @@ export default function App() {
   const [benchmarkMessages, setBenchmarkMessages] = useState<DeliberationMessage[]>([]);
   const [isBenchmarkDeliberating, setIsBenchmarkDeliberating] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('tt_sidebar_width');
+      return saved ? parseInt(saved, 10) : 300;
+    } catch {
+      return 300;
+    }
+  });
+
+  const [rightPanelWidth, setRightPanelWidth] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('tt_right_panel_width');
+      return saved ? parseInt(saved, 10) : 280;
+    } catch {
+      return 280;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tt_sidebar_width', sidebarWidth.toString());
+    } catch {}
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tt_right_panel_width', rightPanelWidth.toString());
+    } catch {}
+  }, [rightPanelWidth]);
+
+  const handleStartResizeLeft = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const newWidth = Math.max(220, Math.min(520, moveEvent.clientX));
+      setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleStartResizeRight = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const newWidth = Math.max(240, Math.min(550, window.innerWidth - moveEvent.clientX));
+      setRightPanelWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
 
   const benchmarkCandidateA = candidates.find((c) => c.id === benchmarkSlotAId) || null;
   const benchmarkCandidateB = candidates.find((c) => c.id === benchmarkSlotBId) || null;
@@ -630,6 +701,16 @@ export default function App() {
           onOpenBenchmark={handleOpenBenchmark}
           isBenchmarkActive={activeWorkspaceTab === 'benchmark'}
           onToggleCollapse={() => setIsSidebarCollapsed(true)}
+          width={sidebarWidth}
+        />
+      )}
+
+      {/* Left Resizer Handle */}
+      {!isSidebarCollapsed && (
+        <div
+          onMouseDown={handleStartResizeLeft}
+          className="w-1 hover:w-1.5 active:w-1.5 h-screen bg-[#dedbd3] hover:bg-[#7285d5] active:bg-[#7285d5] cursor-col-resize transition-all shrink-0 z-10 select-none"
+          title="Tarik untuk mengubah lebar antrean kandidat"
         />
       )}
 
@@ -677,6 +758,13 @@ export default function App() {
         onMoveStage={handleMoveCandidateStage}
       />
 
+      {/* Right Resizer Handle */}
+      <div
+        onMouseDown={handleStartResizeRight}
+        className="w-1 hover:w-1.5 active:w-1.5 h-screen bg-[#dedbd3] hover:bg-[#7285d5] active:bg-[#7285d5] cursor-col-resize transition-all shrink-0 z-10 select-none"
+        title="Tarik untuk mengubah lebar panel kanan"
+      />
+
       {/* Panel 3: Right Inspector Panel - Arbiter Chat (Benchmark) atau Forensic Explorer */}
       {activeWorkspaceTab === 'benchmark' ? (
         <BenchmarkInspectorPanel
@@ -685,12 +773,14 @@ export default function App() {
           messages={benchmarkMessages}
           isDeliberating={isBenchmarkDeliberating}
           onSendMessage={handleSendBenchmarkMessage}
+          width={rightPanelWidth}
         />
       ) : (
         <ForensicExplorerPanel
           candidate={activeCandidate}
           activeTabId={activeWorkspaceTab}
           onSelectTab={handleSelectWorkspaceTab}
+          width={rightPanelWidth}
         />
       )}
       <AddCandidateModal

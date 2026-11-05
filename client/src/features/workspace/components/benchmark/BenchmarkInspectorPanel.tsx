@@ -11,6 +11,7 @@ interface BenchmarkInspectorPanelProps {
   messages: DeliberationMessage[];
   isDeliberating: boolean;
   onSendMessage: (question: string) => void;
+  width?: number;
 }
 
 export const BenchmarkInspectorPanel: React.FC<BenchmarkInspectorPanelProps> = ({
@@ -19,6 +20,7 @@ export const BenchmarkInspectorPanel: React.FC<BenchmarkInspectorPanelProps> = (
   messages,
   isDeliberating,
   onSendMessage,
+  width = 330,
 }) => {
   const [input, setInput] = useState('');
   const chatBottomRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,7 @@ export const BenchmarkInspectorPanel: React.FC<BenchmarkInspectorPanelProps> = (
   };
 
   return (
-    <aside className="w-[330px] shrink-0 bg-[#fbfaf8] border-l border-[#e5e3dc] text-[#333641] font-sans text-xs select-none flex flex-col h-screen overflow-hidden">
+    <aside style={{ width, minWidth: width }} className="shrink-0 bg-[#fbfaf8] border-l border-[#e5e3dc] text-[#333641] font-sans text-xs select-none flex flex-col h-screen overflow-hidden">
       {/* 1. Panel Header */}
       <div className="h-10 px-3 bg-[#f5f4ef] border-b border-[#e2dfd7] flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">

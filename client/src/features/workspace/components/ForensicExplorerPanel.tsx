@@ -22,12 +22,14 @@ interface ForensicExplorerPanelProps {
   candidate: WorkspaceCandidate | null;
   activeTabId: string;
   onSelectTab: (tabId: string) => void;
+  width?: number;
 }
 
 export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
   candidate,
   activeTabId,
   onSelectTab,
+  width = 260,
   }) => {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     audit: false,
@@ -64,7 +66,7 @@ export const ForensicExplorerPanel: React.FC<ForensicExplorerPanelProps> = ({
   }
 
   return (
-    <aside className="w-[260px] shrink-0 bg-[#fbfaf8] border-l border-[#e5e3dc] text-[#333641] font-sans text-xs select-none flex flex-col h-screen overflow-hidden min-h-0">
+    <aside style={{ width, minWidth: width }} className="shrink-0 bg-[#fbfaf8] border-l border-[#e5e3dc] text-[#333641] font-sans text-xs select-none flex flex-col h-screen overflow-hidden min-h-0">
       {/* 1. Header Toolbar */}
       <div className="h-10 px-3 bg-[#f5f4ef] border-b border-[#e2dfd7] flex items-center justify-between text-xs shrink-0 select-none">
         <span className="text-[11px] font-sans font-bold tracking-wider text-[#797d8c] uppercase">
