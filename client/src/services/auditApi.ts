@@ -176,34 +176,12 @@ export async function discoverCandidateRepos(
   return json.repos || [];
 }
 
-export interface DeliberationResponse {
-  answer: string;
-  anchors: string[];
-  newAuditedRepo?: string;
-  newEvidenceItem?: EvidenceItem;
-}
-
-export async function sendDeliberationQuestion(
-  dossier: TechnicalDossier,
-  question: string
-): Promise<DeliberationResponse> {
-  const res = await fetch(`${API_BASE}/deliberate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ dossier, question }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Gagal berkonsultasi dengan AI Deliberation Partner.');
-  }
-  const json = await res.json();
-  return {
-    answer: json.answer || '',
-    anchors: json.anchors || [],
-    newAuditedRepo: json.newAuditedRepo,
-    newEvidenceItem: json.newEvidenceItem,
-  };
-}
+export {
+  sendDeliberationQuestion,
+  streamDeliberationQuestion,
+  type DeliberationResponse,
+  type StreamDeliberationCallbacks,
+} from './deliberationApi.js';
 
 export async function generateConstructiveFeedback(
   dossier: TechnicalDossier
