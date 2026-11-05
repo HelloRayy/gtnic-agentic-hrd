@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers, FileText, Code2 } from 'lucide-react';
+import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers, FileText, Code2, Calendar } from 'lucide-react';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
 import { AssessmentHighlightBox } from './AssessmentHighlightBox.js';
@@ -9,9 +9,10 @@ interface CandidateBriefingCardProps {
   candidate: WorkspaceCandidate;
   onViewCv?: () => void;
   onInspectCode?: () => void;
+  onPromoteToInterview?: () => void;
 }
 
-export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ candidate, onViewCv, onInspectCode }) => {
+export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ candidate, onViewCv, onInspectCode, onPromoteToInterview }) => {
   const { dossier } = candidate;
   const verifiedCount = dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
   const transferableCount = dossier.evidenceMatrix.filter((e) => e.status === 'TRANSFERABLE').length;
@@ -55,6 +56,17 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
         {/* Metrik & Aksi Cepat Forensik */}
         <div className="flex items-center gap-2 flex-wrap">
+          {onPromoteToInterview && (!candidate.stage || candidate.stage === 'screening') && (
+            <button
+              type="button"
+              onClick={onPromoteToInterview}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[8px] bg-[#7285d5] hover:bg-[#5f74cc] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+              title="Loloskan kandidat ini ke tahap wawancara teknis"
+            >
+              <Calendar size={13} />
+              <span>Loloskan ke Wawancara ➔</span>
+            </button>
+          )}
           {onViewCv && (
             <button
               type="button"

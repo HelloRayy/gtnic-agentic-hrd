@@ -26,6 +26,7 @@ interface DeliberationChatViewProps {
   onSaveDossier?: () => void;
   onViewCv?: () => void;
   onInspectCode?: () => void;
+  onPromoteToInterview?: () => void;
 }
 
 export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
@@ -40,6 +41,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   onSaveDossier,
   onViewCv,
   onInspectCode,
+  onPromoteToInterview,
 }) => {
   const [input, setInput] = useState('');
   const [skillsOpen, setSkillsOpen] = useState(false);
@@ -152,6 +154,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
           candidate={candidate}
           onViewCv={onViewCv}
           onInspectCode={onInspectCode}
+          onPromoteToInterview={onPromoteToInterview}
         />
 
         {/* Dialogue Messages */}

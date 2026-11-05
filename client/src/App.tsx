@@ -674,6 +674,7 @@ export default function App() {
         onSelectSlotB={handleSelectBenchmarkSlotB}
         onSelectCandidate={setActiveCandidateId}
         onCloseBenchmark={() => handleSelectWorkspaceTab('chat')}
+        onMoveStage={handleMoveCandidateStage}
       />
 
       {/* Panel 3: Right Inspector Panel - Arbiter Chat (Benchmark) atau Forensic Explorer */}

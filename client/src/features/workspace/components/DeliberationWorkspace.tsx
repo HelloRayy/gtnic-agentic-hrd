@@ -11,6 +11,9 @@ import { InterviewActionView } from './inspector/InterviewActionView.js';
 import { WebIdeInspectorView } from './inspector/WebIdeInspectorView.js';
 import { generateIdeSnippets } from '../services/ideCodeAdapter.js';
 import { CandidateBenchmarkView } from './benchmark/CandidateBenchmarkView.js';
+import { RecruitmentPipelineStepper } from './pipeline/RecruitmentPipelineStepper.js';
+import { InterviewSessionHub } from './pipeline/InterviewSessionHub.js';
+import { CandidateAcceptedView } from './pipeline/CandidateAcceptedView.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { TraceEvent, GoogleAuthStatus } from '@/types/audit.js';
 
@@ -38,6 +41,7 @@ interface DeliberationWorkspaceProps {
   onSelectSlotA?: (id: string | null) => void;
   onSelectSlotB?: (id: string | null) => void;
   onCloseBenchmark?: () => void;
+  onMoveStage?: (candidateId: string, newStage: 'screening' | 'interview' | 'accepted') => void;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -64,6 +68,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   slotBId = null,
   onSelectSlotA,
   onSelectSlotB,
+  onMoveStage,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -97,6 +102,11 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         isLoading={isLoading}
         onReaudit={onReaudit}
         onOpenWebIde={onOpenWebIde}
+      />
+      {/* 2. Three-Stage Recruitment Pipeline Stepper */}
+      <RecruitmentPipelineStepper
+        currentStage={candidate.stage || 'screening'}
+        onSelectStage={(stage) => onMoveStage?.(candidate.id, stage)}
       />
 
       {/* 2. CoT Forensic Progress Stream Bar (Active only while running) */}
@@ -172,18 +182,34 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
       {/* 4. Dynamic Main Workspace Canvas View Area */}
       <div className="flex-1 overflow-hidden flex flex-col">
         {activeWorkspaceTab === 'chat' && (
-          <DeliberationChatView
-            candidate={candidate}
-            messages={candidate.chatHistory}
-            candidateName={candidate.name}
-            candidateRole={candidate.role}
-            auditedRepos={dossier.auditedRepos}
-            isDeliberating={isDeliberating}
-            onSendMessage={onSendMessage}
-            onSchedule={() => onSelectWorkspaceTab('action')}
-            onViewCv={onViewCv || (() => onSelectWorkspaceTab('cv'))}
-            onInspectCode={onInspectCode || (() => onSelectWorkspaceTab('code:core-logic'))}
-          />
+          candidate.stage === 'interview' ? (
+            <InterviewSessionHub
+              candidate={candidate}
+              googleStatus={googleStatus}
+              onPromoteToAccepted={() => onMoveStage?.(candidate.id, 'accepted')}
+              onBackToScreening={() => onMoveStage?.(candidate.id, 'screening')}
+            />
+          ) : candidate.stage === 'accepted' ? (
+            <CandidateAcceptedView
+              candidate={candidate}
+              onBackToInterview={() => onMoveStage?.(candidate.id, 'interview')}
+              onBackToScreening={() => onMoveStage?.(candidate.id, 'screening')}
+            />
+          ) : (
+            <DeliberationChatView
+              candidate={candidate}
+              messages={candidate.chatHistory}
+              candidateName={candidate.name}
+              candidateRole={candidate.role}
+              auditedRepos={dossier.auditedRepos}
+              isDeliberating={isDeliberating}
+              onSendMessage={onSendMessage}
+              onSchedule={() => onSelectWorkspaceTab('action')}
+              onViewCv={onViewCv || (() => onSelectWorkspaceTab('cv'))}
+              onInspectCode={onInspectCode || (() => onSelectWorkspaceTab('code:core-logic'))}
+              onPromoteToInterview={() => onMoveStage?.(candidate.id, 'interview')}
+            />
+          )
         )}
 
         {activeWorkspaceTab === 'cv' && (
