@@ -115,11 +115,11 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <FolderGit2 size={15} className="text-[#7285d5]" />
-                <span className="text-[12px] font-bold text-[#626471] uppercase tracking-wider">
+                <span className="text-[13px] font-bold text-[#626471] uppercase tracking-wider">
                   Repositori Publik yang Diaudit
                 </span>
               </div>
-              <span className="text-[11px] font-semibold text-[#5264a7] bg-[#edf0fb] border border-[#d8e0f7] px-2 py-0.5 rounded-full">
+              <span className="text-xs font-semibold text-[#5264a7] bg-[#edf0fb] border border-[#d8e0f7] px-2.5 py-0.5 rounded-full">
                 {dossier.auditedRepos.length} Repositori
               </span>
             </div>
@@ -157,11 +157,11 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
             <div className="flex items-center justify-between mb-2.5">
               <div className="flex items-center gap-2">
                 <Layers size={15} className="text-[#2b8a3e]" />
-                <span className="text-[12px] font-bold text-[#626471] uppercase tracking-wider">
+                <span className="text-[13px] font-bold text-[#626471] uppercase tracking-wider">
                   Rangkuman Bukti Faktual CV
                 </span>
               </div>
-              <span className="text-[11px] text-[#8c8d97] font-medium">
+              <span className="text-xs text-[#8c8d97] font-medium">
                 Total {dossier.evidenceMatrix.length} Klaim
               </span>
             </div>
@@ -195,7 +195,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                   <CheckCircle2 size={14} className="text-[#2b8a3e]" />
                   <span className="text-base font-bold text-[#206930] tabular-nums">{verifiedCount}</span>
                 </div>
-                <span className="text-[11px] font-semibold text-[#246b33] mt-1 leading-tight">
+                <span className="text-xs font-semibold text-[#246b33] mt-1 leading-tight">
                   Terverifikasi
                 </span>
               </div>
@@ -208,7 +208,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                   <ShieldCheck size={14} className="text-[#4b63b0]" />
                   <span className="text-base font-bold text-[#344a8e] tabular-nums">{transferableCount}</span>
                 </div>
-                <span className="text-[11px] font-semibold text-[#344a8e] mt-1 leading-tight">
+                <span className="text-xs font-semibold text-[#344a8e] mt-1 leading-tight">
                   Serumpun
                 </span>
               </div>
@@ -221,7 +221,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                   <AlertCircle size={14} className="text-[#c05621]" />
                   <span className="text-base font-bold text-[#a04618] tabular-nums">{missingCount}</span>
                 </div>
-                <span className="text-[11px] font-semibold text-[#a04618] mt-1 leading-tight">
+                <span className="text-xs font-semibold text-[#a04618] mt-1 leading-tight">
                   Perlu Tanya
                 </span>
               </div>
@@ -240,7 +240,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
                 Website Produksi & Live Demo Terdeteksi ({dossier.liveDemos.length})
               </span>
             </div>
-            <span className="text-[11px] font-semibold text-[#275954] bg-[#dcf1ec] px-2.5 py-0.5 rounded-full border border-[#b8e2d8]">
+            <span className="text-xs font-semibold text-[#275954] bg-[#dcf1ec] px-2.5 py-0.5 rounded-full border border-[#b8e2d8]">
               Live Deploy Ready
             </span>
           </div>

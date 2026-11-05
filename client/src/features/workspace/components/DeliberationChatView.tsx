@@ -187,7 +187,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
               {msg.timestamp && (
                 <div
                   style={{
-                    fontSize: 9.5,
+                    fontSize: 11,
                     marginTop: 4,
                     textAlign: isUser ? 'right' : 'left',
                     color: isUser ? 'rgba(255, 255, 255, 0.75)' : '#8c8d97',
