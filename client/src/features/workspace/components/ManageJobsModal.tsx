@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, RotateCcw, Briefcase, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, RotateCcw } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal.js';
 import {
   RECRUITMENT_PRESETS,

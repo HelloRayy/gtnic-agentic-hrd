@@ -86,7 +86,6 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
             <CheckCircle2 size={15} className="text-[#2b8a3e]" />
             <span>{verifiedCount}/{dossier.evidenceMatrix.length} Bukti Terverifikasi</span>
           </div>
-          </div>
         </div>
       </div>
 
