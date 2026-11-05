@@ -46,22 +46,9 @@ export async function handleDeliberateCompare(req: Request, res: Response): Prom
     const verifiedB = dossierB?.evidenceMatrix?.filter((e) => e.status === 'VERIFIED') || [];
 
     if (!routerClient.isConfigured) {
-      const fallbackAnswer = `[Mode Simulasi Arbiter] Menanggapi pertanyaan: "${question}".
-
-1. **Rangkuman Eksekutif**:
-Antara **${nameA}** dan **${nameB}**, keduanya memiliki fokus rekayasa yang berbeda. ${nameA} memiliki ${verifiedA.length} bukti kode terverifikasi di repo (${reposA.join(', ') || 'publik'}), sementara ${nameB} mengantongi ${verifiedB.length} bukti terverifikasi di repo (${reposB.join(', ') || 'publik'}).
-
-2. **Perbandingan Bukti Teknis**:
-- **${nameA}**: Menunjukkan kekuatan pada ${dossierA?.candidate?.claimedSkills?.slice(0, 3).join(', ') || 'stack utama'} dengan bukti implementasi nyata di codebase.
-- **${nameB}**: Menunjukkan kekuatan pada ${dossierB?.candidate?.claimedSkills?.slice(0, 3).join(', ') || 'stack utama'}.
-
-3. **Rekomendasi Wawancara Tech Lead**:
-Uji pemahaman arsitektur ${nameA} seputar skalabilitas sistem, dan validasi mitigasi error pada ${nameB}.`;
-
-      res.json({
-        success: true,
-        answer: fallbackAnswer,
-        anchors: [...reposA.slice(0, 2), ...reposB.slice(0, 2)],
+      res.status(503).json({
+        success: false,
+        error: 'Layanan AI Router belum terhubung. Periksa konfigurasi ROUTER_BASE_URL dan ROUTER_API_KEY pada server.',
       });
       return;
     }
@@ -99,32 +86,20 @@ Pertanyaan Tim Engineering: "${question}"
       answer: string;
       anchors?: string[];
     }
-    let response: ComparisonResult;
     try {
-      response = await routerClient.completeStructured(systemPrompt, userPrompt);
+      const response = (await routerClient.completeStructured(systemPrompt, userPrompt)) as ComparisonResult;
+      res.json({
+        success: true,
+        answer: response.answer || 'Komparasi selesai diproses.',
+        anchors: Array.isArray(response.anchors) ? response.anchors : [...reposA.slice(0, 1), ...reposB.slice(0, 1)],
+      });
     } catch (llmErr: unknown) {
-      console.warn('[Benchmark] Router error, activating deterministic fallback:', llmErr);
-      response = {
-        answer: `[Analisis Komparasi Forensik] Menanggapi pertanyaan: "${question}".
-
-1. **Rangkuman Eksekutif**:
-Antara **${nameA}** dan **${nameB}**, keduanya memiliki fokus rekayasa yang berbeda. ${nameA} memiliki ${verifiedA.length} bukti kode terverifikasi di repositori (${reposA.join(', ') || 'publik'}), sementara ${nameB} mengantongi ${verifiedB.length} bukti terverifikasi di repositori (${reposB.join(', ') || 'publik'}).
-
-2. **Perbandingan Bukti Teknis**:
-- **${nameA}**: Menunjukkan kekuatan pada ${dossierA?.candidate?.claimedSkills?.slice(0, 3).join(', ') || 'stack utama'} dengan bukti nyata di repositori ${reposA[0] || 'publik'}.
-- **${nameB}**: Menunjukkan kekuatan pada ${dossierB?.candidate?.claimedSkills?.slice(0, 3).join(', ') || 'stack utama'} dengan bukti implementasi di ${reposB[0] || 'publik'}.
-
-3. **Rekomendasi Wawancara Tech Lead**:
-Uji kedalaman arsitektur ${nameA} seputar skalabilitas sistem, dan validasi mitigasi error serta pengujian kode pada ${nameB}.`,
-        anchors: [...reposA.slice(0, 2), ...reposB.slice(0, 2)],
-      };
+      const msg = llmErr instanceof Error ? llmErr.message : String(llmErr);
+      res.status(502).json({
+        success: false,
+        error: `Gagal berkomunikasi dengan AI Router (${msg}). Periksa ketersediaan koneksi 9Router atau model pilihan Anda.`,
+      });
     }
-
-    res.json({
-      success: true,
-      answer: response.answer || 'Komparasi selesai diproses.',
-      anchors: Array.isArray(response.anchors) ? response.anchors : [...reposA.slice(0, 1), ...reposB.slice(0, 1)],
-    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     res.status(500).json({ success: false, error: msg });

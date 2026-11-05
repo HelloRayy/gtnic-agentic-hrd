@@ -194,10 +194,9 @@ export async function handleDeliberationChat(req: Request, res: Response): Promi
     const ctx = await prepareDeliberationContext(req.body as Record<string, unknown>);
 
     if (!routerClient.isConfigured) {
-      res.json({
-        success: true,
-        answer: `[Mode Simulasi Co-Pilot] Pertanyaan Anda terkait kandidat ${ctx.candidateName}: "${ctx.question}". Kandidat ini memiliki ${ctx.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length} klaim terverifikasi di repositori ${ctx.auditedRepos.join(', ') || 'publik'}. Analisis codebase menunjukkan pola arsitektur yang konsisten dengan standar teknis modern.`,
-        anchors: ctx.auditedRepos.slice(0, 2),
+      res.status(503).json({
+        success: false,
+        error: 'Layanan AI Router belum terhubung. Periksa konfigurasi ROUTER_BASE_URL dan ROUTER_API_KEY.',
       });
       return;
     }
@@ -206,18 +205,8 @@ export async function handleDeliberationChat(req: Request, res: Response): Promi
       answer?: string;
       anchors?: string[];
     }
-    let response: SynthesisResult;
-    try {
-      const structuredPrompt = `${ctx.systemPrompt}\nOutput valid JSON only: { "answer": "your comprehensive two-tier answer in Bahasa Indonesia", "anchors": ["repo/file references"] }`;
-      response = (await routerClient.completeStructured(structuredPrompt, ctx.userPrompt)) as SynthesisResult;
-    } catch (err: unknown) {
-      console.warn('[DeliberationChat] Router error, activating graceful recovery:', err);
-      const verifiedClaims = ctx.evidenceMatrix.filter((e) => e.status === 'VERIFIED');
-      response = {
-        answer: `Berdasarkan audit repositori teknis **${ctx.candidateName}**: Terkait pertanyaan "${ctx.question}", kandidat memiliki ${verifiedClaims.length} bukti kode terverifikasi di repositori (${ctx.auditedRepos.join(', ') || 'publik'}). Kode menunjukkan pola arsitektur yang konsisten dengan standar teknis modern.`,
-        anchors: ctx.auditedRepos.slice(0, 2),
-      };
-    }
+    const structuredPrompt = `${ctx.systemPrompt}\nOutput valid JSON only: { "answer": "your comprehensive two-tier answer in Bahasa Indonesia", "anchors": ["repo/file references"] }`;
+    const response = (await routerClient.completeStructured(structuredPrompt, ctx.userPrompt)) as SynthesisResult;
 
     res.json({
       success: true,
@@ -247,44 +236,23 @@ export async function handleStreamDeliberationChat(req: Request, res: Response):
     );
 
     if (!routerClient.isConfigured) {
-      const mockAnswer = `[Mode Simulasi Co-Pilot] Pertanyaan Anda terkait kandidat ${ctx.candidateName}: "${ctx.question}". Kandidat ini memiliki ${ctx.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length} klaim terverifikasi di repositori ${ctx.auditedRepos.join(', ') || 'publik'}.`;
-      res.write(`data: ${JSON.stringify({ type: 'token', token: mockAnswer })}\n\n`);
       res.write(`data: ${JSON.stringify({
-        type: 'done',
-        answer: mockAnswer,
-        anchors: ctx.auditedRepos.slice(0, 2),
+        type: 'error',
+        error: 'Layanan AI Router belum terhubung. Periksa konfigurasi ROUTER_BASE_URL dan ROUTER_API_KEY.',
       })}\n\n`);
       res.end();
       return;
     }
 
     let fullText = '';
-    try {
-      const streamRes = await routerClient.streamChat(
-        ctx.systemPrompt,
-        ctx.userPrompt,
-        (delta) => {
-          res.write(`data: ${JSON.stringify({ type: 'token', token: delta })}\n\n`);
-        }
-      );
-      fullText = streamRes.fullText;
-    } catch (streamErr: unknown) {
-      console.warn('[DeliberationChat] Stream error, activating graceful recovery:', streamErr);
-      const verifiedClaims = ctx.evidenceMatrix.filter((e) => e.status === 'VERIFIED');
-      const fallbackText = `Berdasarkan audit repositori teknis **${ctx.candidateName}**:
-
-1. **Rangkuman Eksekutif**:
-Terkait pertanyaan Anda: "${ctx.question}", kandidat ini telah diverifikasi memiliki ${verifiedClaims.length} bukti implementasi nyata di repositori (${ctx.auditedRepos.join(', ') || 'publik'}). Rekam jejak kode menunjukkan pemahaman yang kuat pada stack ${ctx.jobTitle}.
-
-2. **Bukti Kode Terverifikasi**:
-${verifiedClaims.slice(0, 3).map((v) => `- **${v.claim}**: ${v.evidenceSummary}`).join('\n') || '- Kode telah diverifikasi sesuai standar produksi.'}
-
-3. **Panduan Wawancara Tech Lead**:
-Gali pemahaman kandidat mengenai trade-off skalabilitas dan mitigasi error pada repositori ${ctx.auditedRepos[0] || 'utama'}.`;
-
-      fullText = fallbackText;
-      res.write(`data: ${JSON.stringify({ type: 'token', token: fallbackText })}\n\n`);
-    }
+    const streamRes = await routerClient.streamChat(
+      ctx.systemPrompt,
+      ctx.userPrompt,
+      (delta) => {
+        res.write(`data: ${JSON.stringify({ type: 'token', token: delta })}\n\n`);
+      }
+    );
+    fullText = streamRes.fullText;
 
     const detectedAnchors = ctx.auditedRepos.filter((r) =>
       fullText.toLowerCase().includes(r.toLowerCase())
@@ -302,7 +270,10 @@ Gali pemahaman kandidat mengenai trade-off skalabilitas dan mitigasi error pada 
     })}\n\n`);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    res.write(`data: ${JSON.stringify({ type: 'error', error: msg })}\n\n`);
+    res.write(`data: ${JSON.stringify({
+      type: 'error',
+      error: `Gagal berkomunikasi dengan AI Router (${msg}). Periksa ketersediaan koneksi 9Router atau model pilihan Anda.`,
+    })}\n\n`);
   } finally {
     res.end();
   }
