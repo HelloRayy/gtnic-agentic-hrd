@@ -72,6 +72,62 @@ export class RouterClient {
     throw lastError || new Error('All configured router models failed to respond.');
   }
 
+  public async streamChat(
+    systemPrompt: string,
+    userPrompt: string,
+    onChunk: (delta: string) => void
+  ): Promise<{ fullText: string; resolvedModel: string }> {
+    if (!this.client) {
+      throw new Error('LLM Router is not configured with an API key.');
+    }
+
+    const candidateModels = [
+      config.router.defaultModel,
+      ...this.fallbackModels,
+    ].filter((m, idx, arr) => Boolean(m) && arr.indexOf(m) === idx);
+
+    let lastError: unknown = null;
+
+    for (const model of candidateModels) {
+      const isPrimary = model === config.router.defaultModel;
+      const modelTimeout = isPrimary ? 35000 : 45000;
+
+      try {
+        console.log(`[RouterClient] Streaming chat with model: ${model}...`);
+        const stream = await this.client.chat.completions.create(
+          {
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt },
+            ],
+            temperature: 0.3,
+            stream: true,
+          },
+          { timeout: modelTimeout }
+        );
+
+        let fullText = '';
+        for await (const chunk of stream) {
+          const delta = chunk.choices[0]?.delta?.content || '';
+          if (delta) {
+            fullText += delta;
+            onChunk(delta);
+          }
+        }
+
+        console.log(`[RouterClient] Stream completed with model: ${model} (${fullText.length} chars)`);
+        return { fullText, resolvedModel: model };
+      } catch (err: unknown) {
+        lastError = err;
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(`[RouterClient] Streaming model "${model}" failed (${msg}). Trying next fallback...`);
+      }
+    }
+
+    throw lastError || new Error('All configured router models failed to stream chat.');
+  }
+
   private cleanAndParseJson(raw: string): Record<string, unknown> {
     let clean = raw.trim();
     if (clean.includes('```json')) {

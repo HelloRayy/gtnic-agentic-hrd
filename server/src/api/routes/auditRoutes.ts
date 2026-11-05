@@ -6,6 +6,7 @@ import {
   handleStreamAudit,
   handleDiscoverRepos,
   handleDeliberationChat,
+  handleStreamDeliberationChat,
   handleConstructiveFeedback,
   handleGetRepoFileContent,
 } from '../controllers/auditController.js';
@@ -41,7 +42,9 @@ auditRouter.post('/audit/stream', upload.single('cv'), handleStreamAudit);
 auditRouter.get('/discover-repos', handleDiscoverRepos);
 auditRouter.post('/discover-repos', handleDiscoverRepos);
 auditRouter.post('/deliberate', handleDeliberationChat);
+auditRouter.post('/deliberate/stream', handleStreamDeliberationChat);
 auditRouter.post('/audit/chat', handleDeliberationChat);
+auditRouter.post('/audit/chat/stream', handleStreamDeliberationChat);
 auditRouter.post('/constructive-feedback', handleConstructiveFeedback);
 auditRouter.get('/repo/file-content', handleGetRepoFileContent);
 
