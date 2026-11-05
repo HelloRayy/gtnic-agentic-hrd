@@ -351,17 +351,23 @@ export default function App() {
       hour: '2-digit',
       minute: '2-digit',
     });
-
     const userMessage = {
       role: 'user' as const,
       content: messageText,
       timestamp: userTimestamp,
     };
 
+    const initialAgentMessage = {
+      role: 'assistant' as const,
+      content: '',
+      timestamp: userTimestamp,
+      anchors: [] as string[],
+    };
+
     setCandidates((prev) =>
       prev.map((c) =>
         c.id === activeCandidateId
-          ? { ...c, chatHistory: [...c.chatHistory, userMessage] }
+          ? { ...c, chatHistory: [...c.chatHistory, userMessage, initialAgentMessage] }
           : c
       )
     );
@@ -369,61 +375,101 @@ export default function App() {
     setIsDeliberating(true);
 
     try {
-      const res = await sendDeliberationQuestion(
-        activeCandidate.dossier,
-        messageText
-      );
-      const agentTimestamp = new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
+      await streamDeliberationQuestion(activeCandidate.dossier, messageText, {
+        onToken: (token) => {
+          setCandidates((prev) =>
+            prev.map((c) => {
+              if (c.id !== activeCandidateId) return c;
+              const history = [...c.chatHistory];
+              const lastIdx = history.length - 1;
+              if (lastIdx >= 0 && history[lastIdx].role === 'assistant') {
+                history[lastIdx] = {
+                  ...history[lastIdx],
+                  content: history[lastIdx].content + token,
+                };
+              }
+              return { ...c, chatHistory: history };
+            })
+          );
+        },
+        onComplete: (res) => {
+          const agentTimestamp = new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          setCandidates((prev) =>
+            prev.map((c) => {
+              if (c.id !== activeCandidateId) return c;
+              const history = [...c.chatHistory];
+              const lastIdx = history.length - 1;
+              if (lastIdx >= 0 && history[lastIdx].role === 'assistant') {
+                history[lastIdx] = {
+                  ...history[lastIdx],
+                  content: history[lastIdx].content || res.answer,
+                  timestamp: agentTimestamp,
+                  anchors: res.anchors,
+                };
+              }
+              const updatedRepos =
+                res.newAuditedRepo && !c.dossier.auditedRepos.includes(res.newAuditedRepo)
+                  ? [...c.dossier.auditedRepos, res.newAuditedRepo]
+                  : c.dossier.auditedRepos;
+              const updatedMatrix = res.newEvidenceItem
+                ? [res.newEvidenceItem, ...c.dossier.evidenceMatrix]
+                : c.dossier.evidenceMatrix;
+              return {
+                ...c,
+                reposCount: updatedRepos.length,
+                dossier: {
+                  ...c.dossier,
+                  auditedRepos: updatedRepos,
+                  evidenceMatrix: updatedMatrix,
+                },
+                chatHistory: history,
+              };
+            })
+          );
+        },
+        onError: (errMsg) => {
+          setCandidates((prev) =>
+            prev.map((c) => {
+              if (c.id !== activeCandidateId) return c;
+              const history = [...c.chatHistory];
+              const lastIdx = history.length - 1;
+              if (lastIdx >= 0 && history[lastIdx].role === 'assistant') {
+                const currentContent = history[lastIdx].content;
+                history[lastIdx] = {
+                  ...history[lastIdx],
+                  content: currentContent
+                    ? `${currentContent}\n\n[Peringatan: ${errMsg}]`
+                    : `Maaf, terjadi kendala komunikasi dengan router model: ${errMsg}`,
+                };
+              }
+              return { ...c, chatHistory: history };
+            })
+          );
+        },
       });
-
-      const agentMessage = {
-        role: 'assistant' as const,
-        content: res.answer,
-        timestamp: agentTimestamp,
-        anchors: res.anchors,
-      };
-
-      setCandidates((prev) =>
-        prev.map((c) => {
-          if (c.id !== activeCandidateId) return c;
-          const updatedRepos =
-            res.newAuditedRepo && !c.dossier.auditedRepos.includes(res.newAuditedRepo)
-              ? [...c.dossier.auditedRepos, res.newAuditedRepo]
-              : c.dossier.auditedRepos;
-          const updatedMatrix = res.newEvidenceItem
-            ? [res.newEvidenceItem, ...c.dossier.evidenceMatrix]
-            : c.dossier.evidenceMatrix;
-          return {
-            ...c,
-            reposCount: updatedRepos.length,
-            dossier: {
-              ...c.dossier,
-              auditedRepos: updatedRepos,
-              evidenceMatrix: updatedMatrix,
-            },
-            chatHistory: [...c.chatHistory, agentMessage],
-          };
-        })
-      );
     } catch (err: unknown) {
       const errMsg =
         err instanceof Error ? err.message : 'Gagal memproses deliberasi AI.';
-      const errorMessage = {
-        role: 'assistant' as const,
-        content: `Maaf, terjadi kendala komunikasi dengan router model: ${errMsg}`,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-      };
       setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === activeCandidateId
-            ? { ...c, chatHistory: [...c.chatHistory, errorMessage] }
-            : c
-        )
+        prev.map((c) => {
+          if (c.id !== activeCandidateId) return c;
+          const history = [...c.chatHistory];
+          const lastIdx = history.length - 1;
+          if (lastIdx >= 0 && history[lastIdx].role === 'assistant') {
+            const currentContent = history[lastIdx].content;
+            history[lastIdx] = {
+              ...history[lastIdx],
+              content: currentContent
+                ? `${currentContent}\n\n[Peringatan: ${errMsg}]`
+                : `Maaf, terjadi kendala komunikasi dengan router model: ${errMsg}`,
+            };
+          }
+          return { ...c, chatHistory: history };
+        })
       );
     } finally {
       setIsDeliberating(false);
