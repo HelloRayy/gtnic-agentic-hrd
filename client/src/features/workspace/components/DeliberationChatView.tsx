@@ -44,18 +44,18 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   const [input, setInput] = useState('');
   const [skillsOpen, setSkillsOpen] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeoutRef = useRef<number | null>(null);
 
   const handleMouseEnter = () => {
     if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
+      window.clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
     }
     setSkillsOpen(true);
   };
 
   const handleMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
+    hoverTimeoutRef.current = window.setTimeout(() => {
       setSkillsOpen(false);
     }, 200);
   };

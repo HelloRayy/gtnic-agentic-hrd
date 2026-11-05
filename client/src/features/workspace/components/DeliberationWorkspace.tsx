@@ -32,7 +32,6 @@ interface DeliberationWorkspaceProps {
   onViewCv?: () => void;
   onInspectCode?: () => void;
   allCandidates?: WorkspaceCandidate[];
-  benchmarkCandidateIds?: [string, string] | null;
   onSelectCandidate?: (id: string) => void;
   slotAId?: string | null;
   slotBId?: string | null;
@@ -59,7 +58,6 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   onViewCv,
   onInspectCode,
   allCandidates = [],
-  benchmarkCandidateIds = null,
   onSelectCandidate,
   onCloseBenchmark,
   slotAId = null,
