@@ -1019,3 +1019,30 @@ body {
   box-shadow: none;
   color: #333641;
 }
+
+@media print {
+  .sidebar,
+  .topbar,
+  .result-pane,
+  aside,
+  .chat-compose,
+  .chat-persona-actions,
+  .pane-header,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  body, html, main, .live-chat, .chat-transcript {
+    background: #ffffff !important;
+    color: #111111 !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .chat-transcript {
+    padding: 0 !important;
+    max-height: none !important;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Calendar, Video, CheckCircle2, AlertCircle } from 'lucide-react';
-import { dispatchScheduleInterview } from '@/services/auditApi.js';
-import type { TechnicalDossier, GoogleAuthStatus } from '@/types/audit.js';
+import { Calendar, Video, CheckCircle2, AlertCircle, Mail, Copy, Check } from 'lucide-react';
+import { dispatchScheduleInterview, generateConstructiveFeedback } from '@/services/auditApi.js';
+import type { TechnicalDossier, GoogleAuthStatus, ConstructiveFeedbackDraft } from '@/types/audit.js';
 
 interface InterviewActionViewProps {
   dossier: TechnicalDossier;
@@ -12,11 +12,11 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
   dossier,
   googleStatus,
 }) => {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const defaultDate = tomorrow.toISOString().split('T')[0];
-
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  });
   const [time, setTime] = useState('14:00');
   const [durationMinutes, setDurationMinutes] = useState(45);
   const [sendEmail, setSendEmail] = useState(true);
@@ -27,6 +27,30 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
     eventLink?: string;
     message?: string;
   } | null>(null);
+  const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
+  const [feedbackDraft, setFeedbackDraft] = useState<ConstructiveFeedbackDraft | null>(null);
+  const [feedbackCopied, setFeedbackCopied] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+
+  const handleDraftFeedback = async () => {
+    setIsGeneratingFeedback(true);
+    setFeedbackError(null);
+    try {
+      const draft = await generateConstructiveFeedback(dossier);
+      setFeedbackDraft(draft);
+    } catch (err: unknown) {
+      setFeedbackError(err instanceof Error ? err.message : 'Gagal menyusun umpan balik.');
+    } finally {
+      setIsGeneratingFeedback(false);
+    }
+  };
+
+  const handleCopyFeedback = () => {
+    if (!feedbackDraft) return;
+    navigator.clipboard.writeText(`Subject: ${feedbackDraft.subject}\n\n${feedbackDraft.body}`);
+    setFeedbackCopied(true);
+    setTimeout(() => setFeedbackCopied(false), 2000);
+  };
 
   const candidateEmail = dossier.candidate.email || `${dossier.candidate.name.toLowerCase().replace(/\s+/g, '.')}@example.com`;
 
@@ -203,6 +227,70 @@ export const InterviewActionView: React.FC<InterviewActionViewProps> = ({
           )}
         </button>
       </form>
+
+      {/* Constructive Engineering Feedback Engine (Anti-Ghosting) */}
+      <div className="p-3.5 bg-white border border-[#e9e8e6] rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="text-sm font-semibold text-[#333641] flex items-center gap-1.5">
+              <Mail className="w-4 h-4 text-[#7285d5]" />
+              <span>Draf Umpan Balik Teknis (Anti-Ghosting)</span>
+            </div>
+            <div className="text-xs text-[#737582] mt-0.5">
+              Draf surat penolakan edukatif berbasis temuan audit kode nyata.
+            </div>
+          </div>
+          {!feedbackDraft && (
+            <button
+              type="button"
+              onClick={handleDraftFeedback}
+              disabled={isGeneratingFeedback}
+              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#f2f4fc] border border-[#ccd5f7] text-[#4f64b8] hover:bg-[#e4ebf9] transition-all cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              {isGeneratingFeedback ? 'Menyusun...' : 'Susun Draf Email'}
+            </button>
+          )}
+        </div>
+
+        {feedbackError && (
+          <div className="p-2.5 rounded-lg bg-[#fdf0ef] border border-[#f6cbc7] text-xs text-[#963730]">
+            {feedbackError}
+          </div>
+        )}
+
+        {feedbackDraft && (
+          <div className="space-y-2 pt-2 border-t border-[#f0eee9]">
+            <div className="p-2.5 rounded-lg bg-[#fbfaf8] border border-[#e9e8e6] text-xs space-y-1.5 font-sans">
+              <div className="font-semibold text-[#333641] pb-1 border-b border-[#eceae4]">
+                Subjek: {feedbackDraft.subject}
+              </div>
+              <div className="text-[#4b4e5d] whitespace-pre-wrap leading-relaxed select-text text-[11.5px]">
+                {feedbackDraft.body}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <button
+                type="button"
+                onClick={handleDraftFeedback}
+                disabled={isGeneratingFeedback}
+                className="text-[11px] text-[#737582] hover:text-[#333641] underline cursor-pointer"
+              >
+                {isGeneratingFeedback ? 'Menyusun ulang...' : 'Susun Ulang'}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyFeedback}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#7285d5] text-white hover:bg-[#5f74cc] transition-colors cursor-pointer shadow-sm"
+              >
+                {feedbackCopied ? <Check size={13} /> : <Copy size={13} />}
+                <span>{feedbackCopied ? 'Tersalin!' : 'Salin Draf Email'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
