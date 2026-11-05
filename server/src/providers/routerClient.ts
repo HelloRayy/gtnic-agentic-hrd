@@ -16,7 +16,7 @@ export class RouterClient {
       this.client = new OpenAI({
         apiKey: config.router.apiKey,
         baseURL: config.router.baseUrl,
-        maxRetries: 0,
+        maxRetries: 2,
       });
     }
   }
@@ -39,7 +39,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 45000 : 50000;
+      const modelTimeout = isPrimary ? 120000 : 90000;
 
       try {
         console.log(`[RouterClient] Dispatching synthesis to model: ${model} (timeout: ${modelTimeout}ms)...`);
@@ -90,7 +90,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 35000 : 45000;
+      const modelTimeout = isPrimary ? 120000 : 90000;
 
       try {
         console.log(`[RouterClient] Streaming chat with model: ${model}...`);
