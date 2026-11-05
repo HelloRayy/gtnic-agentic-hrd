@@ -227,15 +227,16 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
 
         {activeWorkspaceTab === 'benchmark' && (
           <CandidateBenchmarkView
-            candidateA={
-              allCandidates.find((c) => c.id === benchmarkCandidateIds?.[0]) ||
-              allCandidates[0] ||
-              candidate
+            allCandidates={allCandidates}
+            initialCandidateA={
+              benchmarkCandidateIds?.[0]
+                ? allCandidates.find((c) => c.id === benchmarkCandidateIds[0]) || null
+                : null
             }
-            candidateB={
-              allCandidates.find((c) => c.id === benchmarkCandidateIds?.[1]) ||
-              allCandidates[1] ||
-              candidate
+            initialCandidateB={
+              benchmarkCandidateIds?.[1]
+                ? allCandidates.find((c) => c.id === benchmarkCandidateIds[1]) || null
+                : null
             }
             onSelectForSchedule={(id) => {
               onSelectCandidate?.(id);

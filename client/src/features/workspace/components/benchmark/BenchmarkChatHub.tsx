@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, Terminal, Sparkles, MessageSquare } from 'lucide-react';
+import { ArrowUp, Terminal, Sparkles } from 'lucide-react';
 import { TalentTraceMascot } from '../TalentTraceMascot.js';
 import { FormattedChatMessage } from '../FormattedChatMessage.js';
 import type { DeliberationMessage } from '@/types/audit.js';

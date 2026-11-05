@@ -1,35 +1,59 @@
 import React, { useState } from 'react';
-import { Columns, X } from 'lucide-react';
+import { Columns, X, Sparkles } from 'lucide-react';
 import { CandidateBenchmarkCard } from './CandidateBenchmarkCard.js';
+import { EmptyBenchmarkSlot } from './EmptyBenchmarkSlot.js';
 import { BenchmarkChatHub } from './BenchmarkChatHub.js';
 import { sendBenchmarkDeliberation } from '@/services/auditApi.js';
 import type { WorkspaceCandidate } from '../../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
 interface CandidateBenchmarkViewProps {
-  candidateA: WorkspaceCandidate;
-  candidateB: WorkspaceCandidate;
+  allCandidates: WorkspaceCandidate[];
+  initialCandidateA?: WorkspaceCandidate | null;
+  initialCandidateB?: WorkspaceCandidate | null;
   onSelectForSchedule?: (candidateId: string) => void;
   onClose?: () => void;
 }
 
 export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
-  candidateA,
-  candidateB,
+  allCandidates,
+  initialCandidateA,
+  initialCandidateB,
   onSelectForSchedule,
   onClose,
 }) => {
-  const [messages, setMessages] = useState<DeliberationMessage[]>([
-    {
-      role: 'assistant',
-      content: `Selamat datang di ruang Head-to-Head Benchmark. Saya siap membandingkan profil teknis antara **${candidateA.name}** dan **${candidateB.name}** secara objektif berbasis bukti repositori nyata. Ajukan pertanyaan komparasi di bawah ini untuk melihat perbandingan trade-off arsitektur, testing, atau kesiapan stack mereka.`,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    },
-  ]);
+  const [slotAId, setSlotAId] = useState<string | null>(initialCandidateA?.id || null);
+  const [slotBId, setSlotBId] = useState<string | null>(initialCandidateB?.id || null);
+
+  const candidateA = allCandidates.find((c) => c.id === slotAId) || null;
+  const candidateB = allCandidates.find((c) => c.id === slotBId) || null;
+
+  const [customMessages, setCustomMessages] = useState<DeliberationMessage[]>([]);
   const [isDeliberating, setIsDeliberating] = useState(false);
 
+  const baseWelcomeMessage: DeliberationMessage | null =
+    candidateA && candidateB
+      ? {
+          role: 'assistant',
+          content: `Ruang Head-to-Head aktif untuk **${candidateA.name}** dan **${candidateB.name}**. Silakan ajukan pertanyaan komparasi teknis di bawah untuk membedah trade-off arsitektur, testing, atau kesiapan stack mereka.`,
+          timestamp: 'Siap',
+        }
+      : null;
+
+  const messages = baseWelcomeMessage ? [baseWelcomeMessage, ...customMessages] : [];
+
+  const handleSelectSlotA = (id: string | null) => {
+    setSlotAId(id);
+    setCustomMessages([]);
+  };
+
+  const handleSelectSlotB = (id: string | null) => {
+    setSlotBId(id);
+    setCustomMessages([]);
+  };
+
   const handleSendMessage = async (question: string) => {
-    if (!question.trim() || isDeliberating) return;
+    if (!question.trim() || isDeliberating || !candidateA || !candidateB) return;
 
     const userTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const userMsg: DeliberationMessage = {
@@ -38,7 +62,7 @@ export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
       timestamp: userTimestamp,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    setCustomMessages((prev) => [...prev, userMsg]);
     setIsDeliberating(true);
 
     try {
@@ -66,7 +90,7 @@ export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
         anchors: res.anchors,
       };
 
-      setMessages((prev) => [...prev, agentMsg]);
+      setCustomMessages((prev) => [...prev, agentMsg]);
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : 'Gagal memproses komparasi.';
       const errorMsg: DeliberationMessage = {
@@ -74,7 +98,7 @@ export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
         content: `Terjadi kendala saat menganalisis kedua kandidat: ${errMsg}`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-      setMessages((prev) => [...prev, errorMsg]);
+      setCustomMessages((prev) => [...prev, errorMsg]);
     } finally {
       setIsDeliberating(false);
     }
@@ -90,7 +114,13 @@ export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
             Head-to-Head Split-Screen Benchmark
           </span>
           <span className="text-[11px] text-[#737582]">
-            ({candidateA.name} vs {candidateB.name})
+            {candidateA && candidateB
+              ? `(${candidateA.name} vs ${candidateB.name})`
+              : candidateA
+              ? `(${candidateA.name} vs Slot 2 Kosong)`
+              : candidateB
+              ? `(Slot 1 Kosong vs ${candidateB.name})`
+              : '(Dua Slot Kosong)'}
           </span>
         </div>
 
@@ -108,26 +138,60 @@ export const CandidateBenchmarkView: React.FC<CandidateBenchmarkViewProps> = ({
 
       {/* 2. Split Screen Two-Column Side-by-Side Area */}
       <div className="flex-1 p-4 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CandidateBenchmarkCard
-          candidate={candidateA}
-          onSelectForSchedule={onSelectForSchedule}
-          accentColor="#7285d5"
-        />
-        <CandidateBenchmarkCard
-          candidate={candidateB}
-          onSelectForSchedule={onSelectForSchedule}
-          accentColor="#8cac91"
-        />
+        {candidateA ? (
+          <CandidateBenchmarkCard
+            candidate={candidateA}
+            onSelectForSchedule={onSelectForSchedule}
+            onRemove={() => handleSelectSlotA(null)}
+            accentColor="#7285d5"
+          />
+        ) : (
+          <EmptyBenchmarkSlot
+            slotNumber={1}
+            slotLabel="Slot 1: Tarik atau Pilih Kandidat A"
+            availableCandidates={allCandidates.filter((c) => c.id !== slotBId)}
+            onSelectCandidate={(id) => handleSelectSlotA(id)}
+            accentColor="#7285d5"
+          />
+        )}
+
+        {candidateB ? (
+          <CandidateBenchmarkCard
+            candidate={candidateB}
+            onSelectForSchedule={onSelectForSchedule}
+            onRemove={() => handleSelectSlotB(null)}
+            accentColor="#8cac91"
+          />
+        ) : (
+          <EmptyBenchmarkSlot
+            slotNumber={2}
+            slotLabel="Slot 2: Tarik atau Pilih Kandidat B"
+            availableCandidates={allCandidates.filter((c) => c.id !== slotAId)}
+            onSelectCandidate={(id) => handleSelectSlotB(id)}
+            accentColor="#8cac91"
+          />
+        )}
       </div>
 
       {/* 3. Bottom Deliberation Chat Hub */}
-      <BenchmarkChatHub
-        nameA={candidateA.name}
-        nameB={candidateB.name}
-        messages={messages}
-        isDeliberating={isDeliberating}
-        onSendMessage={handleSendMessage}
-      />
+      {candidateA && candidateB ? (
+        <BenchmarkChatHub
+          nameA={candidateA.name}
+          nameB={candidateB.name}
+          messages={messages}
+          isDeliberating={isDeliberating}
+          onSendMessage={handleSendMessage}
+        />
+      ) : (
+        <div className="p-3 bg-[#faf9f6] border-t border-[#e2dfd7] text-center text-xs text-[#787b89] flex items-center justify-center gap-2 shrink-0">
+          <Sparkles size={13} className="text-[#e2a36b]" />
+          <span>
+            {candidateA || candidateB
+              ? 'Tarik atau pilih 1 kandidat lagi di atas untuk mengaktifkan AI Deliberation Arbiter.'
+              : 'Tarik dari sidebar kiri atau pilih 2 kandidat di atas untuk mulai membandingkan.'}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

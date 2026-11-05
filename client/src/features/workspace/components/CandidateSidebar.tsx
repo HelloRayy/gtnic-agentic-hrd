@@ -128,7 +128,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
       </div>
 
       {/* Head-to-Head Benchmark Action */}
-      {candidates.length >= 2 && onOpenBenchmark && (
+      {onOpenBenchmark && (
         <button
           type="button"
           onClick={onOpenBenchmark}

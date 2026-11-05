@@ -1,17 +1,19 @@
 import React from 'react';
-import { CheckCircle2, AlertCircle, GitBranch, ShieldCheck, Calendar, ArrowRight } from 'lucide-react';
+import { CheckCircle2, AlertCircle, GitBranch, ShieldCheck, Calendar, ArrowRight, X } from 'lucide-react';
 import { CandidateAvatar } from '../CandidateAvatar.js';
 import type { WorkspaceCandidate } from '../../types.js';
 
 interface CandidateBenchmarkCardProps {
   candidate: WorkspaceCandidate;
   onSelectForSchedule?: (candidateId: string) => void;
+  onRemove?: () => void;
   accentColor?: string;
 }
 
 export const CandidateBenchmarkCard: React.FC<CandidateBenchmarkCardProps> = ({
   candidate,
   onSelectForSchedule,
+  onRemove,
   accentColor = '#7285d5',
 }) => {
   const dossier = candidate.dossier;
@@ -44,18 +46,31 @@ export const CandidateBenchmarkCard: React.FC<CandidateBenchmarkCardProps> = ({
           </div>
         </div>
 
-        {onSelectForSchedule && (
-          <button
-            type="button"
-            onClick={() => onSelectForSchedule(candidate.id)}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-[#e2dfd7] bg-white text-[#555660] hover:bg-[#f0eee9] hover:text-[#333641] flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
-            title="Loloskan kandidat ini ke tahap jadwal wawancara"
-          >
-            <Calendar size={13} className="text-[#8cac91]" />
-            <span>Pilih</span>
-            <ArrowRight size={12} />
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {onSelectForSchedule && (
+            <button
+              type="button"
+              onClick={() => onSelectForSchedule(candidate.id)}
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-[#e2dfd7] bg-white text-[#555660] hover:bg-[#f0eee9] hover:text-[#333641] flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
+              title="Loloskan kandidat ini ke tahap jadwal wawancara"
+            >
+              <Calendar size={13} className="text-[#8cac91]" />
+              <span>Pilih</span>
+              <ArrowRight size={12} />
+            </button>
+          )}
+
+          {onRemove && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="p-1.5 rounded-lg border border-transparent text-[#8c8d97] hover:text-[#d9756c] hover:bg-[#fdf0ef] hover:border-[#f6cbc7] transition-all cursor-pointer"
+              title="Keluarkan kandidat dari slot perbandingan"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Scrollable Body: Bukti & Analisis */}

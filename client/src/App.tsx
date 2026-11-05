@@ -103,10 +103,7 @@ export default function App() {
   const [benchmarkCandidateIds, setBenchmarkCandidateIds] = useState<[string, string] | null>(null);
 
   const handleOpenBenchmark = () => {
-    if (candidates.length < 2) return;
-    const candidateA = activeCandidate || candidates[0];
-    const candidateB = candidates.find((c) => c.id !== candidateA.id) || candidates[1];
-    setBenchmarkCandidateIds([candidateA.id, candidateB.id]);
+    setBenchmarkCandidateIds(null);
     handleSelectWorkspaceTab('benchmark');
   };
 
