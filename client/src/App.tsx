@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { Columns } from 'lucide-react';
+import { BenchmarkInspectorPanel } from '@/features/workspace/components/benchmark/BenchmarkInspectorPanel.js';
 import { CandidateSidebar } from '@/features/workspace/components/CandidateSidebar.js';
 import { DeliberationWorkspace } from '@/features/workspace/components/DeliberationWorkspace.js';
 import { ForensicExplorerPanel } from '@/features/workspace/components/ForensicExplorerPanel.js';
@@ -8,17 +10,16 @@ import { CandidateApplyPage } from '@/features/workspace/components/CandidateApp
 import { ManageJobsModal } from '@/features/workspace/components/ManageJobsModal.js';
 import { getStoredJobs, type RecruitmentPreset } from '@/features/workspace/demoPresets.js';
 import type { WorkspaceCandidate } from '@/features/workspace/types.js';
-import type { TraceEvent, GoogleAuthStatus, TechnicalDossier } from '@/types/audit.js';
+import type { TraceEvent, GoogleAuthStatus, TechnicalDossier, DeliberationMessage } from '@/types/audit.js';
 import {
   streamAuditExecution,
-  sendDeliberationQuestion,
   streamDeliberationQuestion,
   fetchGoogleAuthStatus,
   fetchAuditHistory,
   fetchAuditById,
   deleteAuditRecord,
+  sendBenchmarkDeliberation,
 } from '@/services/auditApi.js';
-
 const STORAGE_KEY = 'talenttrace_candidates_v1';
 
 export default function App() {
@@ -100,11 +101,82 @@ export default function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
   const [googleStatus, setGoogleStatus] = useState<GoogleAuthStatus | null>(null);
-  const [benchmarkCandidateIds, setBenchmarkCandidateIds] = useState<[string, string] | null>(null);
+  const [benchmarkSlotAId, setBenchmarkSlotAId] = useState<string | null>(null);
+  const [benchmarkSlotBId, setBenchmarkSlotBId] = useState<string | null>(null);
+  const [benchmarkMessages, setBenchmarkMessages] = useState<DeliberationMessage[]>([]);
+  const [isBenchmarkDeliberating, setIsBenchmarkDeliberating] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const benchmarkCandidateA = candidates.find((c) => c.id === benchmarkSlotAId) || null;
+  const benchmarkCandidateB = candidates.find((c) => c.id === benchmarkSlotBId) || null;
 
   const handleOpenBenchmark = () => {
-    setBenchmarkCandidateIds(null);
+    setBenchmarkSlotAId(null);
+    setBenchmarkSlotBId(null);
+    setBenchmarkMessages([]);
     handleSelectWorkspaceTab('benchmark');
+  };
+
+  const handleSelectBenchmarkSlotA = (id: string | null) => {
+    setBenchmarkSlotAId(id);
+    setBenchmarkMessages([]);
+  };
+
+  const handleSelectBenchmarkSlotB = (id: string | null) => {
+    setBenchmarkSlotBId(id);
+    setBenchmarkMessages([]);
+  };
+
+  const handleSendBenchmarkMessage = async (question: string) => {
+    if (!benchmarkCandidateA || !benchmarkCandidateB || isBenchmarkDeliberating || !question.trim()) return;
+
+    const userTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMsg: DeliberationMessage = {
+      role: 'user',
+      content: question,
+      timestamp: userTimestamp,
+    };
+
+    setBenchmarkMessages((prev) => [...prev, userMsg]);
+    setIsBenchmarkDeliberating(true);
+
+    try {
+      const res = await sendBenchmarkDeliberation(
+        {
+          name: benchmarkCandidateA.name,
+          role: benchmarkCandidateA.role,
+          claimedSkills: benchmarkCandidateA.dossier.candidate.claimedSkills,
+          dossier: benchmarkCandidateA.dossier,
+        },
+        {
+          name: benchmarkCandidateB.name,
+          role: benchmarkCandidateB.role,
+          claimedSkills: benchmarkCandidateB.dossier.candidate.claimedSkills,
+          dossier: benchmarkCandidateB.dossier,
+        },
+        question
+      );
+
+      const agentTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const agentMsg: DeliberationMessage = {
+        role: 'assistant',
+        content: res.answer,
+        timestamp: agentTimestamp,
+        anchors: res.anchors,
+      };
+
+      setBenchmarkMessages((prev) => [...prev, agentMsg]);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Gagal memproses komparasi.';
+      const errorMsg: DeliberationMessage = {
+        role: 'assistant',
+        content: `Terjadi kendala saat menganalisis kedua kandidat: ${errMsg}`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setBenchmarkMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsBenchmarkDeliberating(false);
+    }
   };
 
   const timerRef = useRef<number | null>(null);
@@ -542,21 +614,36 @@ export default function App() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-[#f8f7f4]">
       {/* Panel 1: Candidate Sidebar & Ingestion Queue */}
-      <CandidateSidebar
-        candidates={candidates}
-        activeCandidateId={activeCandidateId}
-        onSelectCandidate={setActiveCandidateId}
-        onMoveStage={handleMoveCandidateStage}
-        onOpenUploadModal={() => setIsAddModalOpen(true)}
-        onOpenIntegrations={() => setIsIntegrationsOpen(true)}
-        onClearCandidates={handleClearCandidates}
-        onSwitchToApply={switchToApply}
-        onOpenManageJobs={() => setIsManageJobsOpen(true)}
-        jobsCount={jobs.length}
-        googleStatus={googleStatus}
-        onOpenBenchmark={handleOpenBenchmark}
-        isBenchmarkActive={activeWorkspaceTab === 'benchmark'}
-      />
+      {!isSidebarCollapsed && (
+        <CandidateSidebar
+          candidates={candidates}
+          activeCandidateId={activeCandidateId}
+          onSelectCandidate={setActiveCandidateId}
+          onMoveStage={handleMoveCandidateStage}
+          onOpenUploadModal={() => setIsAddModalOpen(true)}
+          onOpenIntegrations={() => setIsIntegrationsOpen(true)}
+          onClearCandidates={handleClearCandidates}
+          onSwitchToApply={switchToApply}
+          onOpenManageJobs={() => setIsManageJobsOpen(true)}
+          jobsCount={jobs.length}
+          googleStatus={googleStatus}
+          onOpenBenchmark={handleOpenBenchmark}
+          isBenchmarkActive={activeWorkspaceTab === 'benchmark'}
+          onToggleCollapse={() => setIsSidebarCollapsed(true)}
+        />
+      )}
+
+      {isSidebarCollapsed && (
+        <button
+          type="button"
+          onClick={() => setIsSidebarCollapsed(false)}
+          className="fixed top-2.5 left-2.5 z-30 px-2.5 py-1.5 rounded-lg bg-white border border-[#dedcd2] text-[#4d5162] hover:bg-[#f2f0ea] hover:text-[#22242c] shadow-sm transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
+          title="Buka kembali antrean kandidat"
+        >
+          <Columns size={13} className="text-[#7285d5]" />
+          <span>Antrean</span>
+        </button>
+      )}
 
       {/* Panel 2: Center Workspace & Deliberation Hub */}
       <DeliberationWorkspace
@@ -581,17 +668,30 @@ export default function App() {
         }}
         googleStatus={googleStatus}
         allCandidates={candidates}
-        benchmarkCandidateIds={benchmarkCandidateIds}
+        slotAId={benchmarkSlotAId}
+        slotBId={benchmarkSlotBId}
+        onSelectSlotA={handleSelectBenchmarkSlotA}
+        onSelectSlotB={handleSelectBenchmarkSlotB}
         onSelectCandidate={setActiveCandidateId}
         onCloseBenchmark={() => handleSelectWorkspaceTab('chat')}
       />
 
-      {/* Panel 3: Right Forensic Explorer Panel - Struktur Folder Tree */}
-      <ForensicExplorerPanel
-        candidate={activeCandidate}
-        activeTabId={activeWorkspaceTab}
-        onSelectTab={handleSelectWorkspaceTab}
-      />
+      {/* Panel 3: Right Inspector Panel - Arbiter Chat (Benchmark) atau Forensic Explorer */}
+      {activeWorkspaceTab === 'benchmark' ? (
+        <BenchmarkInspectorPanel
+          candidateA={benchmarkCandidateA}
+          candidateB={benchmarkCandidateB}
+          messages={benchmarkMessages}
+          isDeliberating={isBenchmarkDeliberating}
+          onSendMessage={handleSendBenchmarkMessage}
+        />
+      ) : (
+        <ForensicExplorerPanel
+          candidate={activeCandidate}
+          activeTabId={activeWorkspaceTab}
+          onSelectTab={handleSelectWorkspaceTab}
+        />
+      )}
       <AddCandidateModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

@@ -34,6 +34,10 @@ interface DeliberationWorkspaceProps {
   allCandidates?: WorkspaceCandidate[];
   benchmarkCandidateIds?: [string, string] | null;
   onSelectCandidate?: (id: string) => void;
+  slotAId?: string | null;
+  slotBId?: string | null;
+  onSelectSlotA?: (id: string | null) => void;
+  onSelectSlotB?: (id: string | null) => void;
   onCloseBenchmark?: () => void;
 }
 
@@ -58,6 +62,10 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   benchmarkCandidateIds = null,
   onSelectCandidate,
   onCloseBenchmark,
+  slotAId = null,
+  slotBId = null,
+  onSelectSlotA,
+  onSelectSlotB,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -228,16 +236,10 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
         {activeWorkspaceTab === 'benchmark' && (
           <CandidateBenchmarkView
             allCandidates={allCandidates}
-            initialCandidateA={
-              benchmarkCandidateIds?.[0]
-                ? allCandidates.find((c) => c.id === benchmarkCandidateIds[0]) || null
-                : null
-            }
-            initialCandidateB={
-              benchmarkCandidateIds?.[1]
-                ? allCandidates.find((c) => c.id === benchmarkCandidateIds[1]) || null
-                : null
-            }
+            slotAId={slotAId}
+            slotBId={slotBId}
+            onSelectSlotA={onSelectSlotA || (() => {})}
+            onSelectSlotB={onSelectSlotB || (() => {})}
             onSelectForSchedule={(id) => {
               onSelectCandidate?.(id);
               onSelectWorkspaceTab('action');

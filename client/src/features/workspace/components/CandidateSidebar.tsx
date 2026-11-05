@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, GripVertical, ExternalLink, Briefcase, Columns } from 'lucide-react';
+import { Plus, Calendar, GripVertical, ExternalLink, Briefcase, Columns, ChevronLeft } from 'lucide-react';
 import { TalentTraceMascot } from './TalentTraceMascot.js';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import type { WorkspaceCandidate } from '../types.js';
@@ -22,6 +22,7 @@ interface CandidateSidebarProps {
   jobsCount?: number;
   onOpenBenchmark?: () => void;
   isBenchmarkActive?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
@@ -38,6 +39,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   jobsCount = 3,
   onOpenBenchmark,
   isBenchmarkActive = false,
+  onToggleCollapse,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -54,17 +56,39 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
   return (
     <aside className="sidebar" style={{ width: 300 }}>
-      {/* TalentTrace Brand Wordmark */}
-      <button type="button" className="wordmark">
-        <span className="dotted-logo">
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-        <span>TalentTrace</span>
-        <span className="wordmark-dot">•</span>
-      </button>
+      {/* TalentTrace Brand Wordmark & Collapse Control */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        <button type="button" className="wordmark" style={{ margin: 0 }}>
+          <span className="dotted-logo">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
+          <span>TalentTrace</span>
+          <span className="wordmark-dot">•</span>
+        </button>
+
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            title="Ciutkan sidebar antrean"
+            style={{
+              padding: '4px 6px',
+              borderRadius: 6,
+              border: '1px solid #e9e8e6',
+              backgroundColor: '#ffffff',
+              color: '#8c8d97',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <ChevronLeft size={14} />
+          </button>
+        )}
+      </div>
 
       {/* TalentTrace Recruiter Profile Card */}
       <div className="profile">
