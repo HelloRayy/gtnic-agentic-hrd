@@ -9,6 +9,12 @@ import {
   handleConstructiveFeedback,
   handleGetRepoFileContent,
 } from '../controllers/auditController.js';
+import {
+  handleGetHistory,
+  handleGetHistoryById,
+  handleDeleteHistoryById,
+  handleSaveHistoryRecord,
+} from '../controllers/historyController.js';
 import { config } from '../../config/env.js';
 
 const upload = multer({
@@ -38,3 +44,13 @@ auditRouter.post('/deliberate', handleDeliberationChat);
 auditRouter.post('/audit/chat', handleDeliberationChat);
 auditRouter.post('/constructive-feedback', handleConstructiveFeedback);
 auditRouter.get('/repo/file-content', handleGetRepoFileContent);
+
+// History & Persistence Endpoints
+auditRouter.get('/history', handleGetHistory);
+auditRouter.get('/history/:id', handleGetHistoryById);
+auditRouter.delete('/history/:id', handleDeleteHistoryById);
+auditRouter.post('/history', handleSaveHistoryRecord);
+
+auditRouter.get('/audit/history', handleGetHistory);
+auditRouter.get('/audit/history/:id', handleGetHistoryById);
+auditRouter.delete('/audit/history/:id', handleDeleteHistoryById);

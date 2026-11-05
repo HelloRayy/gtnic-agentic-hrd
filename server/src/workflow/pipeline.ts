@@ -1,9 +1,11 @@
 import { toolRegistry } from '../tools/index.js';
 import { routerClient } from '../providers/routerClient.js';
 import { TraceStore } from '../memory/traceStore.js';
+import { auditRepository } from '../db/database.js';
 import { SYSTEM_PROMPT_ENTERPRISE_AUDITOR } from '../prompts/systemPrompts.js';
 import { formatSynthesisPrompt, formatAssessmentPrompt, formatInterviewPrompt } from '../prompts/templates.js';
 import { findTransferableMatch } from '../core/techTaxonomy.js';
+import { runGroundingVerification } from './groundingVerification.js';
 import { createSandboxFallbackRepo } from './sandboxFallback.js';
 import type {
   AuditInput,
@@ -12,12 +14,14 @@ import type {
   TechnicalDossier,
   EvidenceItem,
   InterviewQuestion,
+  TraceEvent,
 } from '../core/types.js';
 
 export class AuditPipeline {
-  public async execute(input: AuditInput, onProgress?: (event: any) => void): Promise<TechnicalDossier> {
+  public async execute(input: AuditInput, onProgress?: (event: TraceEvent) => void): Promise<TechnicalDossier> {
     const startTime = Date.now();
-    const traceStore = new TraceStore(onProgress);
+    const auditId = input.auditId || `audit_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const traceStore = new TraceStore(onProgress, auditId);
 
     // 1. Ingestion Phase
     traceStore.log('PLAN', 'INGESTION', 'Initiating candidate CV extraction and metadata parsing.');
@@ -218,53 +222,13 @@ export class AuditPipeline {
     }
 
     // 4. Grounding Verification Gate & Ambiguity Clarification Synthesis
-    traceStore.log('PLAN', 'SELF_CORRECTION', 'Executing Grounding Verification Gate across synthesized evidence.');
-    let correctionCount = 0;
-
-    for (const item of evidenceMatrix) {
-      if (item.status === 'VERIFIED') {
-        const claimLower = item.claim.toLowerCase();
-        const hasManifestEvidence = allDeps.some(d => d.includes(claimLower));
-        const hasRepoAnchor = item.repoAnchor && auditedRepos.some(r => r.repoName === item.repoAnchor);
-        const hasLanguageOrFileMatch = auditedRepos.some(
-          r => r.primaryLanguage.toLowerCase().includes(claimLower) ||
-               r.fileTreeSample.some(f => f.toLowerCase().includes(claimLower))
-        );
-
-        if (!hasManifestEvidence && !hasRepoAnchor && !hasLanguageOrFileMatch) {
-          const trans = findTransferableMatch(item.claim, allDeps);
-          if (trans.isTransferable && trans.matchedDep) {
-            item.status = 'TRANSFERABLE';
-            item.evidenceSummary += ` [Koreksi Mandiri Grounding: Disesuaikan ke TRANSFERABLE karena terdeteksi teknologi serumpun '${trans.matchedDep}']`;
-          } else {
-            item.status = 'PARTIAL';
-            item.evidenceSummary += ' [Koreksi Mandiri Grounding: Diturunkan ke PARTIAL karena tidak ditemukan bukti artefak fisik pada manifest repositori]';
-          }
-          correctionCount++;
-          traceStore.log(
-            'REFLECTION',
-            'GROUNDING_CORRECTION',
-            `Corrected claim '${item.claim}' to '${item.status}' based on deterministic manifest verification.`
-          );
-        }
-      }
-    }
-
-    // Automatically inject deterministic ambiguity clarification items
-    for (const repo of auditedRepos) {
-      if (repo.authorshipStatus === 'UNLINKED_GIT_CONFIG') {
-        const prompt = `Klarifikasi Konfigurasi Git (${repo.repoName}): ${repo.authorshipNote}`;
-        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
-      } else if (repo.authorshipStatus === 'THIRD_PARTY_OWNED') {
-        const prompt = `Klarifikasi Kepemilikan Kode (${repo.repoName}): ${repo.authorshipNote} Tanyakan peran kontribusi spesifik kandidat.`;
-        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
-      }
-      if (repo.isPotentialClone) {
-        const prompt = `Verifikasi Orisinalitas Proyek (${repo.repoName}): Terdapat indikasi proyek kursus/tutorial. Tanyakan bagian arsitektur mana yang dibuat mandiri oleh kandidat.`;
-        if (!clarificationPrompts.includes(prompt)) clarificationPrompts.push(prompt);
-      }
-    }
-
+    const { correctionCount } = runGroundingVerification(
+      evidenceMatrix,
+      auditedRepos,
+      clarificationPrompts,
+      allDeps,
+      traceStore
+    );
     traceStore.log(
       'REFLECTION',
       'SELF_CORRECTION_COMPLETED',
@@ -275,7 +239,9 @@ export class AuditPipeline {
       .filter(r => Boolean(r.homepageUrl))
       .map(r => ({ repoName: r.repoName, url: r.homepageUrl! }));
 
-    return {
+    const dossier: TechnicalDossier = {
+      id: auditId,
+      createdAt: new Date().toISOString(),
       candidate,
       jobTitle,
       overallAssessment,
@@ -288,6 +254,24 @@ export class AuditPipeline {
       traceEvents: traceStore.getEvents(),
       liveDemos,
     };
+
+    try {
+      auditRepository.saveAudit({
+        id: auditId,
+        candidateName: candidate.name,
+        candidateEmail: candidate.email,
+        githubUsername: candidate.githubUsername,
+        jobTitle,
+        overallAssessment,
+        dossier,
+        executionTimeMs: dossier.executionTimeMs,
+        createdAt: dossier.createdAt,
+      });
+    } catch (saveErr) {
+      console.warn('[AuditPipeline] Gagal menyimpan audit ke SQLite:', saveErr);
+    }
+
+    return dossier;
   }
 }
 

@@ -238,3 +238,66 @@ export async function fetchRepoFileContent(
     filePath: data.filePath,
   };
 }
+
+export interface AuditHistorySummary {
+  id: string;
+  candidateName: string;
+  candidateEmail?: string;
+  githubUsername?: string;
+  jobTitle: string;
+  overallAssessment?: string;
+  executionTimeMs: number;
+  createdAt: string;
+}
+
+export async function fetchAuditHistory(): Promise<AuditHistorySummary[]> {
+  const res = await fetch(`${API_BASE}/history`);
+  if (!res.ok) {
+    throw new Error('Gagal mengambil daftar riwayat audit.');
+  }
+  const json = await res.json();
+  return json.data || [];
+}
+
+export async function fetchAuditById(id: string): Promise<TechnicalDossier> {
+  const res = await fetch(`${API_BASE}/history/${encodeURIComponent(id)}`);
+  if (!res.ok) {
+    throw new Error('Gagal memuat detail audit dari database.');
+  }
+  const json = await res.json();
+  return json.data;
+}
+
+export async function deleteAuditRecord(id: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/history/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    throw new Error('Gagal menghapus riwayat audit.');
+  }
+}
+
+export async function saveAuditRecord(
+  dossier: TechnicalDossier,
+  candidateName: string,
+  jobTitle?: string
+): Promise<string> {
+  const res = await fetch(`${API_BASE}/history`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: dossier.id,
+      candidateName,
+      candidateEmail: dossier.candidate.email,
+      githubUsername: dossier.candidate.githubUsername,
+      jobTitle: jobTitle || dossier.jobTitle,
+      overallAssessment: dossier.overallAssessment,
+      dossier,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error('Gagal menyimpan riwayat audit ke database.');
+  }
+  const json = await res.json();
+  return json.id;
+}

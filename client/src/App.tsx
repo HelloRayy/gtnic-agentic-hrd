@@ -13,6 +13,9 @@ import {
   streamAuditExecution,
   sendDeliberationQuestion,
   fetchGoogleAuthStatus,
+  fetchAuditHistory,
+  fetchAuditById,
+  deleteAuditRecord,
 } from '@/services/auditApi.js';
 
 const STORAGE_KEY = 'talenttrace_candidates_v1';
@@ -123,8 +126,79 @@ export default function App() {
   }, [candidates, activeCandidateId]);
   useEffect(() => {
     fetchGoogleAuthStatus().then(setGoogleStatus);
-  }, []);
 
+    // Sinkronisasi data riwayat kandidat dari database SQLite backend
+    const syncDatabaseHistory = async () => {
+      try {
+        const historyList = await fetchAuditHistory();
+        if (historyList.length > 0) {
+          const loaded: WorkspaceCandidate[] = [];
+          for (const item of historyList.slice(0, 10)) {
+            try {
+              const dossier = await fetchAuditById(item.id);
+              const verifiedCount = dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
+              const totalClaims = dossier.evidenceMatrix.length || 1;
+              const score = Math.round((verifiedCount / totalClaims) * 100);
+
+              let candidateStatus: 'verified' | 'partial' | 'warning' | 'unverified' = 'verified';
+              let candidateStatusLabel = 'TERVERIFIKASI';
+              if (score < 45) {
+                candidateStatus = 'warning';
+                candidateStatusLabel = 'PERLU KLARIFIKASI';
+              } else if (score < 75) {
+                candidateStatus = 'partial';
+                candidateStatusLabel = 'SEBAGIAN';
+              }
+
+              const resolvedName = item.candidateName || dossier.candidate.name || 'Kandidat';
+              const resolvedRole = item.jobTitle || dossier.jobTitle || 'Software Engineer';
+
+              loaded.push({
+                id: item.id,
+                name: resolvedName,
+                role: resolvedRole,
+                status: candidateStatus,
+                statusLabel: candidateStatusLabel,
+                stage: 'screening',
+                matchScore: score,
+                avatarSeed: resolvedName
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase(),
+                githubUrl: dossier.candidate.githubUrl || '',
+                reposCount: dossier.auditedRepos.length,
+                dossier,
+                chatHistory: [
+                  {
+                    role: 'assistant',
+                    content: `Audit dimuat dari database SQLite lokal. ${dossier.overallAssessment}`,
+                    timestamp: new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  },
+                ],
+              });
+            } catch (err) {
+              console.warn('[App] Gagal memuat detail audit:', item.id, err);
+            }
+          }
+
+          if (loaded.length > 0) {
+            setCandidates((prev) => {
+              if (prev.length === 0) return loaded;
+              const existingIds = new Set(prev.map((c) => c.id));
+              const missing = loaded.filter((c) => !existingIds.has(c.id));
+              return [...prev, ...missing];
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[App] SQLite sync error:', err);
+      }
+    };
+
+    syncDatabaseHistory();
+  }, []);
   useEffect(() => {
     if (isLoading) {
       startTimeRef.current = Date.now();
@@ -175,7 +249,7 @@ export default function App() {
           const resolvedRole = explicitJobTitle || dossierResult.jobTitle || tempJobTitle;
 
           const newCandidate: WorkspaceCandidate = {
-            id: `cand-${Date.now()}`,
+            id: dossierResult.id || `cand-${Date.now()}`,
             name: resolvedName,
             role: resolvedRole,
             status: candidateStatus,
@@ -369,6 +443,9 @@ export default function App() {
 
   const handleClearCandidates = () => {
     if (window.confirm('Hapus seluruh kandidat dari sesi demo ini?')) {
+      for (const cand of candidates) {
+        deleteAuditRecord(cand.id).catch(() => {});
+      }
       setCandidates([]);
       setActiveCandidateId(null);
       try {

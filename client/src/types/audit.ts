@@ -59,10 +59,12 @@ export interface TraceEvent {
   phase: 'PLAN' | 'TOOL_CALL' | 'OBSERVATION' | 'REFLECTION';
   timestamp: string;
   detail: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface TechnicalDossier {
+  id?: string;
+  createdAt?: string;
   candidate: CandidateProfile;
   jobTitle: string;
   overallAssessment: string;
