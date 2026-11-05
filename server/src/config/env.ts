@@ -27,14 +27,22 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   githubToken: process.env.GITHUB_TOKEN || '',
   router: {
-    apiKey: process.env.ROUTER_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || '',
-    baseUrl: process.env.ROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+    apiKey: process.env.ROUTER_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || '9router',
+    baseUrl:
+      process.env.ROUTER_BASE_URL ||
+      (process.env.RAILWAY_ENVIRONMENT
+        ? 'http://9router.railway.internal:20128/v1'
+        : 'http://localhost:20128/v1'),
     defaultModel: process.env.ROUTER_MODEL || 'gemini-3.8-flash',
   },
   geminiApiKey: process.env.GEMINI_API_KEY || '',
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID || '',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    redirectUri: process.env.GOOGLE_REDIRECT_URI || `http://localhost:${process.env.PORT || '5000'}/api/auth/google/callback`,
+    redirectUri:
+      process.env.GOOGLE_REDIRECT_URI ||
+      (process.env.RAILWAY_PUBLIC_DOMAIN
+        ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}/api/auth/google/callback`
+        : `http://localhost:${process.env.PORT || '5000'}/api/auth/google/callback`),
   },
 };
