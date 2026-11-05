@@ -63,6 +63,10 @@
     --ring: 224.3 76.3% 48%;
   }
 }
+html {
+  font-size: 16px;
+  zoom: 1.15;
+}
 
 body {
   margin: 0;
@@ -203,7 +207,7 @@ body {
 }
 
 .nav-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: #a3a3ab;
   letter-spacing: 1.2px;
@@ -664,7 +668,7 @@ body {
 .version {
   display: flex;
   justify-content: space-between;
-  font-size: 7.5px;
+  font-size: 11px;
   color: #b1b1b7;
   letter-spacing: 0.8px;
   padding: 12px 10px 0;

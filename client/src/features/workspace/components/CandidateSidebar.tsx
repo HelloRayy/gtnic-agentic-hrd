@@ -117,7 +117,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
               border: '1px solid #e9e8e6',
               backgroundColor: '#ffffff',
               color: '#8c8d97',
-              fontSize: 11,
+              fontSize: 12.5,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
@@ -166,7 +166,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
             backgroundColor: '#f6f5f1',
             border: '1px dashed #dedcd8',
             marginBottom: 12,
-            fontSize: 11,
+            fontSize: 12.5,
             color: '#707070',
             lineHeight: 1.5,
             textAlign: 'center',
@@ -225,7 +225,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                 </div>
                 <span
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 600,
                     color: '#8c8d97',
                     backgroundColor: '#eeede9',
@@ -271,7 +271,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                 {stageCandidates.length === 0 ? (
                   <div
                     style={{
-                      fontSize: 10.5,
+                      fontSize: 12,
                       color: '#a3a3ab',
                       textAlign: 'center',
                       padding: '10px 4px',
@@ -367,7 +367,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
                               </span>
                               <small
                                 style={{
-                                  fontSize: 11.5,
+                                  fontSize: 12.5,
                                   fontWeight: 550,
                                   color: isActive ? '#596aa9' : '#767676',
                                   background: isActive ? '#e0e4f4' : '#eeede9',
@@ -411,7 +411,7 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
         <div style={{ marginTop: 20, paddingTop: 14, borderTop: '1px solid #eeedea', paddingBottom: 10 }}>
           <div
             style={{
-              fontSize: 10.5,
+              fontSize: 12,
               fontWeight: 700,
               color: '#8c8d97',
               textTransform: 'uppercase',
@@ -512,12 +512,12 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
 
         <div className="dot-note" style={{ padding: '14px 10px 16px' }}>
           <span className="tiny-star" style={{ fontSize: 24 }}>✦</span>
-          <p style={{ fontSize: 11, color: '#707070', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 12.5, color: '#707070', lineHeight: 1.6 }}>
             Tarik & lepas kartu pelamar untuk memindahkan tahapan rekrutmen.
           </p>
         </div>
 
-        <div className="version" style={{ fontSize: 8.5, color: '#a0a0ac' }}>
+        <div className="version" style={{ fontSize: 11, color: '#a0a0ac' }}>
           <span>TalentTrace HR</span>
           <span>v2.4 · Enterprise</span>
         </div>
