@@ -10,6 +10,7 @@ import {
 import { SkillsMenuPopover } from './SkillsMenuPopover.js';
 import { TalentTraceMascot } from './TalentTraceMascot.js';
 import { CandidateBriefingCard } from './CandidateBriefingCard.js';
+import { FormattedChatMessage } from './FormattedChatMessage.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
@@ -60,7 +61,8 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
   };
 
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Gunakan 'auto' saat streaming untuk mencegah lag smooth-scroll animation thrashing
+    chatBottomRef.current?.scrollIntoView({ behavior: isDeliberating ? 'auto' : 'smooth' });
   }, [messages, isDeliberating]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -157,7 +159,7 @@ export const DeliberationChatView: React.FC<DeliberationChatViewProps> = ({
           const isUser = msg.role === 'user';
           return (
             <div key={index} className={`chat-bubble ${isUser ? 'user' : 'assistant'}`}>
-              <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+              <FormattedChatMessage content={msg.content} isUser={isUser} />
 
               {msg.anchors && msg.anchors.length > 0 && (
                 <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>

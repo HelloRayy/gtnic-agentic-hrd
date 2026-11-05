@@ -67,6 +67,26 @@ export async function streamDeliberationQuestion(
 
   const decoder = new TextDecoder();
   let buffer = '';
+  let tokenBuffer = '';
+  let flushTimer: number | null = null;
+
+  const flushTokens = () => {
+    if (tokenBuffer) {
+      const chunk = tokenBuffer;
+      tokenBuffer = '';
+      callbacks.onToken(chunk);
+    }
+    if (flushTimer) {
+      clearTimeout(flushTimer);
+      flushTimer = null;
+    }
+  };
+
+  const scheduleFlush = () => {
+    if (!flushTimer) {
+      flushTimer = window.setTimeout(flushTokens, 40);
+    }
+  };
 
   try {
     while (true) {
@@ -86,10 +106,12 @@ export async function streamDeliberationQuestion(
         try {
           const payload = JSON.parse(jsonStr);
           if (payload.type === 'token' && typeof payload.token === 'string') {
-            callbacks.onToken(payload.token);
+            tokenBuffer += payload.token;
+            scheduleFlush();
           } else if (payload.type === 'status' && typeof payload.message === 'string') {
             callbacks.onStatus?.(payload.message);
           } else if (payload.type === 'done') {
+            flushTokens();
             callbacks.onComplete({
               answer: payload.answer || '',
               anchors: payload.anchors || [],
@@ -97,6 +119,7 @@ export async function streamDeliberationQuestion(
               newEvidenceItem: payload.newEvidenceItem,
             });
           } else if (payload.type === 'error') {
+            flushTokens();
             callbacks.onError(payload.error || 'Terjadi galat pada AI deliberation stream.');
           }
         } catch (parseErr) {
@@ -105,7 +128,10 @@ export async function streamDeliberationQuestion(
       }
     }
   } catch (err: unknown) {
+    flushTokens();
     const msg = err instanceof Error ? err.message : String(err);
     callbacks.onError(msg);
+  } finally {
+    flushTokens();
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Terminal, Sparkles, MessageSquare } from 'lucide-react';
-import { OpenDotsMascot } from '../OpenDotsMascot.js';
+import { TalentTraceMascot } from '../TalentTraceMascot.js';
+import { FormattedChatMessage } from '../FormattedChatMessage.js';
 import type { DeliberationMessage } from '@/types/audit.js';
 
 interface BenchmarkChatHubProps {
@@ -51,7 +52,7 @@ export const BenchmarkChatHub: React.FC<BenchmarkChatHubProps> = ({
       {/* 1. Header Hub Deliberasi Arbiter */}
       <div className="px-5 py-2.5 bg-[#f5f4ee] border-b border-[#e6e4dc] flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <OpenDotsMascot color="blue" size="sm" isWorking={isDeliberating} />
+          <TalentTraceMascot color="blue" size="sm" isWorking={isDeliberating} />
           <div>
             <div className="text-xs font-bold text-[#333641] flex items-center gap-1.5">
               <span>Arbiter Deliberasi Head-to-Head</span>
@@ -113,17 +114,17 @@ export const BenchmarkChatHub: React.FC<BenchmarkChatHubProps> = ({
               >
                 {!isUser && (
                   <div className="shrink-0 mt-0.5">
-                    <OpenDotsMascot color="blue" size="sm" />
+                    <TalentTraceMascot color="blue" size="sm" />
                   </div>
                 )}
                 <div
-                  className={`max-w-2xl p-3 rounded-xl leading-relaxed whitespace-pre-wrap select-text ${
+                  className={`max-w-2xl p-3 rounded-xl leading-relaxed select-text ${
                     isUser
                       ? 'bg-[#7285d5] text-white rounded-tr-none'
                       : 'bg-white border border-[#e5e3dc] text-[#333641] shadow-[0_1px_2px_rgba(0,0,0,0.02)] rounded-tl-none'
                   }`}
                 >
-                  <div>{msg.content}</div>
+                  <FormattedChatMessage content={msg.content} isUser={isUser} />
                   {msg.anchors && msg.anchors.length > 0 && (
                     <div className="mt-2 pt-1.5 border-t border-[#f0eee9] flex items-center gap-1.5 flex-wrap">
                       <Terminal size={11} className="text-[#8c8d97]" />
