@@ -278,4 +278,32 @@ export async function saveAuditRecord(
   }
   const json = await res.json();
   return json.id;
+export interface BenchmarkDeliberationResponse {
+  answer: string;
+  anchors: string[];
+}
+
+export async function sendBenchmarkDeliberation(
+  candidateA: { name: string; role?: string; claimedSkills?: string[]; dossier: TechnicalDossier },
+  candidateB: { name: string; role?: string; claimedSkills?: string[]; dossier: TechnicalDossier },
+  question: string
+): Promise<BenchmarkDeliberationResponse> {
+  const res = await fetch(`${API_BASE}/benchmark/deliberate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      candidateA,
+      candidateB,
+      question,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal memproses deliberasi komparasi.');
+  }
+  const json = await res.json();
+  return {
+    answer: json.answer || '',
+    anchors: json.anchors || [],
+  };
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, GripVertical, ExternalLink, Briefcase } from 'lucide-react';
+import { Plus, Calendar, GripVertical, ExternalLink, Briefcase, Columns } from 'lucide-react';
 import { TalentTraceMascot } from './TalentTraceMascot.js';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import type { WorkspaceCandidate } from '../types.js';
@@ -20,6 +20,8 @@ interface CandidateSidebarProps {
   onSwitchToApply?: () => void;
   onOpenManageJobs?: () => void;
   jobsCount?: number;
+  onOpenBenchmark?: () => void;
+  isBenchmarkActive?: boolean;
 }
 
 export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
@@ -34,6 +36,8 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
   onSwitchToApply,
   onOpenManageJobs,
   jobsCount = 3,
+  onOpenBenchmark,
+  isBenchmarkActive = false,
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
@@ -122,6 +126,37 @@ export const CandidateSidebar: React.FC<CandidateSidebarProps> = ({
           </button>
         )}
       </div>
+
+      {/* Head-to-Head Benchmark Action */}
+      {candidates.length >= 2 && onOpenBenchmark && (
+        <button
+          type="button"
+          onClick={onOpenBenchmark}
+          className="btn-press"
+          style={{
+            width: '100%',
+            marginBottom: 12,
+            padding: '8px 12px',
+            borderRadius: 8,
+            border: isBenchmarkActive ? '1px solid #7285d5' : '1px solid #e2dfd7',
+            backgroundColor: isBenchmarkActive ? '#edf0fb' : '#ffffff',
+            color: isBenchmarkActive ? '#384c98' : '#333641',
+            fontSize: 12,
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 7,
+            boxShadow: '0 1px 2px rgba(57,57,74,0.02)',
+            transition: 'all 0.15s ease',
+          }}
+          title="Bandingkan dua kandidat finalis secara berdampingan (split-screen)"
+        >
+          <Columns size={14} style={{ color: '#e2a36b' }} />
+          <span>Bandingkan Head-to-Head</span>
+        </button>
+      )}
 
       {candidates.length === 0 && (
         <div

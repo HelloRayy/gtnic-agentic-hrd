@@ -10,6 +10,7 @@ import { InvestigationRadarView } from './inspector/InvestigationRadarView.js';
 import { InterviewActionView } from './inspector/InterviewActionView.js';
 import { WebIdeInspectorView } from './inspector/WebIdeInspectorView.js';
 import { generateIdeSnippets } from '../services/ideCodeAdapter.js';
+import { CandidateBenchmarkView } from './benchmark/CandidateBenchmarkView.js';
 import type { WorkspaceCandidate } from '../types.js';
 import type { TraceEvent, GoogleAuthStatus } from '@/types/audit.js';
 
@@ -30,6 +31,10 @@ interface DeliberationWorkspaceProps {
   googleStatus: GoogleAuthStatus | null;
   onViewCv?: () => void;
   onInspectCode?: () => void;
+  allCandidates?: WorkspaceCandidate[];
+  benchmarkCandidateIds?: [string, string] | null;
+  onSelectCandidate?: (id: string) => void;
+  onCloseBenchmark?: () => void;
 }
 
 export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
@@ -49,6 +54,10 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
   googleStatus,
   onViewCv,
   onInspectCode,
+  allCandidates = [],
+  benchmarkCandidateIds = null,
+  onSelectCandidate,
+  onCloseBenchmark,
 }) => {
   const [showTraceDetails, setShowTraceDetails] = useState(false);
 
@@ -165,7 +174,7 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
             auditedRepos={dossier.auditedRepos}
             isDeliberating={isDeliberating}
             onSendMessage={onSendMessage}
-            onSchedule={onOpenWebIde}
+            onSchedule={() => onSelectWorkspaceTab('action')}
             onViewCv={onViewCv || (() => onSelectWorkspaceTab('cv'))}
             onInspectCode={onInspectCode || (() => onSelectWorkspaceTab('code:core-logic'))}
           />
@@ -214,6 +223,26 @@ export const DeliberationWorkspace: React.FC<DeliberationWorkspaceProps> = ({
               <InterviewActionView dossier={dossier} googleStatus={googleStatus} />
             </div>
           </div>
+        )}
+
+        {activeWorkspaceTab === 'benchmark' && (
+          <CandidateBenchmarkView
+            candidateA={
+              allCandidates.find((c) => c.id === benchmarkCandidateIds?.[0]) ||
+              allCandidates[0] ||
+              candidate
+            }
+            candidateB={
+              allCandidates.find((c) => c.id === benchmarkCandidateIds?.[1]) ||
+              allCandidates[1] ||
+              candidate
+            }
+            onSelectForSchedule={(id) => {
+              onSelectCandidate?.(id);
+              onSelectWorkspaceTab('action');
+            }}
+            onClose={onCloseBenchmark || (() => onSelectWorkspaceTab('chat'))}
+          />
         )}
       </div>
     </main>

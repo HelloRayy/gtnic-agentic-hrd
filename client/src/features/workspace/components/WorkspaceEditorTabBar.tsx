@@ -8,6 +8,7 @@ import {
   BookOpen,
   Sparkles,
   Calendar,
+  Columns,
 } from 'lucide-react';
 import type { IdeFileSnippet } from '../types.js';
 
@@ -55,6 +56,12 @@ export const WorkspaceEditorTabBar: React.FC<WorkspaceEditorTabBarProps> = ({
       return {
         label: 'jadwal_interview.gcal',
         icon: <Calendar size={13} className="text-[#8cac91]" />,
+      };
+    }
+    if (tabId === 'benchmark') {
+      return {
+        label: 'komparasi_finalis.diff',
+        icon: <Columns size={13} className="text-[#e2a36b]" />,
       };
     }
     if (tabId.startsWith('code:')) {

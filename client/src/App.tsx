@@ -100,6 +100,15 @@ export default function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
   const [googleStatus, setGoogleStatus] = useState<GoogleAuthStatus | null>(null);
+  const [benchmarkCandidateIds, setBenchmarkCandidateIds] = useState<[string, string] | null>(null);
+
+  const handleOpenBenchmark = () => {
+    if (candidates.length < 2) return;
+    const candidateA = activeCandidate || candidates[0];
+    const candidateB = candidates.find((c) => c.id !== candidateA.id) || candidates[1];
+    setBenchmarkCandidateIds([candidateA.id, candidateB.id]);
+    handleSelectWorkspaceTab('benchmark');
+  };
 
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -548,6 +557,8 @@ export default function App() {
         onOpenManageJobs={() => setIsManageJobsOpen(true)}
         jobsCount={jobs.length}
         googleStatus={googleStatus}
+        onOpenBenchmark={handleOpenBenchmark}
+        isBenchmarkActive={activeWorkspaceTab === 'benchmark'}
       />
 
       {/* Panel 2: Center Workspace & Deliberation Hub */}
@@ -572,6 +583,10 @@ export default function App() {
           handleSelectWorkspaceTab('code:core-logic');
         }}
         googleStatus={googleStatus}
+        allCandidates={candidates}
+        benchmarkCandidateIds={benchmarkCandidateIds}
+        onSelectCandidate={setActiveCandidateId}
+        onCloseBenchmark={() => handleSelectWorkspaceTab('chat')}
       />
 
       {/* Panel 3: Right Forensic Explorer Panel - Struktur Folder Tree */}
