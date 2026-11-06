@@ -22,7 +22,9 @@
     "googleapis": "^188.0.0",
     "multer": "^2.4.0",
     "openai": "^4.86.1",
-    "pdf-parse": "^2.4.5"
+    "pdf-parse": "^2.4.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
