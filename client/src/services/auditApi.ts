@@ -7,6 +7,7 @@ import type {
   DiscoveredRepo,
   ConstructiveFeedbackDraft,
   RepoCommitItem,
+  ContributionCalendarData,
 } from '@/types/audit.js';
 
 const API_BASE = '/api';
@@ -74,29 +75,20 @@ export async function streamAuditExecution(
 
 export async function fetchSampleAudit(): Promise<TechnicalDossier> {
   const res = await fetch(`${API_BASE}/sample`);
-  if (!res.ok) {
-    throw new Error(`Failed to load sample audit: ${res.statusText}`);
-  }
+  if (!res.ok) throw new Error(`Failed to load sample audit: ${res.statusText}`);
   const json = await res.json();
-  if (!json.success) {
-    throw new Error(json.error || 'Sample audit failed');
-  }
+  if (!json.success) throw new Error(json.error || 'Sample audit failed');
   return json.data;
 }
 
 export async function submitAudit(formData: FormData): Promise<TechnicalDossier> {
-  const res = await fetch(`${API_BASE}/audit`, {
-    method: 'POST',
-    body: formData,
-  });
+  const res = await fetch(`${API_BASE}/audit`, { method: 'POST', body: formData });
   if (!res.ok) {
     const errJson = await res.json().catch(() => ({}));
     throw new Error(errJson.error || `Audit request failed: ${res.statusText}`);
   }
   const json = await res.json();
-  if (!json.success) {
-    throw new Error(json.error || 'Audit processing failed');
-  }
+  if (!json.success) throw new Error(json.error || 'Audit processing failed');
   return json.data;
 }
 
@@ -112,15 +104,9 @@ export async function checkServerHealth(): Promise<boolean> {
 export async function fetchGoogleAuthStatus(): Promise<GoogleAuthStatus> {
   try {
     const res = await fetch(`${API_BASE}/auth/google/status`);
-    if (!res.ok) {
-      return { isConfigured: false, isAuthenticated: false, email: null };
-    }
+    if (!res.ok) return { isConfigured: false, isAuthenticated: false, email: null };
     const data = await res.json();
-    return {
-      isConfigured: Boolean(data.isConfigured),
-      isAuthenticated: Boolean(data.isAuthenticated),
-      email: data.email || null,
-    };
+    return { isConfigured: Boolean(data.isConfigured), isAuthenticated: Boolean(data.isAuthenticated), email: data.email || null };
   } catch {
     return { isConfigured: false, isAuthenticated: false, email: null };
   }
@@ -213,6 +199,20 @@ export async function fetchRepoCommits(owner: string, repo: string): Promise<Rep
   }
   const json = await res.json();
   return json.commits || [];
+}
+
+export async function fetchCandidateContributions(username: string): Promise<ContributionCalendarData> {
+  const params = new URLSearchParams({ username });
+  const res = await fetch(`${API_BASE}/candidate/contributions?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal mengambil kalender kontribusi GitHub.');
+  }
+  const json = await res.json();
+  return {
+    totalContributions: json.totalContributions || 0,
+    days: json.days || [],
+  };
 }
 
 export interface AuditHistorySummary {

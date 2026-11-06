@@ -21,6 +21,18 @@ export interface RepoCommitItem {
   verified?: boolean;
 }
 
+export interface ContributionDay {
+  date: string;
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
+}
+
+export interface ContributionCalendarData {
+  totalContributions: number;
+  days: ContributionDay[];
+  streak?: number;
+}
+
 export interface RepoAuditEvidence {
   repoName: string;
   repoUrl: string;

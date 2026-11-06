@@ -10,6 +10,7 @@ import {
   handleConstructiveFeedback,
   handleGetRepoFileContent,
   handleGetRepoCommits,
+  handleGetCandidateContributions,
 } from '../controllers/auditController.js';
 import {
   handleGetHistory,
@@ -50,6 +51,8 @@ auditRouter.post('/constructive-feedback', handleConstructiveFeedback);
 auditRouter.get('/repo/file-content', handleGetRepoFileContent);
 auditRouter.get('/repo/commits', handleGetRepoCommits);
 auditRouter.get('/audit/repo/commits', handleGetRepoCommits);
+auditRouter.get('/candidate/contributions', handleGetCandidateContributions);
+auditRouter.get('/audit/candidate/contributions', handleGetCandidateContributions);
 
 // History & Persistence Endpoints
 auditRouter.get('/history', handleGetHistory);

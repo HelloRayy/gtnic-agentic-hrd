@@ -341,4 +341,4 @@ Ringkasan Audit: ${dossier.overallAssessment}
   }
 }
 
-export { handleGetRepoFileContent, handleGetRepoCommits } from './repoController.js';
+export { handleGetRepoFileContent, handleGetRepoCommits, handleGetCandidateContributions } from './repoController.js';

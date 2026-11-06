@@ -4,6 +4,7 @@ import { CandidateAvatar } from './CandidateAvatar.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
 import { AssessmentHighlightBox } from './AssessmentHighlightBox.js';
 import { RepoCommitHistoryCard } from './RepoCommitHistoryCard.js';
+import { GitHubContributionHeatmap } from './GitHubContributionHeatmap.js';
 import { LiveDemosSection } from './LiveDemosSection.js';
 import type { WorkspaceCandidate } from '../types.js';
 
@@ -259,7 +260,13 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </div>
       </div>
 
-      {/* 5. Riwayat Commit Publik GitHub (Container Klaim CV) */}
+      {/* 5. Grafik Aktivitas Kontribusi & Commit GitHub (Kotak Hijau) */}
+      <GitHubContributionHeatmap
+        githubUsername={dossier.candidate.githubUsername}
+        candidateName={candidate.name}
+      />
+
+      {/* 6. Riwayat Commit Publik GitHub (Timeline Detail) */}
       {dossier.auditedRepos.length > 0 && (
         <RepoCommitHistoryCard
           auditedRepos={dossier.auditedRepos}
@@ -272,7 +279,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         />
       )}
 
-      {/* 6. Live Production Demo Websites */}
+      {/* 7. Live Production Demo Websites */}
       <LiveDemosSection liveDemos={dossier.liveDemos || []} />
     </div>
   );
