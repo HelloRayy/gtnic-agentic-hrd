@@ -1,8 +1,10 @@
-import React from 'react';
-import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, Globe, AlertCircle, FolderGit2, Layers, FileText, Code2, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { GitBranch, ShieldCheck, CheckCircle2, ExternalLink, AlertCircle, FolderGit2, Layers, FileText, Code2, Calendar } from 'lucide-react';
 import { CandidateAvatar } from './CandidateAvatar.js';
 import { TechBadge } from '@/components/ui/TechBadge.js';
 import { AssessmentHighlightBox } from './AssessmentHighlightBox.js';
+import { RepoCommitHistoryCard } from './RepoCommitHistoryCard.js';
+import { LiveDemosSection } from './LiveDemosSection.js';
 import type { WorkspaceCandidate } from '../types.js';
 
 interface CandidateBriefingCardProps {
@@ -17,6 +19,9 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
   const verifiedCount = dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
   const transferableCount = dossier.evidenceMatrix.filter((e) => e.status === 'TRANSFERABLE').length;
   const missingCount = dossier.evidenceMatrix.filter((e) => e.status === 'NO_PUBLIC_EVIDENCE').length;
+  const [selectedCommitRepo, setSelectedCommitRepo] = useState<string>(
+    dossier.auditedRepos.length > 0 ? dossier.auditedRepos[0] : ''
+  );
 
   return (
     <div className="bg-white rounded-[18px] border border-[#e9e8e6] p-7 shadow-[0_2px_16px_rgba(57,57,74,0.04)] mb-6 space-y-6">
@@ -140,20 +145,32 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
               {dossier.auditedRepos.length > 0 ? (
                 dossier.auditedRepos.map((repo) => {
                   const fullUrl = `https://github.com/${repo.includes('/') ? repo : `${dossier.candidate.githubUsername || 'kandidat'}/${repo}`}`;
+                  const isSelected = (selectedCommitRepo || dossier.auditedRepos[0]) === repo;
                   return (
-                    <a
+                    <div
                       key={repo}
-                      href={fullUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 text-[13px] text-[#333641] hover:text-[#5269bb] font-medium bg-white hover:bg-[#fafafc] px-3 py-2 rounded-[8px] border border-[#e5e4de] hover:border-[#7285d5] transition-all shadow-[0_1px_2px_rgba(57,57,74,0.03)]"
-                      title={`Buka ${repo} di GitHub`}
+                      onClick={() => setSelectedCommitRepo(repo)}
+                      className={`group inline-flex items-center gap-2 text-[13px] font-medium px-3 py-2 rounded-[8px] border transition-all cursor-pointer shadow-[0_1px_2px_rgba(57,57,74,0.03)] ${
+                        isSelected
+                          ? 'bg-[#f4f7fe] text-[#3e56a8] border-[#7285d5] ring-2 ring-[#7285d5]/20 font-semibold'
+                          : 'bg-white hover:bg-[#fafafc] text-[#333641] hover:text-[#5269bb] border-[#e5e4de] hover:border-[#7285d5]'
+                      }`}
+                      title={`Klik untuk melihat riwayat commit ${repo}`}
                     >
-                      <GitBranch size={14} className="text-[#7285d5] shrink-0" />
-                      <span className="truncate max-w-[200px]">{repo}</span>
+                      <GitBranch size={14} className={isSelected ? 'text-[#3e56a8]' : 'text-[#7285d5] shrink-0'} />
+                      <span className="truncate max-w-[180px]">{repo}</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] ml-0.5" title="Terhubung ke Kode Sumber" />
-                      <ExternalLink size={12} className="text-[#a5a5ad] group-hover:text-[#5269bb] transition-colors" />
-                    </a>
+                      <a
+                        href={fullUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[#a5a5ad] hover:text-[#5269bb] transition-colors p-0.5"
+                        title="Buka repositori di GitHub"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
                   );
                 })
               ) : (
@@ -242,53 +259,21 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
         </div>
       </div>
 
-      {/* 5. Live Production Demo Websites (Menampilkan Seluruh Live Deploy yang Terdeteksi) */}
-      {dossier.liveDemos && dossier.liveDemos.length > 0 && (
-        <div className="space-y-3 pt-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe size={16} className="text-[#35766f]" />
-              <span className="text-[12px] font-bold text-[#275954] uppercase tracking-wider">
-                Website Produksi & Live Demo Terdeteksi ({dossier.liveDemos.length})
-              </span>
-            </div>
-            <span className="text-xs font-semibold text-[#275954] bg-[#dcf1ec] px-2.5 py-0.5 rounded-full border border-[#b8e2d8]">
-              Live Deploy Ready
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {dossier.liveDemos.map((demo, idx) => (
-              <div
-                key={idx}
-                className="bg-[#eef8f6] border border-[#bce3db] rounded-[11px] p-3.5 flex items-center justify-between gap-3 shadow-[0_1px_3px_rgba(39,89,84,0.03)]"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#10b981] shrink-0" title="Aktif" />
-                    <span className="text-sm font-bold text-[#1f4743] truncate">
-                      {demo.repoName}
-                    </span>
-                  </div>
-                  <span className="text-[11.5px] text-[#477a74] truncate block mt-0.5 font-mono">
-                    {demo.url.replace(/^https?:\/\//, '')}
-                  </span>
-                </div>
-
-                <a
-                  href={demo.url.startsWith('http') ? demo.url : `https://${demo.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 text-xs font-semibold text-white bg-[#35766f] hover:bg-[#275954] px-3.5 py-2 rounded-[8px] inline-flex items-center gap-1.5 transition-all shadow-[0_1px_2px_rgba(53,118,111,0.2)] cursor-pointer"
-                >
-                  <span>Buka Demo</span>
-                  <ExternalLink size={12} />
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* 5. Riwayat Commit Publik GitHub (Container Klaim CV) */}
+      {dossier.auditedRepos.length > 0 && (
+        <RepoCommitHistoryCard
+          auditedRepos={dossier.auditedRepos}
+          repoDetails={dossier.repoDetails}
+          candidateName={candidate.name}
+          githubUsername={dossier.candidate.githubUsername}
+          selectedRepo={selectedCommitRepo}
+          onSelectRepo={setSelectedCommitRepo}
+          onInspectCode={onInspectCode}
+        />
       )}
+
+      {/* 6. Live Production Demo Websites */}
+      <LiveDemosSection liveDemos={dossier.liveDemos || []} />
     </div>
   );
 };

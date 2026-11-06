@@ -9,6 +9,18 @@ export interface CandidateProfile {
 
 export type AuthorshipStatus = 'MATCHED' | 'UNLINKED_GIT_CONFIG' | 'THIRD_PARTY_OWNED';
 
+export interface RepoCommitItem {
+  sha: string;
+  shortSha: string;
+  message: string;
+  authorName: string;
+  authorLogin?: string;
+  authorAvatar?: string;
+  date: string;
+  url: string;
+  verified?: boolean;
+}
+
 export interface RepoAuditEvidence {
   repoName: string;
   repoUrl: string;
@@ -25,6 +37,7 @@ export interface RepoAuditEvidence {
   commitCountSample: number;
   isSquashedOrMigrated: boolean;
   recentCommitSample: string[];
+  commitHistory?: RepoCommitItem[];
   license: string | null;
   isMonorepo: boolean;
   authorshipStatus: AuthorshipStatus;

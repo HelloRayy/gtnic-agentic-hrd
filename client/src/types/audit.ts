@@ -9,6 +9,18 @@ export interface CandidateProfile {
 
 export type AuthorshipStatus = 'MATCHED' | 'UNLINKED_GIT_CONFIG' | 'THIRD_PARTY_OWNED';
 
+export interface RepoCommitItem {
+  sha: string;
+  shortSha: string;
+  message: string;
+  authorName: string;
+  authorLogin?: string;
+  authorAvatar?: string;
+  date: string;
+  url: string;
+  verified?: boolean;
+}
+
 export interface RepoAuditEvidence {
   repoName: string;
   repoUrl: string;
@@ -25,6 +37,7 @@ export interface RepoAuditEvidence {
   commitCountSample: number;
   isSquashedOrMigrated: boolean;
   recentCommitSample: string[];
+  commitHistory?: RepoCommitItem[];
   license: string | null;
   isMonorepo: boolean;
   authorshipStatus: AuthorshipStatus;
@@ -76,25 +89,6 @@ export interface TechnicalDossier {
   executionTimeMs: number;
   traceEvents?: TraceEvent[];
   liveDemos?: { repoName: string; url: string }[];
-}
-
-export interface RepoAuditEvidence {
-  repoName: string;
-  repoUrl: string;
-  description: string;
-  primaryLanguage: string;
-  stars: number;
-  isFork: boolean;
-  lastUpdated: string;
-  manifestFiles: { path: string; dependencies: string[] }[];
-  fileTreeSample: string[];
-  hasTests: boolean;
-  hasCiCd: boolean;
-  hasDocker: boolean;
-  commitCountSample: number;
-  recentCommitSample: string[];
-  isMonorepo: boolean;
-  homepageUrl?: string | null;
 }
 
 export interface GoogleAuthStatus {

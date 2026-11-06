@@ -9,6 +9,7 @@ import {
   handleStreamDeliberationChat,
   handleConstructiveFeedback,
   handleGetRepoFileContent,
+  handleGetRepoCommits,
 } from '../controllers/auditController.js';
 import {
   handleGetHistory,
@@ -47,6 +48,8 @@ auditRouter.post('/audit/chat', handleDeliberationChat);
 auditRouter.post('/audit/chat/stream', handleStreamDeliberationChat);
 auditRouter.post('/constructive-feedback', handleConstructiveFeedback);
 auditRouter.get('/repo/file-content', handleGetRepoFileContent);
+auditRouter.get('/repo/commits', handleGetRepoCommits);
+auditRouter.get('/audit/repo/commits', handleGetRepoCommits);
 
 // History & Persistence Endpoints
 auditRouter.get('/history', handleGetHistory);

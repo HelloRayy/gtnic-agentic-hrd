@@ -39,7 +39,25 @@ Target utama pengguna TalentTrace AI adalah tim Human Resources Department (HRD)
 
 ---
 
-## 5. Batasan Sistem dan Mitigasi Risiko
+## 5. Arsitektur Sistem AI
+TalentTrace AI bekerja dengan menggabungkan model LLM dan mekanisme pemanggilan fungsi (*tool calling*) secara berurutan. Alur dimulai saat pengguna mengunggah berkas CV dan memasukkan tautan GitHub pelamar. Agen AI kemudian membaca dokumen tersebut, menentukan alat analisis yang dibutuhkan, dan memvalidasi kesesuaian data sebelum menyajikan hasilnya ke antarmuka web.
+
+Proses analisis dijalankan melalui beberapa modul utama. Modul *cv_parser* mengekstrak riwayat kerja dan keahlian dari CV, lalu *github_triage* menyortir repositori publik kandidat yang paling relevan. Repositori tersebut kemudian diperiksa oleh *github_repo_audit* untuk melihat struktur folder, riwayat commit asli, dan berkas dependensi proyek. Selanjutnya, hasil temuan kode dicocokkan dengan klaim di CV melalui proses *grounding verification* agar ringkasan yang dihasilkan berbasis bukti nyata dan terbebas dari halusinasi model.
+
+Untuk penyimpanan dan performa, sistem menggunakan database lokal SQLite dengan mode WAL serta *caching* dua lapis (RAM dan disk). Penggunaan SQLite lokal menjaga riwayat evaluasi tetap tersimpan cepat dan aman tanpa membebani panggilan API GitHub secara berulang. Pada sisi tampilan, pengguna dapat melihat ringkasan evaluasi, menjelajahi struktur berkas proyek, bertanya langsung ke asisten AI, serta menjadwalkan wawancara lewat integrasi Google Calendar dan Gmail.
+
+---
+
+## 6. Fitur Utama AI Agent & Metrik Estimasi Efisiensi Operasional
+Fitur utama TalentTrace AI berfokus pada verifikasi kecocokan antara dokumen resume pelamar dengan bukti repositori kode di GitHub. Sistem mengekstrak klaim kemampuan teknis kandidat dan memetakannya langsung ke riwayat commit serta susunan proyek nyata. Melalui fitur penjelajah pohon berkas (*repo tree explorer*), pengguna dapat melihat hierarki direktori kode kandidat layaknya tampilan editor kode ringkas tanpa perlu berpindah tab peramban. Setiap keahlian yang diaudit kemudian diberi label status verifikasi secara transparan, sehingga rekruter langsung mengetahui bagian mana yang terbukti ada di repositori dan bagian mana yang belum memiliki bukti.
+
+Untuk mendukung rekruter non-teknis, sistem menyediakan ruang diskusi interaktif di mana HRD dapat menanyakan aspek teknis atau istilah koding kandidat kepada asisten AI menggunakan bahasa sehari-hari. Agen menjawab dengan merujuk langsung pada fakta repositori pelamar, sekaligus membantu menyusun draf jadwal wawancara teknis yang terhubung ke Google Calendar serta menyiapkan draf email *feedback* bagi kandidat. Seluruh riwayat evaluasi ini dikelola secara persisten menggunakan basis data lokal SQLite dengan mode WAL dan mekanisme *caching* dua lapis, menjamin keamanan data internal perusahaan serta memungkinkan penelusuran riwayat audit secara instan.
+
+Dari sisi efisiensi operasional, penerapan sistem ini memangkas waktu proses screening awal dari rata-rata 3 hingga 5 hari kerja per posisi menjadi sekitar 3 sampai 5 menit per kandidat. Pengurangan waktu telaah manual ini sekaligus menghemat sekitar 10 hingga 15 jam kerja per minggu bagi tim *Tech Lead* atau *Senior Engineer* yang sebelumnya harus memeriksa portofolio teknis secara manual. Selain mempercepat siklus seleksi (*time-to-hire*), validasi berbasis bukti kode nyata ini secara signifikan meminimalkan risiko salah rekrut (*bad hire*) yang kerap dipicu oleh klaim berlebih pada resume pelamar.
+
+---
+
+## 7. Batasan Sistem dan Mitigasi Risiko
 1. **Akses Terbatas pada Repositori Publik**
    - *Batasan*: AI Agent hanya dapat memeriksa repositori GitHub yang disetel publik; proyek pada repositori privat tidak dapat diakses demi menjaga privasi dan kerahasiaan kandidat.
    - *Mitigasi*: Kandidat disarankan menyematkan (*pinned*) proyek publik terbaiknya. Agen menandai keahlian yang belum memiliki bukti publik dengan status "Perlu Konfirmasi" agar tim HRD dapat mengklarifikasikannya langsung saat sesi wawancara.

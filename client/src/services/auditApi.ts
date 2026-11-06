@@ -6,6 +6,7 @@ import type {
   ScheduleInterviewResponse,
   DiscoveredRepo,
   ConstructiveFeedbackDraft,
+  RepoCommitItem,
 } from '@/types/audit.js';
 
 const API_BASE = '/api';
@@ -144,27 +145,20 @@ export async function disconnectGoogleAccount(): Promise<boolean> {
   }
 }
 
-export async function dispatchScheduleInterview(
-  payload: ScheduleInterviewPayload
-): Promise<ScheduleInterviewResponse> {
+export async function dispatchScheduleInterview(payload: ScheduleInterviewPayload): Promise<ScheduleInterviewResponse> {
   const res = await fetch(`${API_BASE}/action/schedule-interview`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.error || `Failed to schedule interview: ${res.statusText}`);
   }
-
   return res.json();
 }
 
-export async function discoverCandidateRepos(
-  usernameOrUrl: string,
-  targetSkills?: string[]
-): Promise<DiscoveredRepo[]> {
+export async function discoverCandidateRepos(usernameOrUrl: string, targetSkills?: string[]): Promise<DiscoveredRepo[]> {
   const skillsQuery = targetSkills && targetSkills.length > 0 ? `&skills=${encodeURIComponent(targetSkills.join(','))}` : '';
   const res = await fetch(`${API_BASE}/discover-repos?url=${encodeURIComponent(usernameOrUrl)}${skillsQuery}`);
   if (!res.ok) {
@@ -205,15 +199,20 @@ export async function fetchRepoFileContent(
 ): Promise<{ content: string; fileName: string; filePath: string }> {
   const params = new URLSearchParams({ owner, repo, path });
   const res = await fetch(`${API_BASE}/repo/file-content?${params.toString()}`);
-  if (!res.ok) {
-    throw new Error('Gagal memuat isi berkas dari repositori.');
-  }
+  if (!res.ok) throw new Error('Gagal memuat isi berkas dari repositori.');
   const data = await res.json();
-  return {
-    content: data.content,
-    fileName: data.fileName,
-    filePath: data.filePath,
-  };
+  return { content: data.content, fileName: data.fileName, filePath: data.filePath };
+}
+
+export async function fetchRepoCommits(owner: string, repo: string): Promise<RepoCommitItem[]> {
+  const params = new URLSearchParams({ owner, repo });
+  const res = await fetch(`${API_BASE}/repo/commits?${params.toString()}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal mengambil riwayat commit repositori.');
+  }
+  const json = await res.json();
+  return json.commits || [];
 }
 
 export interface AuditHistorySummary {
@@ -229,29 +228,21 @@ export interface AuditHistorySummary {
 
 export async function fetchAuditHistory(): Promise<AuditHistorySummary[]> {
   const res = await fetch(`${API_BASE}/history`);
-  if (!res.ok) {
-    throw new Error('Gagal mengambil daftar riwayat audit.');
-  }
+  if (!res.ok) throw new Error('Gagal mengambil daftar riwayat audit.');
   const json = await res.json();
   return json.data || [];
 }
 
 export async function fetchAuditById(id: string): Promise<TechnicalDossier> {
   const res = await fetch(`${API_BASE}/history/${encodeURIComponent(id)}`);
-  if (!res.ok) {
-    throw new Error('Gagal memuat detail audit dari database.');
-  }
+  if (!res.ok) throw new Error('Gagal memuat detail audit dari database.');
   const json = await res.json();
   return json.data;
 }
 
 export async function deleteAuditRecord(id: string): Promise<void> {
-  const res = await fetch(`${API_BASE}/history/${encodeURIComponent(id)}`, {
-    method: 'DELETE',
-  });
-  if (!res.ok) {
-    throw new Error('Gagal menghapus riwayat audit.');
-  }
+  const res = await fetch(`${API_BASE}/history/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Gagal menghapus riwayat audit.');
 }
 
 export async function saveAuditRecord(
@@ -272,9 +263,7 @@ export async function saveAuditRecord(
       dossier,
     }),
   });
-  if (!res.ok) {
-    throw new Error('Gagal menyimpan riwayat audit ke database.');
-  }
+  if (!res.ok) throw new Error('Gagal menyimpan riwayat audit ke database.');
   const json = await res.json();
   return json.id;
 }
