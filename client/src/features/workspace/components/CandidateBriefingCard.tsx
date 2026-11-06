@@ -20,6 +20,10 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
   const verifiedCount = dossier.evidenceMatrix.filter((e) => e.status === 'VERIFIED').length;
   const transferableCount = dossier.evidenceMatrix.filter((e) => e.status === 'TRANSFERABLE').length;
   const missingCount = dossier.evidenceMatrix.filter((e) => e.status === 'NO_PUBLIC_EVIDENCE').length;
+  const displaySkills =
+    dossier.candidate.claimedSkills && dossier.candidate.claimedSkills.length > 0
+      ? dossier.candidate.claimedSkills
+      : dossier.evidenceMatrix.map((e) => e.claim);
   const [selectedCommitRepo, setSelectedCommitRepo] = useState<string>(
     dossier.auditedRepos.length > 0 ? dossier.auditedRepos[0] : ''
   );
@@ -119,7 +123,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
           Klaim Keahlian pada CV:
         </span>
         <div className="flex flex-wrap items-center gap-2">
-          {dossier.candidate.claimedSkills.map((skill, idx) => (
+          {displaySkills.map((skill, idx) => (
             <TechBadge key={idx} name={skill} />
           ))}
         </div>
@@ -262,7 +266,7 @@ export const CandidateBriefingCard: React.FC<CandidateBriefingCardProps> = ({ ca
 
       {/* 5. Grafik Aktivitas Kontribusi & Commit GitHub (Kotak Hijau) */}
       <GitHubContributionHeatmap
-        githubUsername={dossier.candidate.githubUsername}
+        githubUsername={dossier.candidate.githubUsername || candidate.githubUrl}
         candidateName={candidate.name}
       />
 

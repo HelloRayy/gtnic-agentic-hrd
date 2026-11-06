@@ -40,7 +40,7 @@ export async function handleGetRepoCommits(req: Request, res: Response): Promise
           authorAvatar,
           date,
           url: commitUrl,
-          verified: isVerified || (authorLogin.toLowerCase() === owner.toLowerCase()),
+          verified: isVerified,
         };
       });
 
@@ -52,72 +52,16 @@ export async function handleGetRepoCommits(req: Request, res: Response): Promise
       });
       return;
     } catch (githubErr: unknown) {
-      // Graceful degradation: fallback realistis berbasis nama repo & kandidat
-      const fallbackCommits: RepoCommitItem[] = [
-        {
-          sha: '7b2a9e1f4c8d5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
-          shortSha: '7b2a9e1',
-          message: `feat(${repo}): update core service logic and data contract schemas`,
-          authorName: owner,
-          authorLogin: owner,
-          authorAvatar: `https://github.com/${owner}.png`,
-          date: new Date(Date.now() - 3600 * 1000 * 24 * 1).toISOString(),
-          url: `https://github.com/${owner}/${repo}`,
-          verified: true,
-        },
-        {
-          sha: '3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d',
-          shortSha: '3c4d5e6',
-          message: `refactor: optimize response handlers, middleware and state synchronization`,
-          authorName: owner,
-          authorLogin: owner,
-          authorAvatar: `https://github.com/${owner}.png`,
-          date: new Date(Date.now() - 3600 * 1000 * 24 * 3).toISOString(),
-          url: `https://github.com/${owner}/${repo}`,
-          verified: true,
-        },
-        {
-          sha: '9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
-          shortSha: '9a0b1c2',
-          message: `test: add automated unit tests, mocks, and assertion suites`,
-          authorName: owner,
-          authorLogin: owner,
-          authorAvatar: `https://github.com/${owner}.png`,
-          date: new Date(Date.now() - 3600 * 1000 * 24 * 6).toISOString(),
-          url: `https://github.com/${owner}/${repo}`,
-          verified: true,
-        },
-        {
-          sha: '1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e',
-          shortSha: '1f2e3d4',
-          message: `ci: configure GitHub Actions deployment pipeline and docker build`,
-          authorName: owner,
-          authorLogin: owner,
-          authorAvatar: `https://github.com/${owner}.png`,
-          date: new Date(Date.now() - 3600 * 1000 * 24 * 10).toISOString(),
-          url: `https://github.com/${owner}/${repo}`,
-          verified: true,
-        },
-        {
-          sha: 'e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6',
-          shortSha: 'e5d4c3b',
-          message: `chore: initial repository scaffolding and manifest dependency configurations`,
-          authorName: owner,
-          authorLogin: owner,
-          authorAvatar: `https://github.com/${owner}.png`,
-          date: new Date(Date.now() - 3600 * 1000 * 24 * 20).toISOString(),
-          url: `https://github.com/${owner}/${repo}`,
-          verified: false,
-        },
-      ];
-
+      const isNotFound = typeof githubErr === 'object' && githubErr !== null && 'status' in githubErr && (githubErr as { status: number }).status === 404;
+      const msg = isNotFound ? 'Repositori tidak ditemukan atau bersifat privat.' : 'Tidak dapat memuat commit dari repositori.';
       res.json({
         success: true,
         owner,
         repo,
-        commits: fallbackCommits,
-        fallback: true,
+        commits: [],
+        note: msg,
       });
+      return;
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
@@ -200,23 +144,31 @@ export async function handleGetCandidateContributions(req: Request, res: Respons
         const totalMatch = html.match(/([\d,]+)\s+contributions/i);
         const totalContributions = totalMatch ? parseInt(totalMatch[1].replace(/,/g, ''), 10) : 0;
 
-        const dayRegex = /<td[^>]*data-date="([^"]+)"[^>]*data-level="([^"]+)"[^>]*id="([^"]+)"/g;
+        const tdRegex = /<td([^>]*class="[^"]*ContributionCalendar-day[^"]*"[^>]*)>/g;
         let m;
         const days: ContributionDay[] = [];
-        while ((m = dayRegex.exec(html)) !== null) {
-          const date = m[1];
-          const level = Math.min(4, Math.max(0, parseInt(m[2], 10))) as 0 | 1 | 2 | 3 | 4;
-          const cellId = m[3];
+        while ((m = tdRegex.exec(html)) !== null) {
+          const attrs = m[1];
+          const dateMatch = attrs.match(/data-date="([^"]+)"/);
+          const levelMatch = attrs.match(/data-level="([^"]+)"/);
+          const idMatch = attrs.match(/id="([^"]+)"/);
 
-          let count = level > 0 ? (level === 4 ? 8 : level === 3 ? 5 : level === 2 ? 3 : 1) : 0;
-          const tipRegex = new RegExp(`for="${cellId}"[^>]*>([^<]+)<`);
-          const tipMatch = html.match(tipRegex);
-          if (tipMatch) {
-            const countMatch = tipMatch[1].match(/(\d+)\s+contribution/i);
-            if (countMatch) count = parseInt(countMatch[1], 10);
+          if (dateMatch) {
+            const date = dateMatch[1];
+            const level = levelMatch ? (Math.min(4, Math.max(0, parseInt(levelMatch[1], 10))) as 0 | 1 | 2 | 3 | 4) : 0;
+            let count = 0;
+
+            if (idMatch) {
+              const tipRegex = new RegExp(`for="${idMatch[1]}"[^>]*>([^<]+)<`);
+              const tipMatch = html.match(tipRegex);
+              if (tipMatch) {
+                const countMatch = tipMatch[1].match(/(\d+)\s+contribution/i);
+                if (countMatch) count = parseInt(countMatch[1], 10);
+              }
+            }
+            if (count === 0 && level > 0) count = level;
+            days.push({ date, level, count });
           }
-
-          days.push({ date, level, count });
         }
 
         if (days.length > 0) {
@@ -231,40 +183,13 @@ export async function handleGetCandidateContributions(req: Request, res: Respons
       }
     } catch {}
 
-    // Fallback realistis jika rate limit atau offline
-    const days: ContributionDay[] = [];
-    const now = Date.now();
-    let total = 0;
-    for (let i = 364; i >= 0; i--) {
-      const d = new Date(now - i * 86400000);
-      const dateStr = d.toISOString().split('T')[0];
-      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-      const seed = Math.sin(i * 1.5 + (isWeekend ? 0.2 : 0.8));
-      let level: 0 | 1 | 2 | 3 | 4 = 0;
-      let count = 0;
-      if (seed > 0.6) {
-        level = 4;
-        count = 7 + Math.floor(Math.abs(seed * 5));
-      } else if (seed > 0.3) {
-        level = 3;
-        count = 4 + Math.floor(Math.abs(seed * 3));
-      } else if (seed > 0) {
-        level = 2;
-        count = 2 + Math.floor(Math.abs(seed * 2));
-      } else if (seed > -0.3) {
-        level = 1;
-        count = 1;
-      }
-      total += count;
-      days.push({ date: dateStr, level, count });
-    }
-
+    // Respon jujur berbasis ketersediaan data aktual (no fake sine-wave generation)
     res.json({
       success: true,
       username,
-      totalContributions: total,
-      days,
-      fallback: true,
+      totalContributions: 0,
+      days: [],
+      error: 'Data kontribusi publik tidak tersedia atau akun disetel privat.',
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

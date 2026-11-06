@@ -203,7 +203,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
             authorAvatar,
             date,
             url: commitUrl,
-            verified: isVerified || (authorLogin.toLowerCase() === owner.toLowerCase()),
+            verified: isVerified,
           };
         });
 
