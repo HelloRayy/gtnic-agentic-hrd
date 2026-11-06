@@ -3,7 +3,7 @@ import { config } from '../../config/env.js';
 import { auditCacheStore } from '../../memory/cacheStore.js';
 import { parseManifestContent } from './manifestParsers.js';
 import type { BaseTool, ToolParamDef } from '../registry.js';
-import type { RepoAuditEvidence, AuthorshipStatus } from '../../core/types.js';
+import type { RepoAuditEvidence, AuthorshipStatus, RepoCommitItem } from '../../core/types.js';
 
 const octokit = new Octokit({
   auth: config.githubToken || undefined,
@@ -144,24 +144,13 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
       const ignoredPrefixes = ['node_modules/', 'dist/', 'build/', '.next/', 'vendor/', '.git/', 'coverage/'];
       const filePaths = rawFilePaths.filter(p => !ignoredPrefixes.some(prefix => p.startsWith(prefix)));
 
-      const manifestFileNames = [
-        'package.json',
-        'go.mod',
-        'Cargo.toml',
-        'requirements.txt',
-        'Pipfile',
-        'pyproject.toml',
-        'pom.xml',
-        'build.gradle',
-      ];
+      const manifestFileNames = ['package.json', 'go.mod', 'Cargo.toml', 'requirements.txt', 'Pipfile', 'pyproject.toml', 'pom.xml', 'build.gradle'];
       const manifestPaths = filePaths.filter(p => {
         const parts = p.split('/');
         return parts.length <= 4 && manifestFileNames.includes(parts[parts.length - 1]);
       }).slice(0, 8);
 
-      const isMonorepo = manifestPaths.length > 1 || filePaths.some(p =>
-        p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json'
-      );
+      const isMonorepo = manifestPaths.length > 1 || filePaths.some(p => p === 'pnpm-workspace.yaml' || p === 'turbo.json' || p === 'lerna.json');
 
       const manifestResults = await Promise.all(
         manifestPaths.map(async (manifestPath) => {
@@ -169,42 +158,22 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
             const { data: contentData } = await octokit.rest.repos.getContent({ owner, repo, path: manifestPath });
             if ('content' in contentData && typeof contentData.content === 'string') {
               const decoded = Buffer.from(contentData.content, 'base64').toString('utf-8');
-              const deps = parseManifestContent(manifestPath, decoded);
-              return { path: manifestPath, dependencies: deps };
+              return { path: manifestPath, dependencies: parseManifestContent(manifestPath, decoded) };
             }
           } catch {}
           return null;
         })
       );
       const manifestFiles = manifestResults.filter((m): m is { path: string; dependencies: string[] } => m !== null);
+      const hasTests = filePaths.some(p => p.includes('.test.') || p.includes('.spec.') || p.includes('__tests__') || p.endsWith('_test.go') || p.startsWith('tests/'));
+      const hasCiCd = filePaths.some(p => p.includes('.github/workflows') || p.includes('.gitlab-ci.yml') || p.includes('Jenkinsfile'));
+      const hasDocker = filePaths.some(p => p.toLowerCase().includes('dockerfile') || p.toLowerCase().includes('docker-compose'));
 
-      const hasTests = filePaths.some(p =>
-        p.includes('.test.') || p.includes('.spec.') || p.includes('__tests__') || p.endsWith('_test.go') || p.startsWith('tests/')
-      );
-
-      const hasCiCd = filePaths.some(p =>
-        p.includes('.github/workflows') || p.includes('.gitlab-ci.yml') || p.includes('Jenkinsfile')
-      );
-
-      const hasDocker = filePaths.some(p =>
-        p.toLowerCase().includes('dockerfile') || p.toLowerCase().includes('docker-compose')
-      );
-
-      // Virtual manifests for containerization and CI/CD
-      if (hasDocker) {
-        manifestFiles.push({
-          path: 'Dockerfile',
-          dependencies: ['docker', 'container', 'containerization'],
-        });
-      }
-      if (hasCiCd) {
-        manifestFiles.push({
-          path: '.github/workflows',
-          dependencies: ['ci/cd', 'github-actions', 'automation'],
-        });
-      }
+      if (hasDocker) manifestFiles.push({ path: 'Dockerfile', dependencies: ['docker', 'container', 'containerization'] });
+      if (hasCiCd) manifestFiles.push({ path: '.github/workflows', dependencies: ['ci/cd', 'github-actions', 'automation'] });
       // Authorship Analysis (Fuzzy & Non-Punitive)
       let recentCommitSample: string[] = [];
+      let commitHistory: RepoCommitItem[] = [];
       let commitAuthors: string[] = [];
       let isSquashedOrMigrated = false;
       let authorshipStatus: AuthorshipStatus = 'MATCHED';
@@ -213,25 +182,43 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
       let commitCountSample = 0;
 
       try {
-        const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 10 });
+        const { data: commits } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 15 });
         commitCountSample = commits.length;
         recentCommitSample = commits.map(c => c.commit.message.split('\n')[0].slice(0, 70));
+        commitHistory = commits.map(c => {
+          const shortSha = c.sha ? c.sha.slice(0, 7) : '';
+          const authorLogin = c.author?.login || '';
+          const authorName = c.commit.author?.name || authorLogin || 'Developer';
+          const authorAvatar = c.author?.avatar_url || `https://github.com/${authorLogin || owner}.png`;
+          const date = c.commit.author?.date || new Date().toISOString();
+          const commitUrl = c.html_url || `https://github.com/${owner}/${repo}/commit/${c.sha}`;
+          const isVerified = Boolean(c.commit.verification?.verified);
+
+          return {
+            sha: c.sha,
+            shortSha,
+            message: c.commit.message,
+            authorName,
+            authorLogin,
+            authorAvatar,
+            date,
+            url: commitUrl,
+            verified: isVerified || (authorLogin.toLowerCase() === owner.toLowerCase()),
+          };
+        });
 
         const authorLogins = commits.map(c => c.author?.login).filter(Boolean) as string[];
         const gitNames = commits.map(c => c.commit.author?.name).filter(Boolean) as string[];
         commitAuthors = Array.from(new Set([...authorLogins, ...gitNames]));
 
         const hasOwnerLoginMatch = authorLogins.some(l => l.toLowerCase() === owner.toLowerCase());
-
         if (hasOwnerLoginMatch) {
           authorshipStatus = 'MATCHED';
           authorshipNote = 'Verified GitHub profile login authorship on commits.';
         } else if (authorLogins.length === 0 && gitNames.length > 0) {
-          // Commits exist, but author is not linked to GitHub profile login (very normal git config scenario)
           authorshipStatus = 'UNLINKED_GIT_CONFIG';
           authorshipNote = `Commits authored by local git user "${gitNames[0]}". Not linked to GitHub account login. Requires verbal confirmation.`;
         } else if (authorLogins.length > 0 && !hasOwnerLoginMatch) {
-          // Commits are explicitly authored by someone else entirely
           authorshipStatus = 'THIRD_PARTY_OWNED';
           authorshipNote = `Commits authored by GitHub user "${authorLogins[0]}", differing from candidate username "${owner}".`;
         }
@@ -262,6 +249,7 @@ export class GithubRepoAuditTool implements BaseTool<{ owner: string; repo: stri
         commitCountSample,
         isSquashedOrMigrated,
         recentCommitSample,
+        commitHistory,
         license: repoInfo.license?.spdx_id || null,
         isMonorepo,
         authorshipStatus,
