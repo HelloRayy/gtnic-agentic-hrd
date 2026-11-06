@@ -172,6 +172,7 @@ export async function handleGetCandidateContributions(req: Request, res: Respons
         }
 
         if (days.length > 0) {
+          days.sort((a, b) => a.date.localeCompare(b.date));
           res.json({
             success: true,
             username,

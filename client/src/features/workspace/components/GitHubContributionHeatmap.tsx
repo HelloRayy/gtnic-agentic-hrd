@@ -67,16 +67,20 @@ export const GitHubContributionHeatmap: React.FC<GitHubContributionHeatmapProps>
   const { weeks, monthHeaders } = useMemo(() => {
     if (days.length === 0) return { weeks: [], monthHeaders: [] };
 
+    // Urutkan hari secara kronologis agar tidak terjadi lompatan acak antar minggu
+    const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
+
     const groupedWeeks: ContributionDay[][] = [];
     let currentWeek: ContributionDay[] = [];
 
-    // Pastikan awalan sesuai hari dalam seminggu
-    const firstDay = new Date(days[0].date).getDay();
-    for (let i = 0; i < firstDay; i++) {
+    // Pastikan awalan sesuai hari dalam seminggu (0 = Minggu)
+    const firstDateObj = new Date(sortedDays[0].date);
+    const startDayOfWeek = isNaN(firstDateObj.getTime()) ? 0 : firstDateObj.getDay();
+    for (let i = 0; i < startDayOfWeek; i++) {
       currentWeek.push({ date: '', count: 0, level: 0 });
     }
 
-    days.forEach((day) => {
+    sortedDays.forEach((day) => {
       currentWeek.push(day);
       if (currentWeek.length === 7) {
         groupedWeeks.push(currentWeek);
@@ -91,16 +95,21 @@ export const GitHubContributionHeatmap: React.FC<GitHubContributionHeatmapProps>
       groupedWeeks.push(currentWeek);
     }
 
-    // Hitung posisi label bulan di atas kolom minggu
+    // Hitung posisi label bulan di atas kolom minggu dengan proteksi jarak minimum
     const headers: { month: string; colIndex: number }[] = [];
     let lastMonth = -1;
+    let lastColIndex = -10;
+
     groupedWeeks.forEach((week, colIdx) => {
       const validDay = week.find((d) => Boolean(d.date));
       if (validDay) {
-        const m = new Date(validDay.date).getMonth();
-        if (m !== lastMonth) {
+        const dObj = new Date(validDay.date);
+        const m = dObj.getMonth();
+        // Hanya tampilkan jika bulan berganti, berjarak minimal 3 kolom (~39px), dan tidak mepet ujung kanan
+        if (m !== lastMonth && colIdx - lastColIndex >= 3 && colIdx < groupedWeeks.length - 2) {
           headers.push({ month: MONTH_NAMES[m], colIndex: colIdx });
           lastMonth = m;
+          lastColIndex = colIdx;
         }
       }
     });
@@ -170,7 +179,7 @@ export const GitHubContributionHeatmap: React.FC<GitHubContributionHeatmapProps>
                   <span
                     key={idx}
                     className="absolute"
-                    style={{ left: `${hdr.colIndex * 13 + 28}px` }}
+                    style={{ left: `${hdr.colIndex * 13 + 30}px` }}
                   >
                     {hdr.month}
                   </span>
