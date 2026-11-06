@@ -6,9 +6,8 @@ export class RouterClient {
   private readonly fallbackModels = [
     'ag/gemini-3.8-flash-low',
     'ag/gemini-3.8-flash',
-    'gemini/gemini-3.8-flash',
-    'claude-3-5-sonnet',
-    'gpt-4o',
+    'ag/gemini-3.8-flash-medium',
+    'ag/gemini-3.7-flash-low',
   ];
 
   constructor() {
@@ -44,7 +43,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 25000 : 15000;
+      const modelTimeout = isPrimary ? 60000 : 45000;
 
       try {
         console.log(`[RouterClient] Dispatching synthesis to model: ${model} (timeout: ${modelTimeout}ms)...`);
@@ -95,7 +94,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 25000 : 15000;
+      const modelTimeout = isPrimary ? 60000 : 45000;
 
       try {
         console.log(`[RouterClient] Streaming chat with model: ${model}...`);
