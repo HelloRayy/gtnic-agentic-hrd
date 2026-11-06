@@ -4,8 +4,8 @@ import { config } from '../config/env.js';
 export class RouterClient {
   private client: OpenAI | null = null;
   private readonly fallbackModels = [
-    'ag/gemini-3.8-flash',
     'ag/gemini-3.8-flash-low',
+    'ag/gemini-3.8-flash',
     'gemini/gemini-3.8-flash',
     'claude-3-5-sonnet',
     'gpt-4o',
@@ -21,7 +21,7 @@ export class RouterClient {
       this.client = new OpenAI({
         apiKey: config.router.apiKey,
         baseURL: baseUrl || config.router.baseUrl,
-        maxRetries: 2,
+        maxRetries: 0,
       });
     }
   }
@@ -44,7 +44,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 120000 : 90000;
+      const modelTimeout = isPrimary ? 25000 : 15000;
 
       try {
         console.log(`[RouterClient] Dispatching synthesis to model: ${model} (timeout: ${modelTimeout}ms)...`);
@@ -95,7 +95,7 @@ export class RouterClient {
 
     for (const model of candidateModels) {
       const isPrimary = model === config.router.defaultModel;
-      const modelTimeout = isPrimary ? 120000 : 90000;
+      const modelTimeout = isPrimary ? 25000 : 15000;
 
       try {
         console.log(`[RouterClient] Streaming chat with model: ${model}...`);

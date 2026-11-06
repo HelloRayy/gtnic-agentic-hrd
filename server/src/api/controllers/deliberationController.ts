@@ -10,6 +10,7 @@ import type {
 } from '../../core/types.js';
 
 const octokit = new Octokit({ auth: config.githubToken || undefined });
+const userReposCache = new Map<string, { repos: any[]; expiresAt: number }>();
 
 interface DeliberationContext {
   question: string;
@@ -84,14 +85,41 @@ You seamlessly serve both HR Recruiters and Tech Leads with a generalized, high-
     rawDossier?.candidate?.githubUsername ||
     (typeof body.githubUsername === 'string' ? body.githubUsername : undefined);
 
-  if (githubUsername) {
+  const qLower = question.toLowerCase();
+  const explicitRepoIntent =
+    qLower.includes('repo') ||
+    qLower.includes('repositori') ||
+    qLower.includes('repository') ||
+    qLower.includes('github') ||
+    qLower.includes('proyek') ||
+    qLower.includes('project') ||
+    qLower.includes('audit');
+
+  if (githubUsername && explicitRepoIntent) {
     try {
-      const { data: allRepos } = await octokit.rest.repos.listForUser({
-        username: githubUsername,
-        per_page: 50,
-        sort: 'pushed',
-        direction: 'desc',
-      });
+      let allRepos: any[] = [];
+      const cacheKey = githubUsername.toLowerCase();
+      const cached = userReposCache.get(cacheKey);
+
+      if (cached && Date.now() < cached.expiresAt) {
+        allRepos = cached.repos;
+      } else {
+        const fetchPromise = octokit.rest.repos.listForUser({
+          username: githubUsername,
+          per_page: 30,
+          sort: 'pushed',
+          direction: 'desc',
+        });
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('GitHub fetch timeout')), 2500)
+        );
+        const { data } = await Promise.race([fetchPromise, timeoutPromise]);
+        allRepos = data;
+        userReposCache.set(cacheKey, {
+          repos: allRepos,
+          expiresAt: Date.now() + 1000 * 60 * 15,
+        });
+      }
 
       const unauditedRepos = allRepos.filter(
         (r) =>
@@ -101,7 +129,6 @@ You seamlessly serve both HR Recruiters and Tech Leads with a generalized, high-
           r.name.toLowerCase() !== githubUsername.toLowerCase()
       );
 
-      const qLower = question.toLowerCase();
       let targetRepo = unauditedRepos.find((r) => {
         const rName = r.name.toLowerCase();
         const rNorm = rName.replace(/[-_]/g, ' ');
@@ -109,12 +136,7 @@ You seamlessly serve both HR Recruiters and Tech Leads with a generalized, high-
       });
 
       if (!targetRepo) {
-        const techKeywords = [
-          'websocket', 'socket', 'graphql', 'grpc', 'kafka', 'redis',
-          'docker', 'kubernetes', 'python', 'fastapi', 'flutter', 'dart',
-          'monorepo', 'next', 'tailwind', 'vue', 'angular', 'django',
-          'flask', 'security', 'auth', 'jwt', 'ci/cd', 'actions', 'soccer', 'wifi'
-        ];
+        const techKeywords = ['websocket', 'socket', 'graphql', 'grpc', 'kafka', 'redis', 'docker', 'kubernetes', 'python', 'fastapi', 'flutter', 'dart', 'monorepo', 'next', 'tailwind', 'vue', 'angular', 'django', 'flask', 'security', 'auth', 'jwt', 'ci/cd', 'actions'];
         const mentioned = techKeywords.filter((k) => qLower.includes(k));
         if (mentioned.length > 0) {
           targetRepo = unauditedRepos.find((r) => {
@@ -126,10 +148,14 @@ You seamlessly serve both HR Recruiters and Tech Leads with a generalized, high-
 
       if (targetRepo) {
         onStatus?.(`Mengaudit repositori tambahan '${targetRepo.name}' langsung dari GitHub...`);
-        const evidence = await toolRegistry.executeTool<Record<string, unknown>, RepoAuditEvidence | null>(
+        const auditPromise = toolRegistry.executeTool<Record<string, unknown>, RepoAuditEvidence | null>(
           'github_repo_audit',
           { owner: githubUsername, repo: targetRepo.name }
         );
+        const timeoutAudit = new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error('GitHub audit timeout')), 4000)
+        );
+        const evidence = await Promise.race([auditPromise, timeoutAudit]);
 
         if (evidence) {
           newAuditedRepo = targetRepo.name;
@@ -158,7 +184,7 @@ Instruksi: Gunakan temuan riil ini untuk menjawab pertanyaan dan sebutkan bahwa 
         }
       }
     } catch (err: unknown) {
-      console.warn('[DeliberationChat] On-demand audit attempt skipped:', err);
+      console.warn('[DeliberationChat] On-demand audit attempt skipped or timed out:', err);
     }
   }
 
@@ -176,16 +202,9 @@ ${question}
   `.trim();
 
   return {
-    question,
-    candidateName,
-    jobTitle,
-    auditedRepos,
-    overallAssessment,
-    evidenceMatrix,
-    userPrompt,
-    systemPrompt,
-    newAuditedRepo,
-    newEvidenceItem,
+    question, candidateName, jobTitle, auditedRepos,
+    overallAssessment, evidenceMatrix, userPrompt, systemPrompt,
+    newAuditedRepo, newEvidenceItem,
   };
 }
 
@@ -201,10 +220,7 @@ export async function handleDeliberationChat(req: Request, res: Response): Promi
       return;
     }
 
-    interface SynthesisResult {
-      answer?: string;
-      anchors?: string[];
-    }
+    type SynthesisResult = { answer?: string; anchors?: string[] };
     const structuredPrompt = `${ctx.systemPrompt}\nOutput valid JSON only: { "answer": "your comprehensive two-tier answer in Bahasa Indonesia", "anchors": ["repo/file references"] }`;
     const response = (await routerClient.completeStructured(structuredPrompt, ctx.userPrompt)) as SynthesisResult;
 
@@ -222,9 +238,11 @@ export async function handleDeliberationChat(req: Request, res: Response): Promi
 }
 
 export async function handleStreamDeliberationChat(req: Request, res: Response): Promise<void> {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
   res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.setHeader('Transfer-Encoding', 'chunked');
   res.flushHeaders?.();
 
   try {

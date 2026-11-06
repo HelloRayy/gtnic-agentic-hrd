@@ -33,7 +33,7 @@ export const config = {
       (process.env.RAILWAY_ENVIRONMENT
         ? 'http://9router.railway.internal:20128/v1'
         : 'http://localhost:20128/v1'),
-    defaultModel: process.env.ROUTER_MODEL || 'gemini-3.8-flash',
+    defaultModel: process.env.ROUTER_MODEL || 'ag/gemini-3.8-flash-low',
   },
   geminiApiKey: process.env.GEMINI_API_KEY || '',
   google: {

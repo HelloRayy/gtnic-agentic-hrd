@@ -48,7 +48,7 @@ Klik service **talenttrace-app**, masuk ke tab **Variables**, lalu tambahkan var
 | :--- | :--- | :--- |
 | `NODE_ENV` | `production` | Mode produksi Express |
 | `ROUTER_BASE_URL` | `http://9router.railway.internal:20128/v1` | URL jaringan internal ke service 9Router |
-| `ROUTER_MODEL` | `gemini-3.8-flash` | Model utama (atau `ag/gemini-3.8-flash-low`) |
+| `ROUTER_MODEL` | `ag/gemini-3.8-flash-low` | Model utama tercepat & hemat token (default) |
 | `ROUTER_API_KEY` | `9router` (atau token 9Router Anda) | Kunci otentikasi internal router |
 | `GITHUB_TOKEN` | Token GitHub Personal Access Anda | Mencegah rate-limit audit repo GitHub |
 

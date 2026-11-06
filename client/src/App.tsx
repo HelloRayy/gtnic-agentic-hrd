@@ -525,6 +525,22 @@ export default function App() {
 
     try {
       await streamDeliberationQuestion(activeCandidate.dossier, messageText, {
+        onStatus: (status) => {
+          setCandidates((prev) =>
+            prev.map((c) => {
+              if (c.id !== activeCandidateId) return c;
+              const history = [...c.chatHistory];
+              const lastIdx = history.length - 1;
+              if (lastIdx >= 0 && history[lastIdx].role === 'assistant' && !history[lastIdx].content) {
+                history[lastIdx] = {
+                  ...history[lastIdx],
+                  content: `[${status}]\n\n`,
+                };
+              }
+              return { ...c, chatHistory: history };
+            })
+          );
+        },
         onToken: (token) => {
           setCandidates((prev) =>
             prev.map((c) => {
@@ -532,9 +548,14 @@ export default function App() {
               const history = [...c.chatHistory];
               const lastIdx = history.length - 1;
               if (lastIdx >= 0 && history[lastIdx].role === 'assistant') {
+                const currentContent = history[lastIdx].content;
+                const cleanContent =
+                  currentContent.startsWith('[') && currentContent.includes(']\n\n')
+                    ? currentContent.replace(/^\[.*?\]\n\n/, '')
+                    : currentContent;
                 history[lastIdx] = {
                   ...history[lastIdx],
-                  content: history[lastIdx].content + token,
+                  content: cleanContent + token,
                 };
               }
               return { ...c, chatHistory: history };

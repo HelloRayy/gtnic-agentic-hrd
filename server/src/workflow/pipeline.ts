@@ -67,24 +67,29 @@ export class AuditPipeline {
           username: candidate.githubUsername,
           targetSkills: candidate.claimedSkills,
           cvText: input.cvText || candidate.summary,
-          maxRepos: 5,
+          maxRepos: 3,
         });
         traceStore.log('OBSERVATION', 'GITHUB_TRIAGE', `Selected ${repoNames.length} top repositories for deep inspection: ${repoNames.join(', ')}`);
       }
 
-      for (const repo of repoNames) {
-        traceStore.log('TOOL_CALL', 'GITHUB_AUDIT', `Auditing code structure, subfolder manifests, and authorship for: ${repo}`);
-        const evidence = await toolRegistry.executeTool<any, RepoAuditEvidence | null>('github_repo_audit', {
-          owner: candidate.githubUsername,
-          repo,
-        });
+      const targetRepos = repoNames.slice(0, 3);
+      const auditResults = await Promise.all(
+        targetRepos.map(async (repo) => {
+          traceStore.log('TOOL_CALL', 'GITHUB_AUDIT', `Auditing code structure, subfolder manifests, and authorship for: ${repo}`);
+          return toolRegistry.executeTool<any, RepoAuditEvidence | null>('github_repo_audit', {
+            owner: candidate.githubUsername,
+            repo,
+          });
+        })
+      );
 
+      for (const evidence of auditResults) {
         if (evidence) {
           auditedRepos.push(evidence);
           traceStore.log(
             'OBSERVATION',
             'GITHUB_AUDIT',
-            `Repo ${repo}: Monorepo=${evidence.isMonorepo}, AuthorshipStatus=${evidence.authorshipStatus}, PotentialClone=${evidence.isPotentialClone}, Commits=${evidence.commitCountSample}`
+            `Repo ${evidence.repoName}: Monorepo=${evidence.isMonorepo}, AuthorshipStatus=${evidence.authorshipStatus}, PotentialClone=${evidence.isPotentialClone}, Commits=${evidence.commitCountSample}`
           );
         }
       }
